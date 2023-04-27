@@ -30,7 +30,6 @@ integer x = 0
 integer y = 804
 integer width = 2702
 integer height = 1072
-boolean controlmenu = false
 long backcolor = 80263328
 toolbaralignment toolbaralignment = alignatleft!
 event pfc_userinput ( )
@@ -353,7 +352,9 @@ mle_userinput.Width = mle_message.Width
 mle_userinput.Visible = False
 
 // Adjust the Height of the window to hide the User Input space.
-This.Height = cb_1.Y + cb_1.Height + 100 + SEPARATOR
+// MiguelL, 30 Dec. 2022: added an extra 40 for the height:
+//This.Height = cb_1.Y + cb_1.Height + 100 + SEPARATOR
+This.Height = cb_1.Y + cb_1.Height + 100 + SEPARATOR + 40
 
 // Center the window on the Parent window.
 lw_parent = ParentWindow()
