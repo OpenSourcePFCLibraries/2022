@@ -1873,6 +1873,12 @@ hprogressbar	l_hpb
 htrackbar		l_htb
 picturehyperlink l_phl
 statichyperlink l_sth
+animation		l_an
+datepicker		l_dp
+inkedit			l_ie
+inkpicture		l_ip
+monthcalendar		l_mc
+webbrowser		l_wb
 			
 If as_itemname = '' Then
 	If as_object = '' Then
@@ -1884,23 +1890,19 @@ else
 	ls_itemname = as_itemname
 End If
 
+// Nothing to process on tabbed control
+IF ls_itemname = 'mditbb_1' THEN Return 0
+
 Choose Case typeof(ago_item) 
-	Case menu!
-		l_menu = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_menu.enabled, l_menu.visible)
-		If Not l_menu.visible Then 
-			// OK, lets see if it has a toolbar and make it invisible as well
-			l_menu.toolbaritemvisible = False
-		End If
-	Case commandbutton!
-		l_cb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_cb.enabled, l_cb.visible)
+	Case animation!
+		l_an = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_an.enabled, l_an.visible)
 	Case checkbox!
 		l_cbx = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_cbx.enabled, l_cbx.visible)
-	Case radiobutton!
-		l_rb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_rb.enabled, l_rb.visible)
+	Case commandbutton!
+		l_cb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_cb.enabled, l_cb.visible)
 	Case datawindow!
 		l_dw = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_dw.enabled, l_dw.visible)
@@ -1918,111 +1920,134 @@ Choose Case typeof(ago_item)
 			ids_items.sort() 
 			li_numset += of_setdatawindowcolumns(l_dw)
 		End If
-
 		is_currfilter = ls_orig_filter
 		IF ids_items.SetFilter(ls_orig_filter) <> 1 Then Return -1
 		IF ids_items.Filter() <> 1 Then Return -1
 		il_numberofrows = ids_items.RowCount()
 		// resort in case the filter reordered things
 		ids_items.sort() 
-	Case userobject!
-		l_uo = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_uo.enabled, l_uo.visible)
-	Case tab!
-		l_tab = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_tab.enabled, l_tab.visible)
-	Case listbox!
-		l_lb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_lb.enabled, l_lb.visible)
+	Case datepicker!
+		l_dp = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_dp.enabled, l_dp.visible)
 	Case dropdownlistbox!
 		l_ddlb = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_ddlb.enabled, l_ddlb.visible)
 	Case dropdownpicturelistbox!
 		l_ddplb = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_ddplb.enabled, l_ddplb.visible)
-	Case singlelineedit!
-		l_sle = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_sle.enabled, l_sle.visible)
-	Case multilineedit!
-		l_mle = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_mle.enabled, l_mle.visible)
 	Case editmask!
 		l_em = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_em.enabled, l_em.visible)
-	Case picturelistbox! 
-		l_plb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_plb.enabled, l_plb.visible)
-	Case richtextedit!
-		l_rte = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_rte.enabled, l_rte.visible)
-	Case statictext!
-		l_st = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_st.enabled, l_st.visible)
-	Case groupbox!
-		l_gb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_gb.enabled, l_gb.visible)
-	Case treeview!
-		l_tv = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_tv.enabled, l_tv.visible)
-	Case listview!
-		l_lv = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_lv.enabled, l_lv.visible)
-	Case olecustomcontrol!
-		l_ocx = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_ocx.enabled, l_ocx.visible)
-	Case picturebutton! 
-		l_pb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_pb.enabled, l_pb.visible)
 	Case graph!
 		l_graph = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_graph.enabled, l_graph.visible)
-	Case vscrollbar! // scroll bars can only be visible or invisible not enabled
-		l_vsb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vsb.visible)
+	Case groupbox!
+		l_gb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_gb.enabled, l_gb.visible)
+	Case hprogressbar!
+		l_hpb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_hpb.visible)
 	Case hscrollbar!
 		l_hsb = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_hsb.visible)
-	Case picture!
-		l_pic = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_pic.enabled, l_pic.visible)
+	Case htrackbar! 
+		l_htb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_htb.visible)
+	Case inkedit!
+		l_ie = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_ie.enabled, l_ie.visible)
+	Case inkpicture!
+		l_ip = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_ip.enabled, l_ip.visible)
 	Case line! 
 		l_line = ago_item
 		setnull(lb_null)
 		li_numset = of_SetState(as_window, ls_itemname, lb_null, l_line.visible)
+	Case listbox!
+		l_lb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_lb.enabled, l_lb.visible)
+	Case listview!
+		l_lv = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_lv.enabled, l_lv.visible)
+	Case menu!
+		l_menu = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_menu.enabled, l_menu.visible)
+		If Not l_menu.visible Then 
+			// OK, lets see if it has a toolbar and make it invisible as well
+			l_menu.toolbaritemvisible = False
+		End If
+	Case monthcalendar!
+		l_mc= ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_mc.enabled, l_mc.visible)
+	Case multilineedit!
+		l_mle = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_mle.enabled, l_mle.visible)
+	Case olecontrol!
+		l_oc = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_oc.enabled, l_oc.visible)
+	Case olecustomcontrol!
+		l_ocx = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_ocx.enabled, l_ocx.visible)
 	Case oval!
 		l_oval = ago_item
 		setnull(lb_null)
 		li_numset = of_SetState(as_window, ls_itemname, lb_null, l_oval.visible)
+	Case picture!
+		l_pic = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_pic.enabled, l_pic.visible)
+	Case picturebutton! 
+		l_pb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_pb.enabled, l_pb.visible)
+	Case picturehyperlink!
+		l_phl = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_phl.enabled, l_phl.visible)
+	Case picturelistbox! 
+		l_plb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_plb.enabled, l_plb.visible)
+	Case radiobutton!
+		l_rb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_rb.enabled, l_rb.visible)
 	Case rectangle!
 		l_rectangle = ago_item
 		setnull(lb_null)
 		li_numset = of_SetState(as_window, ls_itemname, lb_null, l_rectangle.visible)
+	Case richtextedit!
+		l_rte = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_rte.enabled, l_rte.visible)
 	Case roundrectangle!
 		l_roundrectangle = ago_item
 		setnull(lb_null)
 		li_numset = of_SetState(as_window, ls_itemname, lb_null, l_roundrectangle.visible)
-	Case olecontrol!
-		l_oc = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_oc.enabled, l_oc.visible)
-	Case vprogressbar!
-		l_vpb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vpb.visible)
-	Case vtrackbar!
-		l_vtb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vtb.visible)
-	Case hprogressbar!
-		l_hpb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_hpb.visible)
-	Case htrackbar! 
-		l_htb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_htb.visible)
-	Case picturehyperlink!
-		l_phl = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_phl.enabled, l_phl.visible)
+	Case singlelineedit!
+		l_sle = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_sle.enabled, l_sle.visible)
 	Case statichyperlink!
 		l_sth = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_sth.enabled, l_sth.visible)
-		
+	Case statictext!
+		l_st = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_st.enabled, l_st.visible)
+	Case tab!
+		l_tab = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_tab.enabled, l_tab.visible)
+	Case treeview!
+		l_tv = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_tv.enabled, l_tv.visible)
+	Case userobject!
+		l_uo = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_uo.enabled, l_uo.visible)
+	Case vprogressbar!
+		l_vpb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vpb.visible)
+	Case vscrollbar! // scroll bars can only be visible or invisible not enabled
+		l_vsb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vsb.visible)
+	Case vtrackbar!
+		l_vtb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vtb.visible)
+	Case webbrowser!
+		l_wb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_wb.enabled, l_wb.visible)
 	Case Else 
 		// Big time error here.
 		of_Messagebox('pfc_securitystatuserror', 'of_setcontrolstatus', &
