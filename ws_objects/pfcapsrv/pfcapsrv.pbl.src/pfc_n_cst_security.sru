@@ -1873,6 +1873,13 @@ hprogressbar	l_hpb
 htrackbar		l_htb
 picturehyperlink l_phl
 statichyperlink l_sth
+animation		l_an
+datepicker		l_dp
+inkedit			l_ie
+inkpicture		l_ip
+monthcalendar		l_mc
+webbrowser		l_wb
+tabbedbar		l_tb
 			
 If as_itemname = '' Then
 	If as_object = '' Then
@@ -1884,23 +1891,19 @@ else
 	ls_itemname = as_itemname
 End If
 
+// Nothing to process on tabbed control
+IF ls_itemname = 'mditbb_1' THEN Return 0
+
 Choose Case typeof(ago_item) 
-	Case menu!
-		l_menu = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_menu.enabled, l_menu.visible)
-		If Not l_menu.visible Then 
-			// OK, lets see if it has a toolbar and make it invisible as well
-			l_menu.toolbaritemvisible = False
-		End If
-	Case commandbutton!
-		l_cb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_cb.enabled, l_cb.visible)
+	Case animation!
+		l_an = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_an.enabled, l_an.visible)
 	Case checkbox!
 		l_cbx = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_cbx.enabled, l_cbx.visible)
-	Case radiobutton!
-		l_rb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_rb.enabled, l_rb.visible)
+	Case commandbutton!
+		l_cb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_cb.enabled, l_cb.visible)
 	Case datawindow!
 		l_dw = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_dw.enabled, l_dw.visible)
@@ -1918,111 +1921,136 @@ Choose Case typeof(ago_item)
 			ids_items.sort() 
 			li_numset += of_setdatawindowcolumns(l_dw)
 		End If
-
 		is_currfilter = ls_orig_filter
 		IF ids_items.SetFilter(ls_orig_filter) <> 1 Then Return -1
 		IF ids_items.Filter() <> 1 Then Return -1
 		il_numberofrows = ids_items.RowCount()
 		// resort in case the filter reordered things
 		ids_items.sort() 
-	Case userobject!
-		l_uo = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_uo.enabled, l_uo.visible)
-	Case tab!
-		l_tab = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_tab.enabled, l_tab.visible)
-	Case listbox!
-		l_lb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_lb.enabled, l_lb.visible)
+	Case datepicker!
+		l_dp = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_dp.enabled, l_dp.visible)
 	Case dropdownlistbox!
 		l_ddlb = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_ddlb.enabled, l_ddlb.visible)
 	Case dropdownpicturelistbox!
 		l_ddplb = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_ddplb.enabled, l_ddplb.visible)
-	Case singlelineedit!
-		l_sle = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_sle.enabled, l_sle.visible)
-	Case multilineedit!
-		l_mle = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_mle.enabled, l_mle.visible)
 	Case editmask!
 		l_em = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_em.enabled, l_em.visible)
-	Case picturelistbox! 
-		l_plb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_plb.enabled, l_plb.visible)
-	Case richtextedit!
-		l_rte = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_rte.enabled, l_rte.visible)
-	Case statictext!
-		l_st = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_st.enabled, l_st.visible)
-	Case groupbox!
-		l_gb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_gb.enabled, l_gb.visible)
-	Case treeview!
-		l_tv = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_tv.enabled, l_tv.visible)
-	Case listview!
-		l_lv = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_lv.enabled, l_lv.visible)
-	Case olecustomcontrol!
-		l_ocx = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_ocx.enabled, l_ocx.visible)
-	Case picturebutton! 
-		l_pb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_pb.enabled, l_pb.visible)
 	Case graph!
 		l_graph = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_graph.enabled, l_graph.visible)
-	Case vscrollbar! // scroll bars can only be visible or invisible not enabled
-		l_vsb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vsb.visible)
+	Case groupbox!
+		l_gb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_gb.enabled, l_gb.visible)
+	Case hprogressbar!
+		l_hpb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_hpb.visible)
 	Case hscrollbar!
 		l_hsb = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_hsb.visible)
-	Case picture!
-		l_pic = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_pic.enabled, l_pic.visible)
+	Case htrackbar! 
+		l_htb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_htb.visible)
+	Case inkedit!
+		l_ie = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_ie.enabled, l_ie.visible)
+	Case inkpicture!
+		l_ip = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_ip.enabled, l_ip.visible)
 	Case line! 
 		l_line = ago_item
 		setnull(lb_null)
 		li_numset = of_SetState(as_window, ls_itemname, lb_null, l_line.visible)
+	Case listbox!
+		l_lb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_lb.enabled, l_lb.visible)
+	Case listview!
+		l_lv = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_lv.enabled, l_lv.visible)
+	Case menu!
+		l_menu = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_menu.enabled, l_menu.visible)
+		If Not l_menu.visible Then 
+			// OK, lets see if it has a toolbar and make it invisible as well
+			l_menu.toolbaritemvisible = False
+		End If
+	Case monthcalendar!
+		l_mc= ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_mc.enabled, l_mc.visible)
+	Case multilineedit!
+		l_mle = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_mle.enabled, l_mle.visible)
+	Case olecontrol!
+		l_oc = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_oc.enabled, l_oc.visible)
+	Case olecustomcontrol!
+		l_ocx = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_ocx.enabled, l_ocx.visible)
 	Case oval!
 		l_oval = ago_item
 		setnull(lb_null)
 		li_numset = of_SetState(as_window, ls_itemname, lb_null, l_oval.visible)
+	Case picture!
+		l_pic = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_pic.enabled, l_pic.visible)
+	Case picturebutton! 
+		l_pb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_pb.enabled, l_pb.visible)
+	Case picturehyperlink!
+		l_phl = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_phl.enabled, l_phl.visible)
+	Case picturelistbox! 
+		l_plb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_plb.enabled, l_plb.visible)
+	Case radiobutton!
+		l_rb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_rb.enabled, l_rb.visible)
 	Case rectangle!
 		l_rectangle = ago_item
 		setnull(lb_null)
 		li_numset = of_SetState(as_window, ls_itemname, lb_null, l_rectangle.visible)
+	Case richtextedit!
+		l_rte = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_rte.enabled, l_rte.visible)
 	Case roundrectangle!
 		l_roundrectangle = ago_item
 		setnull(lb_null)
 		li_numset = of_SetState(as_window, ls_itemname, lb_null, l_roundrectangle.visible)
-	Case olecontrol!
-		l_oc = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_oc.enabled, l_oc.visible)
-	Case vprogressbar!
-		l_vpb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vpb.visible)
-	Case vtrackbar!
-		l_vtb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vtb.visible)
-	Case hprogressbar!
-		l_hpb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_hpb.visible)
-	Case htrackbar! 
-		l_htb = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_htb.visible)
-	Case picturehyperlink!
-		l_phl = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_phl.enabled, l_phl.visible)
+	Case singlelineedit!
+		l_sle = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_sle.enabled, l_sle.visible)
 	Case statichyperlink!
 		l_sth = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_sth.enabled, l_sth.visible)
-		
+	Case statictext!
+		l_st = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_st.enabled, l_st.visible)
+	Case tab!
+		l_tab = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_tab.enabled, l_tab.visible)
+//	Case tabbedbar!
+//		Return 0
+	Case treeview!
+		l_tv = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_tv.enabled, l_tv.visible)
+	Case userobject!
+		l_uo = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_uo.enabled, l_uo.visible)
+	Case vprogressbar!
+		l_vpb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vpb.visible)
+	Case vscrollbar! // scroll bars can only be visible or invisible not enabled
+		l_vsb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vsb.visible)
+	Case vtrackbar!
+		l_vtb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, lb_dummy, l_vtb.visible)
+	Case webbrowser!
+		l_wb = ago_item
+		li_numset = of_SetState(as_window, ls_itemname, l_wb.enabled, l_wb.visible)
 	Case Else 
 		// Big time error here.
 		of_Messagebox('pfc_securitystatuserror', 'of_setcontrolstatus', &
@@ -2084,44 +2112,45 @@ public function string of_gettype (windowobject a_object, ref string as_desc);//
 //
 //////////////////////////////////////////////////////////////////////////////
 
+String		ls_itemname
+
+ls_itemname = lower(classname(a_object))
+
+IF ls_itemname = 'mditbb_1' THEN
+	as_desc = ""
+	Return "TabbedBar"
+END IF
 
 choose case typeof(a_object) 
-	case commandbutton!
-		commandbutton l_cb
-		l_cb = a_object
-		as_desc = l_cb.text
-		if as_desc = '' then as_desc = of_GetTag(l_cb.tag)
-		return 'CommandButton'
+	Case animation!
+		animation l_an
+		l_an = a_object
+		as_desc = of_GetTag(l_an.tag)
+		return 'Animation'
 	case checkbox!
 		checkbox l_cbx
 		l_cbx = a_object
 		as_desc = l_cbx.text
 		if as_desc = '' then as_desc = of_GetTag(l_cbx.tag)
 		return 'CheckBox'
-	case radiobutton!
-		radiobutton l_rb
-		l_rb = a_object
-		as_desc = l_rb.text
-		if as_desc = '' then as_desc = of_GetTag(l_rb.tag)
-		return 'RadioButton'
+	case commandbutton!
+		commandbutton l_cb
+		l_cb = a_object
+		as_desc = l_cb.text
+		if as_desc = '' then as_desc = of_GetTag(l_cb.tag)
+		return 'CommandButton'
 	case datawindow!
 		datawindow l_dw
 		l_dw = a_object
 		as_desc = l_dw.title
 		if as_desc = '' then as_desc = of_GetTag(l_dw.tag)
 		return 'DataWindow'
-	case userobject!
-		userobject l_uo
-		l_uo = a_object
-		as_desc = l_uo.text
-		if as_desc = '' then as_desc = of_GetTag(l_uo.tag)
-		return 'UserObject'
-	case tab!
-		as_desc = of_GetTag(a_object.tag)
-		return 'Tab'
-	case listbox!
-		as_desc = of_GetTag(a_object.tag)
-		return 'ListBox'
+	Case datepicker!
+		datepicker l_dp
+		l_dp = a_object
+		as_desc = l_dp.text
+		if as_desc = '' then as_desc = of_GetTag(l_dp.tag)
+		return "DatePicker"
 	case dropdownlistbox!
 		dropdownlistbox l_ddlb
 		l_ddlb = a_object
@@ -2134,48 +2163,64 @@ choose case typeof(a_object)
 		as_desc = l_ddplb.text
 		if as_desc = '' then as_desc = of_GetTag(l_ddplb.tag)
 		return 'DropDownPictureListBox'
-	case singlelineedit!
-		singlelineedit l_sle
-		l_sle = a_object
-		as_desc = l_sle.text
-		if as_desc = '' then as_desc = of_GetTag(l_sle.tag)
-		return 'SingleLineEdit'
-	case multilineedit!
-		multilineedit l_mle
-		l_mle = a_object
-		as_desc = l_mle.text
-		if as_desc = '' then as_desc = of_GetTag(l_mle.tag)
-		return 'MultiLineEdit'
 	case  editmask!
 		editmask l_em
 		l_em = a_object
 		as_desc = l_em.text
 		if as_desc = '' then as_desc = of_GetTag(l_em.tag)
 		return 'EditMask'
-	case picturelistbox!
-		as_desc = of_GetTag(a_object.tag)
-		return 'PictureListBox'
-	case richtextedit!
-		as_desc = of_GetTag(a_object.tag)
-		return 'RichTextEdit'
-	case statictext!
-		statictext l_st
-		l_st = a_object
-		as_desc = l_st.text
-		if as_desc = '' then as_desc = of_GetTag(l_st.tag)
-		return 'StaticText'
+	case graph!
+		graph l_graph
+		l_graph = a_object
+		as_desc = l_graph.title
+		if as_desc = '' then as_desc = of_GetTag(l_graph.tag)
+		return 'Graph'
 	case groupbox!
 		groupbox l_gb
 		l_gb = a_object
 		as_desc = l_gb.text
 		if as_desc = '' then as_desc = of_GetTag(l_gb.tag)
 		return 'GroupBox'
-	case treeview!
+	Case hprogressbar!
 		as_desc = of_GetTag(a_object.tag)
-		return 'TreeView'
+		Return "HProgressBar"
+	Case hscrollbar!
+		as_desc = of_GetTag(a_object.tag)
+		return 'HScrollBar'
+	Case htrackbar! 
+		as_desc = of_GetTag(a_object.tag)
+		return 'HTrackBar'
+	Case inkedit!
+		inkedit l_ie
+		l_ie = a_object
+		as_desc= l_ie.text
+		If as_desc = "" Then as_desc = of_GetTag(l_ie.tag)
+		Return "InkEdit"
+	Case inkpicture!
+		inkpicture l_ip
+		l_ip = a_object
+		as_desc = of_GetTag(l_ip.tag)
+		Return "InkPicture"
+	case line!
+		as_desc = of_GetTag(a_object.tag)
+		return 'Line'
+	case listbox!
+		as_desc = of_GetTag(a_object.tag)
+		return 'ListBox'
 	case listview!
 		as_desc = of_GetTag(a_object.tag)
 		return 'ListView'
+	Case monthcalendar!
+		monthcalendar l_mc
+		l_mc = a_object
+		as_desc = of_GetTag(l_mc.tag)
+		Return "MonthCalendar"
+	case multilineedit!
+		multilineedit l_mle
+		l_mle = a_object
+		as_desc = l_mle.text
+		if as_desc = '' then as_desc = of_GetTag(l_mle.tag)
+		return 'MultiLineEdit'
 	case olecontrol!
 		as_desc = of_GetTag(a_object.tag)
 		if as_desc = '' then
@@ -2192,47 +2237,101 @@ choose case typeof(a_object)
 //			as_desc = l_ocx.classshortname
 		end if
 		return 'OCX'
-	case picturebutton!
-		picturebutton l_pb
-		l_pb = a_object
-		as_desc = l_pb.text
-		if as_desc = '' then as_desc = of_GetTag(l_pb.tag)
-		return 'PictureButton'
-	case graph!
-		graph l_graph
-		l_graph = a_object
-		as_desc = l_graph.title
-		if as_desc = '' then as_desc = of_GetTag(l_graph.tag)
-		return 'Graph'
-	case vscrollbar!
+	case oval!
 		as_desc = of_GetTag(a_object.tag)
-		return 'VScrollBar'
-	case hscrollbar!
-		as_desc = of_GetTag(a_object.tag)
-		return 'HScrollBar'
+		return 'Oval'
 	case picture!
 		picture l_pic
 		l_pic = a_object
 		as_desc = l_pic.picturename
 		if as_desc = '' then as_desc = of_GetTag(l_pic.tag)
 		return 'Picture'
-	case line!
+	case picturebutton!
+		picturebutton l_pb
+		l_pb = a_object
+		as_desc = l_pb.text
+		if as_desc = '' then as_desc = of_GetTag(l_pb.tag)
+		return 'PictureButton'
+	Case picturehyperlink!
+		picturelistbox l_phl
+		l_phl = a_object
+		as_desc = of_GetTag(l_phl.tag)
+		return 'PictureHyperlink'
+	case picturelistbox!
 		as_desc = of_GetTag(a_object.tag)
-		return 'Line'
+		return 'PictureListBox'
+	case radiobutton!
+		radiobutton l_rb
+		l_rb = a_object
+		as_desc = l_rb.text
+		if as_desc = '' then as_desc = of_GetTag(l_rb.tag)
+		return 'RadioButton'
 	case rectangle!
 		as_desc = of_GetTag(a_object.tag)
 		return 'Rectangle'
-	case oval!
+	case richtextedit!
 		as_desc = of_GetTag(a_object.tag)
-		return 'Oval'
+		return 'RichTextEdit'
 	case Roundrectangle!
 		as_desc = of_GetTag(a_object.tag)
 		return 'RoundRectangle'
+	case singlelineedit!
+		singlelineedit l_sle
+		l_sle = a_object
+		as_desc = l_sle.text
+		if as_desc = '' then as_desc = of_GetTag(l_sle.tag)
+		return 'SingleLineEdit'
+	Case statichyperlink!
+		statichyperlink l_shl
+		l_shl = a_object
+		as_desc = l_shl.text
+		if as_desc = '' then as_desc = of_GetTag(l_shl.tag)
+		return 'StaticHyperLink'
+	case statictext!
+		statictext l_st
+		l_st = a_object
+		as_desc = l_st.text
+		if as_desc = '' then as_desc = of_GetTag(l_st.tag)
+		return 'StaticText'
+	case tab!
+		as_desc = of_GetTag(a_object.tag)
+		return 'Tab'
+//	Case tabbedbar!
+//		tabbedbar	l_tb
+//		l_tb = a_object
+//		as_desc = of_GetTag(l_tb.tag)
+//		return 'TabbedBar'
+	case treeview!
+		as_desc = of_GetTag(a_object.tag)
+		return 'TreeView'
+	case userobject!
+		userobject l_uo
+		l_uo = a_object
+		as_desc = l_uo.text
+		if as_desc = '' then as_desc = of_GetTag(l_uo.tag)
+		return 'UserObject'
+	Case vprogressbar!
+		vprogressbar l_vpb
+		l_vpb = a_object
+		as_desc = of_GetTag(l_vpb.tag)
+		Return "VProgressBar"
+	case vscrollbar!
+		as_desc = of_GetTag(a_object.tag)
+		return 'VScrollBar'
+	Case vtrackbar!
+		vtrackbar l_vtb
+		l_vtb = a_object
+		as_desc = of_GetTag(l_vtb.tag)
+		Return "VTrackBar"
+	Case webbrowser!
+		webbrowser l_wb
+		l_wb = a_object
+		as_desc = of_GetTag(l_wb.tag)
+		Return "WebBrowser"
 	case else
 		as_desc = 'Unknown: ' + classname(a_object)
 		return 'Unknown'
 end choose
-
 
 end function
 
