@@ -89,10 +89,10 @@ public function integer of_ChangeDirectory (string as_NewDirectory)
 public function integer of_RemoveDirectory (string as_directoryname)
 public function string of_AssemblePath (string as_Drive, string as_DirPath, string as_FileName)
 public function integer of_FileCopy (string as_sourcefile, string as_targetfile, boolean ab_append)
-public function long of_FileRead (string as_FileName, ref blob ablb_Data)
+public function long of_fileread (string as_filename, ref blob ablb_data)
 public function long of_fileread (string as_filename, ref string as_text[])
 public function integer of_filewrite (string as_filename, string as_text, boolean ab_append)
-public function integer of_FileWrite (string as_FileName, blob ablb_Data, boolean ab_Append)
+public function integer of_filewrite (string as_filename, blob ablb_data, boolean ab_append)
 public function integer of_FileWrite (string as_filename, string as_text)
 public function integer of_FileWrite (string as_FileName, blob ablb_Data)
 public function integer of_FileCopy (string as_SourceFile, string as_TargetFile)
@@ -144,6 +144,7 @@ public function string of_gettempfilename (string vs_directory, string vs_prefix
 public function string of_gettempfilename (string vs_prefix)
 public function integer of_setfiletype (string as_filetype)
 public function string of_getfiletype ()
+public function long of_dirlist (string as_filespec, ref string as_dirlist[])
 end prototypes
 
 public function string of_getseparator ();//////////////////////////////////////////////////////////////////////////////
@@ -2481,6 +2482,45 @@ public function string of_getfiletype ();///////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
 return is_filetype
+end function
+
+public function long of_dirlist (string as_filespec, ref string as_dirlist[]);//////////////////////////////////////////////////////////////////////////////
+//	Public Function:  of_DirList
+//	Arguments:		as_FileSpec				The file spec. to list (including wildcards); an
+//													absolute path may be specified or it will
+//													be relative to the current working directory
+//						as_dirlist[]				An array of string whichl will contain
+//													the results, passed by reference.
+//	Returns:			Long
+//						The number of elements in as_DirList if successful, -1 if an error occurrs.
+//	Description:	List the contents of a directory (Name).
+//////////////////////////////////////////////////////////////////////////////
+//	Rev. History:	Version
+//						2022		Mimic native dirlist but without the need of a listbox
+//////////////////////////////////////////////////////////////////////////////
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2022, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//////////////////////////////////////////////////////////////////////////////
+
+return -1
+
 end function
 
 on pfc_n_cst_filesrv.create
