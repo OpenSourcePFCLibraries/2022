@@ -18864,7 +18864,11 @@ Choose Case as_source
 		ae_pdfmethod = distill!
 
 	Case "xslfop"
-		ae_pdfmethod = xslfop!
+		// This method is deprecated
+		return 0
+		
+	Case "nativepdf"
+		ae_pdfmethod = nativepdf!
 
 	Case Else
 		// Wrong Parameter Value

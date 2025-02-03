@@ -933,7 +933,11 @@ CHOOSE CASE ii_style
 		// Win 95 style of processing Control-clicks on Extended Selections.
 		If il_prevclickedrow > 0 Then
 			li_rc = of_RowSelectExt ( il_prevclickedrow ,ib_prevcntrl, ib_prevshift)
-		End If		
+		End If	
+		
+	CASE ELSE
+		// No Action
+		
 END CHOOSE
 
 // There is no Previous row information.
@@ -1005,6 +1009,8 @@ CHOOSE CASE ai_style
 	CASE SINGLE, MULTIPLE, EXTENDED
 		ii_style = ai_style
 		Return 1
+	CASE ELSE
+		Return -1
 END CHOOSE
 
 Return -1 
@@ -1117,6 +1123,10 @@ CHOOSE CASE ii_style
 
 	CASE EXTENDED 
 		li_rc = of_RowSelectExt (al_row, KeyDown(KeyControl!), Keydown(KeyShift!)) 
+		
+	CASE ELSE
+		//No Action
+		
 END CHOOSE
 	
 Return li_rc
@@ -1284,6 +1294,10 @@ CHOOSE CASE ii_style
 
 	CASE EXTENDED 
 		li_rc = of_KeyBRowSelectExt (al_row, Keydown(KeyControl!), Keydown(KeyShift!)) 
+		
+	CASE ELSE
+		//No Action
+		
 END CHOOSE
 	
 Return li_rc

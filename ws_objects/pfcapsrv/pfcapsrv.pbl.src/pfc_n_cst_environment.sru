@@ -300,6 +300,8 @@ Choose Case iul_OSMajorVersion
 				Else
 					is_OSEditionDesc = 'Server Standard'
 				End If
+			Case Else
+				is_OSEditionDesc = 'Unknown'
 		End Choose
 	
 	Case 5

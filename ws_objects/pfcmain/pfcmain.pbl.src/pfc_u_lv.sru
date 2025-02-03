@@ -54,7 +54,7 @@ end variables
 forward prototypes
 public function integer of_AddColumn (string as_columnname, string as_columnlabel, alignment aal_alignment, integer ai_columnwidth)
 public function integer of_AddColumn (string as_columnname, string as_columnlabel, alignment aal_alignment)
-public function integer of_AddColumn (string as_columnname, string as_columnlabel)
+public function integer of_addcolumn (string as_columnname, string as_columnlabel)
 public function integer of_addcolumn (string as_columnname)
 public function integer of_addcolumns ()
 protected function integer of_createkey ()
@@ -383,7 +383,7 @@ Return of_AddColumn(as_ColumnName, as_ColumnLabel, aal_Alignment, li_Width)
 
 end function
 
-public function integer of_AddColumn (string as_columnname, string as_columnlabel);//////////////////////////////////////////////////////////////////////////////
+public function integer of_addcolumn (string as_columnname, string as_columnlabel);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  of_AddColumn
 //
@@ -444,6 +444,8 @@ Choose Case Lower(ids_Source.Describe(as_ColumnName + ".alignment"))
 		lal_Align = Right!
 	Case "2"
 		lal_Align = Center!
+	Case Else
+		//No Action
 End Choose
 
 // Add the column to the ListView

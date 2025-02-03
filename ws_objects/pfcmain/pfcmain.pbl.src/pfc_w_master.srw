@@ -3959,6 +3959,9 @@ Else
 			Return ALLOW_CLOSE
 		Case 3
 			// CANCEL -  Prevent the window from closing
+		Case Else
+			ib_closestatus = False
+			Return PREVENT_CLOSE
 	End Choose
 End If
 

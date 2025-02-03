@@ -8,9 +8,9 @@ end type
 end forward
 
 global type pfc_u_calculator from u_base
-int Width=457
-int Height=416
-long BackColor=80263328
+integer width = 457
+integer height = 416
+long backcolor = 80263328
 event type integer pfc_dropdown ( )
 dw_calculator dw_calculator
 end type
@@ -933,6 +933,8 @@ CHOOSE CASE as_key
 		
 		// Set the new value.
 		of_SetValue (ldbl_value, True)
+	CASE ELSE
+		//No Action
 END CHOOSE
 
 // Store the previous keystroke.
@@ -2263,6 +2265,8 @@ protected function boolean of_isoperator (string as_operator);//////////////////
 CHOOSE CASE as_operator
 	CASE '/', '*', '+', '-'
 		Return True
+	CASE ELSE
+		Return False
 END CHOOSE
 
 Return False
@@ -2445,14 +2449,14 @@ end event
 
 on pfc_u_calculator.create
 int iCurrent
-call u_base::create
+call super::create
 this.dw_calculator=create dw_calculator
 iCurrent=UpperBound(this.Control)
-this.Control[iCurrent+1]=dw_calculator
+this.Control[iCurrent+1]=this.dw_calculator
 end on
 
 on pfc_u_calculator.destroy
-call u_base::destroy
+call super::destroy
 destroy(this.dw_calculator)
 end on
 
@@ -2505,17 +2509,15 @@ end event
 
 type dw_calculator from u_dw within pfc_u_calculator
 event key pbm_dwnkey
-int X=0
-int Y=0
-int Width=462
-int Height=420
-int TabOrder=20
-string DataObject="d_calculator"
-boolean VScrollBar=false
-boolean LiveScroll=false
+integer width = 462
+integer height = 420
+integer taborder = 20
+string dataobject = "d_calculator"
+boolean vscrollbar = false
+boolean livescroll = false
 end type
 
-event key;call super::key;//////////////////////////////////////////////////////////////////////////////
+event key;//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  key
 //
@@ -2577,6 +2579,8 @@ Choose Case key
 			Post of_SetFocusOnRequestor()
 		End If
 		Return
+	Case Else
+		//No Action
 End Choose
 
 // Determine what action to take.

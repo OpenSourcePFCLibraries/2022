@@ -2031,6 +2031,9 @@ choose case ii_source
 	case HEADER
 		ls_coldisplayname = of_getHeaderName (as_colname)
 		
+	CASE ELSE
+		//No Action
+		
 end choose
 
 return ls_coldisplayname
@@ -2711,71 +2714,74 @@ END IF
 ls_coltype = Lower(idw_Requestor.Describe ( as_column + ".ColType" ))
 CHOOSE CASE Left ( ls_coltype , 5 )
 
-		CASE "char(", "char"				//  CHARACTER DATATYPE
-			IF lb_editmask_used = TRUE THEN 
-				/*  Need to replace 'EditMask' characters with 'Format' characters */
-				ls_string_format = lnv_string.of_GlobalReplace ( ls_string_format, "^", "@", FALSE ) //Lowercase
-				ls_string_format = lnv_string.of_GlobalReplace ( ls_string_format, "!", "@", FALSE)	//Uppercase
-				ls_string_format = lnv_string.of_GlobalReplace ( ls_string_format, "#", "@", FALSE ) //Number
-				ls_string_format = lnv_string.of_GlobalReplace ( ls_string_format, "a", "@", TRUE ) //Aplhanumeric
-				ls_string_format = lnv_string.of_GlobalReplace ( ls_string_format, "x", "@", TRUE ) //Any Character
-			END IF 
-			ls_string = idw_Requestor.GetItemString ( al_row, as_column, adw_buffer, ab_orig_value ) 
-			ls_string = String ( ls_string, ls_string_format ) 
-	
-		CASE "date"					//  DATE DATATYPE
-			date ld_date
-			ld_date = idw_Requestor.GetItemDate ( al_row, as_column, adw_buffer, ab_orig_value ) 
-			if Len (ls_string_format) > 0 then
-				ls_string = String ( ld_date, ls_string_format ) 
-			else
-				ls_string = String (ld_date)
-			end if
+	CASE "char(", "char"				//  CHARACTER DATATYPE
+		IF lb_editmask_used = TRUE THEN 
+			/*  Need to replace 'EditMask' characters with 'Format' characters */
+			ls_string_format = lnv_string.of_GlobalReplace ( ls_string_format, "^", "@", FALSE ) //Lowercase
+			ls_string_format = lnv_string.of_GlobalReplace ( ls_string_format, "!", "@", FALSE)	//Uppercase
+			ls_string_format = lnv_string.of_GlobalReplace ( ls_string_format, "#", "@", FALSE ) //Number
+			ls_string_format = lnv_string.of_GlobalReplace ( ls_string_format, "a", "@", TRUE ) //Aplhanumeric
+			ls_string_format = lnv_string.of_GlobalReplace ( ls_string_format, "x", "@", TRUE ) //Any Character
+		END IF 
+		ls_string = idw_Requestor.GetItemString ( al_row, as_column, adw_buffer, ab_orig_value ) 
+		ls_string = String ( ls_string, ls_string_format ) 
 
-		CASE "datet"				//  DATETIME DATATYPE
-			datetime ldtm_datetime
-			ldtm_datetime = idw_Requestor.GetItemDateTime ( al_row, as_column, adw_buffer, ab_orig_value ) 
-			if Len (ls_string_format) > 0 then
-				ls_string = String ( ldtm_datetime, ls_string_format ) 
-			else
-				ls_string = String (ldtm_datetime)
-			end if
+	CASE "date"					//  DATE DATATYPE
+		date ld_date
+		ld_date = idw_Requestor.GetItemDate ( al_row, as_column, adw_buffer, ab_orig_value ) 
+		if Len (ls_string_format) > 0 then
+			ls_string = String ( ld_date, ls_string_format ) 
+		else
+			ls_string = String (ld_date)
+		end if
 
-		CASE "decim"				//  DECIMAL DATATYPE
-			decimal ldec_decimal
-			ldec_decimal = idw_Requestor.GetItemDecimal ( al_row, as_column, adw_buffer, ab_orig_value ) 
-			if Len (ls_string_format) > 0 then
-				ls_string = String ( ldec_decimal, ls_string_format ) 
-			else
-				ls_string = String (ldec_decimal)
-			end if	
-	
-		CASE "numbe", "doubl", "real"		//  DOUBLE DATATYPE	
-			double ldbl_double
-			ldbl_double = idw_Requestor.GetItemNumber ( al_row, as_column, adw_buffer, ab_orig_value ) 
-			if Len (ls_string_format) > 0 then
-				ls_string = String ( ldbl_double, ls_string_format ) 
-			else
-				ls_string = String (ldbl_double)
-			end if
-	
-		CASE "long", "ulong", "int"				//  LONG DATATYPE	
-			long ll_long
-			ll_long = idw_Requestor.GetItemNumber ( al_row, as_column, adw_buffer, ab_orig_value ) 
-			if Len (ls_string_format) > 0 then
-				ls_string = String ( ll_long, ls_string_format ) 
-			else
-				ls_string = String (ll_long)
-			end if
-	
-		CASE "time", "times"		//  TIME DATATYPE
-			time ltm_time
-			ltm_time = idw_Requestor.GetItemTime ( al_row, as_column, adw_buffer, ab_orig_value ) 
-			if Len (ls_string_format) > 0 then
-				ls_string = String ( ltm_time, ls_string_format ) 
-			else
-				ls_string = String (ltm_time)
-			end if
+	CASE "datet"				//  DATETIME DATATYPE
+		datetime ldtm_datetime
+		ldtm_datetime = idw_Requestor.GetItemDateTime ( al_row, as_column, adw_buffer, ab_orig_value ) 
+		if Len (ls_string_format) > 0 then
+			ls_string = String ( ldtm_datetime, ls_string_format ) 
+		else
+			ls_string = String (ldtm_datetime)
+		end if
+
+	CASE "decim"				//  DECIMAL DATATYPE
+		decimal ldec_decimal
+		ldec_decimal = idw_Requestor.GetItemDecimal ( al_row, as_column, adw_buffer, ab_orig_value ) 
+		if Len (ls_string_format) > 0 then
+			ls_string = String ( ldec_decimal, ls_string_format ) 
+		else
+			ls_string = String (ldec_decimal)
+		end if	
+
+	CASE "numbe", "doubl", "real"		//  DOUBLE DATATYPE	
+		double ldbl_double
+		ldbl_double = idw_Requestor.GetItemNumber ( al_row, as_column, adw_buffer, ab_orig_value ) 
+		if Len (ls_string_format) > 0 then
+			ls_string = String ( ldbl_double, ls_string_format ) 
+		else
+			ls_string = String (ldbl_double)
+		end if
+
+	CASE "long", "ulong", "int"				//  LONG DATATYPE	
+		long ll_long
+		ll_long = idw_Requestor.GetItemNumber ( al_row, as_column, adw_buffer, ab_orig_value ) 
+		if Len (ls_string_format) > 0 then
+			ls_string = String ( ll_long, ls_string_format ) 
+		else
+			ls_string = String (ll_long)
+		end if
+
+	CASE "time", "times"		//  TIME DATATYPE
+		time ltm_time
+		ltm_time = idw_Requestor.GetItemTime ( al_row, as_column, adw_buffer, ab_orig_value ) 
+		if Len (ls_string_format) > 0 then
+			ls_string = String ( ltm_time, ls_string_format ) 
+		else
+			ls_string = String (ltm_time)
+		end if
+		
+	CASE ELSE
+		// No Action
 
 END CHOOSE
 
@@ -2800,7 +2806,7 @@ END IF
 Return ls_string
 end function
 
-public function any of_buildcomparison (long al_row, string as_column);//////////////////////////////////////////////////////////////////////////////
+public function any of_buildcomparison (long al_row, string as_column);////////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  of_BuildComparison
 //
@@ -3357,122 +3363,124 @@ end if
 
 CHOOSE CASE Lower ( Left ( idw_Requestor.Describe ( as_column + ".ColType" ) , 5 ) )
 
-		CASE "char(", "char"		//  CHARACTER DATATYPE
-			li_rc = idw_Requestor.SetItem ( al_row, as_column, as_value ) 
+	CASE "char(", "char"		//  CHARACTER DATATYPE
+		li_rc = idw_Requestor.SetItem ( al_row, as_column, as_value ) 
+
+	CASE "date"			//  DATE DATATYPE
+		li_rc = idw_Requestor.SetItem ( al_row, as_column, Date (as_value) ) 
+
+	CASE "datet"		//  DATETIME DATATYPE
+		
+		ld_val = lnv_conversion.of_Date (as_value)
+		If Pos ( as_value, " " ) > 0 Then
+			/*  There was a time entered  */
+			ltm_val = lnv_conversion.of_Time (as_value)
+		Else
+			ltm_val = Time ( "00:00:00" )
+		End If
+		li_rc = idw_Requestor.SetItem (al_row, as_column, DateTime (ld_val, ltm_val))	
+
+	CASE "decim"		//  DECIMAL DATATYPE
+		/*  Replace formatting characters in passed string */
+
+		// which character is used as separator for thousand?  #11012
+		// (only read once to improve performance)
+		if is_charThousand = "" or IsNull (is_charThousand) then
+			if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
+				is_charThousand = ","
+			end if
+		end if
+		
+		ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
+		if Pos (ls_string_value, "%") > 0 then
+			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
+			ldc_val = Dec (ls_string_value) / 100
+		else
+			ldc_val = Dec (ls_string_value)
+		end if
+
+		li_rc = idw_Requestor.SetItem ( al_row, as_column, ldc_val) 
+
+	CASE "numbe", "doubl"			//  NUMBER DATATYPE	
+		/*  Replace formatting characters in passed string */
+		
+		// which character is used as separator for thousand?  #11012
+		// (only read once to improve performance)
+		if is_charThousand = "" or IsNull (is_charThousand) then
+			if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
+				is_charThousand = ","
+			end if
+		end if
+		
+		ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
+		if Pos (ls_string_value, "%") > 0 then
+			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
+			ldb_val = Double (ls_string_value) / 100
+		else
+			ldb_val = Double (ls_string_value)
+		end if
+					
+		li_rc = idw_Requestor.SetItem ( al_row, as_column, ldb_val) 
 	
-		CASE "date"			//  DATE DATATYPE
-			li_rc = idw_Requestor.SetItem ( al_row, as_column, Date (as_value) ) 
-
-		CASE "datet"		//  DATETIME DATATYPE
-			
-			ld_val = lnv_conversion.of_Date (as_value)
-			If Pos ( as_value, " " ) > 0 Then
-				/*  There was a time entered  */
-				ltm_val = lnv_conversion.of_Time (as_value)
-			Else
-				ltm_val = Time ( "00:00:00" )
-			End If
-			li_rc = idw_Requestor.SetItem (al_row, as_column, DateTime (ld_val, ltm_val))	
-
-		CASE "decim"		//  DECIMAL DATATYPE
-			/*  Replace formatting characters in passed string */
-
-			// which character is used as separator for thousand?  #11012
-			// (only read once to improve performance)
-			if is_charThousand = "" or IsNull (is_charThousand) then
-				if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
-					is_charThousand = ","
-				end if
+	CASE "real"				//  REAL DATATYPE	
+		/*  Replace formatting characters in passed string */
+		
+		// which character is used as separator for thousand?  #11012
+		// (only read once to improve performance)
+		if is_charThousand = "" or IsNull (is_charThousand) then
+			if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
+				is_charThousand = ","
 			end if
-			
-			ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
-			if Pos (ls_string_value, "%") > 0 then
-				ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
-				ldc_val = Dec (ls_string_value) / 100
-			else
-				ldc_val = Dec (ls_string_value)
-			end if
-
-			li_rc = idw_Requestor.SetItem ( al_row, as_column, ldc_val) 
+		end if
+		
+		ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
+		if Pos (ls_string_value, "%") > 0 then
+			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
+			lr_val = Real (ls_string_value) / 100
+		else
+			lr_val = Real (ls_string_value)
+		end if
+					
+		li_rc = idw_Requestor.SetItem ( al_row, as_column, lr_val) 
 	
-		CASE "numbe", "doubl"			//  NUMBER DATATYPE	
-			/*  Replace formatting characters in passed string */
-			
-			// which character is used as separator for thousand?  #11012
-			// (only read once to improve performance)
-			if is_charThousand = "" or IsNull (is_charThousand) then
-				if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
-					is_charThousand = ","
-				end if
-			end if
-			
-			ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
-			if Pos (ls_string_value, "%") > 0 then
-				ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
-				ldb_val = Double (ls_string_value) / 100
-			else
-				ldb_val = Double (ls_string_value)
-			end if
-						
-			li_rc = idw_Requestor.SetItem ( al_row, as_column, ldb_val) 
+	CASE "long", "ulong"		//  LONG/INTEGER DATATYPE	
+		/*  Replace formatting characters in passed string */
 		
-		CASE "real"				//  REAL DATATYPE	
-			/*  Replace formatting characters in passed string */
-			
-			// which character is used as separator for thousand?  #11012
-			// (only read once to improve performance)
-			if is_charThousand = "" or IsNull (is_charThousand) then
-				if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
-					is_charThousand = ","
-				end if
+		// which character is used as separator for thousand?  #11012
+		// (only read once to improve performance)
+		if is_charThousand = "" or IsNull (is_charThousand) then
+			if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
+				is_charThousand = ","
 			end if
-			
-			ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
-			if Pos (ls_string_value, "%") > 0 then
-				ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
-				lr_val = Real (ls_string_value) / 100
-			else
-				lr_val = Real (ls_string_value)
-			end if
-						
-			li_rc = idw_Requestor.SetItem ( al_row, as_column, lr_val) 
+		end if
 		
-		CASE "long", "ulong"		//  LONG/INTEGER DATATYPE	
-			/*  Replace formatting characters in passed string */
-			
-			// which character is used as separator for thousand?  #11012
-			// (only read once to improve performance)
-			if is_charThousand = "" or IsNull (is_charThousand) then
-				if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
-					is_charThousand = ","
-				end if
-			end if
-			
-			ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
-			if Pos (ls_string_value, "%") > 0 then
-				ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
-				ll_val = Long (ls_string_value) / 100
-			else
-				ll_val = Long (ls_string_value)
-			end if
-						
-			li_rc = idw_Requestor.SetItem ( al_row, as_column, ll_val) 
-		
-		CASE "time", "times"		//  TIME DATATYPE
-			li_rc = idw_Requestor.SetItem ( al_row, as_column, Time ( as_value ) ) 
+		ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
+		ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
+		if Pos (ls_string_value, "%") > 0 then
+			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
+			ll_val = Long (ls_string_value) / 100
+		else
+			ll_val = Long (ls_string_value)
+		end if
+					
+		li_rc = idw_Requestor.SetItem ( al_row, as_column, ll_val) 
+	
+	CASE "time", "times"		//  TIME DATATYPE
+		li_rc = idw_Requestor.SetItem ( al_row, as_column, Time ( as_value ) ) 
 
+	CASE ELSE
+		Return -1		
 
 END CHOOSE
 

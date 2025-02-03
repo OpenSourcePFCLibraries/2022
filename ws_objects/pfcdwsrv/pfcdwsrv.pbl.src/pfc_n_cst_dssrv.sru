@@ -1919,6 +1919,9 @@ choose case ii_source
 	case HEADER
 		ls_coldisplayname = of_getHeaderName (as_colname)
 		
+	CASE ELSE
+		//No Action
+		
 end choose
 
 return ls_coldisplayname
@@ -3078,7 +3081,9 @@ CHOOSE CASE Lower ( Left ( ids_requestor.Describe ( as_column + ".ColType" ) , 5
 		
 		CASE "time", "times"		//  TIME DATATYPE
 			li_rc = ids_requestor.SetItem ( al_row, as_column, Time ( as_value ) ) 
-
+			
+		CASE ELSE
+			Return -1
 
 END CHOOSE
 
