@@ -76,12 +76,6 @@ if ab_switch then
 				else
 					anv_filesrv = create pfcscanner_n_cst_filesrvwin32
 				end if
-			case sol2!
-				anv_filesrv = create pfcscanner_n_cst_filesrvsol2
-			case hpux!
-				anv_filesrv = create pfcscanner_n_cst_filesrvhpux
-			case aix!
-				anv_filesrv = create pfcscanner_n_cst_filesrvaix
 			case else
 				anv_filesrv = create pfcscanner_n_cst_filesrv
 		end choose
