@@ -2003,6 +2003,8 @@ Choose Case ii_collinkuse
 				of_ScrollDetails(idw_master.GetRow())
 			End If
 		End If
+	Case Else
+		//No Action
 End Choose	
 
 // Loop through the valid details and call this function on the each detail.
@@ -3466,6 +3468,8 @@ Choose Case of_GetStyle()
 		Return of_RetrieveDetails(al_row)
 	Case SCROLL
 		Return of_ScrollDetails(al_row)
+	Case ELSE
+		Return FAILURE
 End Choose 
 
 Return FAILURE 
@@ -4245,7 +4249,7 @@ public function integer of_deletedetailrows ();/////////////////////////////////
 long		ll_deletedcount
 integer	li_numdetails
 integer	li_detail
-integer	li_rc
+integer	li_rc 
 string	ls_reset[]
 
 // Determine how many details are subordinate to the requestor.
@@ -4272,6 +4276,10 @@ for li_detail = 1 to li_numdetails
 			// This will perform Discards on all Detail rows for the deleted Master row.			
 			li_rc = idw_details[li_detail].inv_Linkage.of_DeleteRows &
 						(False, is_keycols, is_keycolsvalue) 			
+		
+		CASE ELSE
+			Return FAILURE
+
 	END CHOOSE
 	If li_rc < 0 Then Exit
 	ll_deletedcount += li_rc
@@ -7345,6 +7353,9 @@ Choose Case Lower ( Left ( idw_master.Describe ( as_column + ".ColType" ) , 5 ) 
 	Case "time", "times"		
 		// TIME DATATYPE
 		ls_string = "Time('" + ls_string + "')" 
+		
+	Case Else
+		//No Action
 
 End Choose
 

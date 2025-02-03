@@ -978,7 +978,7 @@ End For
 return ll_count
 end event
 
-event pfc_insertitem;//////////////////////////////////////////////////////////////////////////////
+event type long pfc_insertitem(long al_parent, n_ds ads_source, long al_row, string as_position, long al_handle);//////////////////////////////////////////////////////////////////////////////
 //	Event:			pfc_InsertItem
 //	Arguments: 		al_parent	The handle to the Treeview item to place retrieved data under
 //						ads_source	The DataStore containing the data to be used for the new item.
@@ -1056,6 +1056,8 @@ else
 			Return this.InsertItem(al_Parent, al_handle, ltvi_new)
 		Case INSERT_FIRST
 			Return this.InsertItemFirst(al_Parent, ltvi_new)
+		Case Else
+			Return -1
 	End Choose
 End If
 

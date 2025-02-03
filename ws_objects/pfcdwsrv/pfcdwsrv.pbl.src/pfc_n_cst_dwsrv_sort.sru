@@ -497,6 +497,9 @@ CHOOSE CASE ii_style
 		of_sortIndicatorNone()
 
 		Return idw_Requestor.SetSort (lnv_return.is_rs)
+		
+	CASE ELSE
+		Return -1
 
 END CHOOSE
 
@@ -999,6 +1002,10 @@ CHOOSE CASE of_GetColumnnameSource ( )
 			anv_sortattrib.is_colnamedisplay[li_i] = &
 					of_GetHeaderName ( anv_sortattrib.is_sortcolumns[li_i] )
 		NEXT
+		
+	CASE ELSE
+		//No Action
+		
 END CHOOSE
 
 // Determine if LookUpDisplay should automatically be added when creating sort strings
@@ -1165,6 +1172,10 @@ CHOOSE CASE ai_style
 		end if
 		
 		Return 1
+		
+	CASE ELSE
+		Return -1
+		
 END CHOOSE
 
 Return -1

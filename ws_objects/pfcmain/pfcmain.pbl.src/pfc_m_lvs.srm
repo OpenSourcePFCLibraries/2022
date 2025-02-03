@@ -372,6 +372,8 @@ Choose Case ilv_Parent.View
 		This.m_list.Checked = True
 	Case ListViewReport!
 		This.m_details.Checked = True
+	Case Else
+		//No action
 End Choose
 
 end event

@@ -777,6 +777,8 @@ Choose Case awo_control.TypeOf()
 		Return ROUNDRECTANGLE
 	Case  mdiclient!
 		Return MDICLIENT
+	Case Else
+		Return "!"
 End Choose
 
 Return '!'
@@ -1168,6 +1170,8 @@ For li_cnt = 1 to li_upperbound
 				Case ROUNDRECTANGLE
 					lrrec_cntrl.X = inv_registered[li_cnt].r_x
 					lrrec_cntrl.Y = inv_registered[li_cnt].r_y
+				Case Else
+					Return -1
 			End Choose	
 		End If /* Move */
 		
@@ -1202,7 +1206,9 @@ For li_cnt = 1 to li_upperbound
 				Case ROUNDRECTANGLE
 					lrrec_cntrl.Resize (inv_registered[li_cnt].r_width, inv_registered[li_cnt].r_height)
 					li_width = lrrec_cntrl.Width
-					li_height = lrrec_cntrl.Height					
+					li_height = lrrec_cntrl.Height
+				Case Else
+					Return -1
 			End Choose		
 			
 			//Determine if the object does not support the requested Width or Height.

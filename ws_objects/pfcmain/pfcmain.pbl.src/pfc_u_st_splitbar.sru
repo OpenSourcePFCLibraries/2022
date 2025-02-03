@@ -736,6 +736,8 @@ CHOOSE CASE ai_extremetype
 								IF lov_Resize.X + lov_Resize.Width > li_MaxPoint THEN
 									li_MaxPoint	= lov_Resize.X + lov_Resize.Width
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 	
 					CASE RoundRectangle!
@@ -754,6 +756,8 @@ CHOOSE CASE ai_extremetype
 								IF lrr_Resize.X + lrr_Resize.Width > li_MaxPoint THEN
 									li_MaxPoint	= lrr_Resize.X + lrr_Resize.Width
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 				
 					CASE Rectangle!
@@ -772,6 +776,8 @@ CHOOSE CASE ai_extremetype
 								IF lr_Resize.X + lr_Resize.Width > li_MaxPoint THEN
 									li_MaxPoint	= lr_Resize.X + lr_Resize.Width
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 
 					CASE ELSE			//	Assume it's a DragObject
@@ -790,6 +796,8 @@ CHOOSE CASE ai_extremetype
 								IF ldrg_Resize.X + ldrg_Resize.Width > li_MaxPoint THEN
 									li_MaxPoint	= ldrg_Resize.X + ldrg_Resize.Width
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 					
 				END CHOOSE
@@ -817,6 +825,7 @@ CHOOSE CASE ai_extremetype
 				
 				CHOOSE CASE TypeOf(iwo_RightBottom[li_Cnt])
 					CASE Line!
+						//No Action
 					CASE Oval!
 							
 						lov_Resize		= iwo_RightBottom[li_Cnt]
@@ -833,6 +842,8 @@ CHOOSE CASE ai_extremetype
 								IF lov_Resize.X + lov_Resize.Width > li_MaxPoint THEN
 									li_MaxPoint	= lov_Resize.X + lov_Resize.Width
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 	
 					CASE RoundRectangle!
@@ -851,6 +862,8 @@ CHOOSE CASE ai_extremetype
 								IF lrr_Resize.X + lrr_Resize.Width > li_MaxPoint THEN
 									li_MaxPoint	= lrr_Resize.X + lrr_Resize.Width
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 				
 					CASE Rectangle!
@@ -869,6 +882,8 @@ CHOOSE CASE ai_extremetype
 								IF lr_Resize.X + lr_Resize.Width > li_MaxPoint THEN
 									li_MaxPoint	= lr_Resize.X + lr_Resize.Width
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 
 					CASE ELSE			//	Assume it's a DragObject
@@ -887,6 +902,8 @@ CHOOSE CASE ai_extremetype
 								IF ldrg_Resize.X + ldrg_Resize.Width > li_MaxPoint THEN
 									li_MaxPoint	= ldrg_Resize.X + ldrg_Resize.Width
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 						
 				END CHOOSE
@@ -914,6 +931,7 @@ CHOOSE CASE ai_extremetype
 				
 				CHOOSE CASE TypeOf(iwo_LeftTop[li_Cnt])
 					CASE Line!
+						// No Action
 					CASE Oval!
 							
 						lov_Resize		= iwo_LeftTop[li_Cnt]
@@ -930,6 +948,8 @@ CHOOSE CASE ai_extremetype
 								IF lov_Resize.Y + lov_Resize.Height > li_MaxPoint THEN
 									li_MaxPoint	= lov_Resize.Y + lov_Resize.Height
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 	
 					CASE RoundRectangle!
@@ -948,6 +968,8 @@ CHOOSE CASE ai_extremetype
 								IF lrr_Resize.Y + lrr_Resize.Height > li_MaxPoint THEN
 									li_MaxPoint	= lrr_Resize.Y + lrr_Resize.Height
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 				
 					CASE Rectangle!
@@ -966,6 +988,8 @@ CHOOSE CASE ai_extremetype
 								IF lr_Resize.Y + lr_Resize.Height > li_MaxPoint THEN
 									li_MaxPoint	= lr_Resize.Y + lr_Resize.Height
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 
 					CASE ELSE			//	Assume it's a DragObject
@@ -984,6 +1008,8 @@ CHOOSE CASE ai_extremetype
 								IF ldrg_Resize.Y + ldrg_Resize.Height > li_MaxPoint THEN
 									li_MaxPoint	= ldrg_Resize.Y + ldrg_Resize.Height
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 						
 				END CHOOSE
@@ -1011,6 +1037,7 @@ CHOOSE CASE ai_extremetype
 				
 				CHOOSE CASE TypeOf(iwo_RightBottom[li_Cnt])
 					CASE Line!
+						//No Action
 					CASE Oval!
 							
 						lov_Resize		= iwo_RightBottom[li_Cnt]
@@ -1027,6 +1054,8 @@ CHOOSE CASE ai_extremetype
 								IF lov_Resize.Y + lov_Resize.Height > li_MaxPoint THEN
 									li_MaxPoint	= lov_Resize.Y + lov_Resize.Height
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 	
 					CASE RoundRectangle!
@@ -1045,6 +1074,8 @@ CHOOSE CASE ai_extremetype
 								IF lrr_Resize.Y + lrr_Resize.Height > li_MaxPoint THEN
 									li_MaxPoint	= lrr_Resize.Y + lrr_Resize.Height
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 				
 					CASE Rectangle!
@@ -1063,6 +1094,8 @@ CHOOSE CASE ai_extremetype
 								IF lr_Resize.Y + lr_Resize.Height > li_MaxPoint THEN
 									li_MaxPoint	= lr_Resize.Y + lr_Resize.Height
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 
 					CASE ELSE			//	Assume it's a DragObject
@@ -1081,6 +1114,8 @@ CHOOSE CASE ai_extremetype
 								IF ldrg_Resize.Y + ldrg_Resize.Height > li_MaxPoint THEN
 									li_MaxPoint	= ldrg_Resize.Y + ldrg_Resize.Height
 								END IF
+							CASE ELSE
+								//No Action
 						END CHOOSE
 						
 				END CHOOSE
@@ -2785,6 +2820,8 @@ ElseIf ii_style = VERTICAL Then
 						CASE RIGHT_ANCHORED
 							ir_rightBottomX[li_cnt] += li_deltaX	
 							ir_rightBottomWidth[li_cnt] += li_deltaX
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lln_resize.Move(ir_rightBottomX[li_cnt], ir_rightBottomY[li_cnt])
@@ -2800,6 +2837,8 @@ ElseIf ii_style = VERTICAL Then
 							ir_rightbottomWidth[li_cnt] -= li_deltax
 						CASE RIGHT_ANCHORED
 							ir_RightBottomX[li_cnt] += li_deltax	
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lov_Resize.Move(ir_rightbottomx[li_cnt], ir_rightbottomy[li_cnt])
@@ -2815,6 +2854,8 @@ ElseIf ii_style = VERTICAL Then
 							ir_rightbottomWidth[li_cnt] -= li_deltax
 						CASE RIGHT_ANCHORED
 							ir_RightBottomX[li_cnt] += li_deltax	
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lrr_Resize.Move(ir_rightbottomx[li_cnt], ir_rightbottomy[li_cnt])
@@ -2830,6 +2871,8 @@ ElseIf ii_style = VERTICAL Then
 							ir_rightbottomWidth[li_cnt] -= li_deltax
 						CASE RIGHT_ANCHORED
 							ir_RightBottomX[li_cnt] += li_deltax	
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lr_Resize.Move(ir_rightbottomx[li_cnt], ir_rightbottomy[li_cnt])
@@ -2845,6 +2888,8 @@ ElseIf ii_style = VERTICAL Then
 							ir_rightbottomWidth[li_cnt] -= li_deltax
 						CASE RIGHT_ANCHORED
 							ir_RightBottomX[li_cnt] += li_deltax	
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					ldrg_Resize.Move(ir_rightbottomx[li_cnt], ir_rightbottomy[li_cnt])
@@ -2982,6 +3027,8 @@ CHOOSE CASE lpo_parent.TypeOf()
 		iuo_parent = lpo_parent
 	CASE Tab!
 		itab_parent = lpo_parent
+	CASE ELSE
+		//No Action
 END CHOOSE
 
 If ib_supported Then

@@ -137,6 +137,8 @@ If ab_oktopause and ib_batchmode=False Then
 		//The user either clicked on Cancel or CancelAll button
 		as_heading = ''
 		as_syntax = ''
+	Else
+		Return li_rc // An error occurred
 	End If
 
 Else
@@ -1747,11 +1749,11 @@ Return is_logfile
 end function
 
 on pfc_n_cst_sqlspy.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_sqlspy.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 
 event destructor;//////////////////////////////////////////////////////////////////////////////

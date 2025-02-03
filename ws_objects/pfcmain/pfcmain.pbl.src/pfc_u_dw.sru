@@ -370,6 +370,8 @@ if ls_type = "column" and not lb_readonly then
 						lb_desired = not lb_editstyleattrib
 					case "ddlb", "dddw"
 						lb_desired = lb_editstyleattrib
+					case else
+						//No Action
 				end choose
 				lm_dw.m_table.m_cut.Enabled = lb_desired
 			end if
@@ -384,6 +386,8 @@ if ls_type = "column" and not lb_readonly then
 						lb_desired = not lb_editstyleattrib
 					case "ddlb", "dddw"
 						lb_desired = lb_editstyleattrib
+					case else
+						//No Action
 				end choose
 				lm_dw.m_table.m_paste.Enabled = lb_desired
 			end if

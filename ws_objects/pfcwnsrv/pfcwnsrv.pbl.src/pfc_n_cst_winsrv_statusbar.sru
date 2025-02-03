@@ -4511,6 +4511,8 @@ CHOOSE Case ii_barfillstyle
 		ls_fillstyle = 'pfc_progress.width="' + string(ii_barwidth) + '" '
 		ls_fillstyle = ls_fillstyle + 'pfc_progress.height="' + string(li_newheight) + '" '
 		ls_fillstyle = ls_fillstyle + 'pfc_progress.y="' + string(li_newy) + '" '
+	Case Else
+		Return "Unknown barfillstyle"
 END CHOOSE
 
 // Set percentages on screen
@@ -4521,6 +4523,8 @@ CHOOSE CASE ii_bardisplaystyle
 		ls_barstyle = "pfc_progress_border.expression=~"'" + string(adc_completion, "#%") + "'~" "
 	CASE POSITION
 		ls_barstyle = "pfc_progress_border.expression=~"'" + string(ii_barposition, "#") + "'~" "
+	CASE ELSE
+		Return "Unknown bardisplaystyle"
 END CHOOSE
 
 return (ls_fillstyle + ls_barstyle)
@@ -4734,6 +4738,8 @@ For li_cnt = 1 to li_upper
 						'font.family="2" font.pitch="2" font.charset="0" background.mode="2" ' +&
 					') '							
 			End IF
+		CASE ELSE	
+			Return -1
 	END CHOOSE
 
 	ls_dwdefinition = ls_dwdefinition + ls_newobject

@@ -8,11 +8,11 @@ end type
 end forward
 
 global type pfc_u_progressbar from u_base
-int Width=1170
-int Height=72
-long BackColor=74481808
-long PictureMaskColor=25166016
-long TabBackColor=74481808
+integer width = 1170
+integer height = 72
+long backcolor = 74481808
+long tabbackcolor = 74481808
+long picturemaskcolor = 25166016
 dw_progress dw_progress
 end type
 global pfc_u_progressbar pfc_u_progressbar
@@ -1588,6 +1588,8 @@ CHOOSE Case ii_fillstyle
 		// vertical movement from bottom to top
 		dw_progress.object.progress_rect.y = ll_height - integer(adc_completion * ll_height)
 		dw_progress.object.progress_rect.height = integer(adc_completion * ll_height)
+	Case Else
+		Return -1
 END CHOOSE
 
 // Set percentages on screen
@@ -1757,6 +1759,8 @@ Choose Case aff_FontFamily
 		ls_FontFamily = "4"
 	Case Decorative!
 		ls_FontFamily = "5"
+	Case Else
+		Return "!"
 End Choose
 
 Choose Case afp_FontPitch
@@ -1766,6 +1770,8 @@ Choose Case afp_FontPitch
 		ls_FontPitch = "1"
 	Case Variable!
 		ls_FontPitch = "2"
+	Case Else
+		Return "!"
 End Choose
 
 If ab_Bold Then
@@ -2556,10 +2562,10 @@ dw_progress.object.pct.width = this.width
 end event
 
 type dw_progress from datawindow within pfc_u_progressbar
-int Width=384
-int Height=76
-string DataObject="d_progress"
-boolean Border=false
+integer width = 384
+integer height = 76
+string dataobject = "d_progress"
+boolean border = false
 end type
 
 event rbuttondown;//////////////////////////////////////////////////////////////////////////////

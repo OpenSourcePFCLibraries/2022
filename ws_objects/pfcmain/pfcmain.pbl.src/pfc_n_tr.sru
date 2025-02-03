@@ -1363,6 +1363,10 @@ choose case ai_filetype
 		if IsNull (this.Autocommit) then this.Autocommit = false
 		
 		li_rc = 1
+		
+	case else
+		Return -1
+		
 end choose
 
 return li_rc

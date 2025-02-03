@@ -467,6 +467,8 @@ For li_cnt = 1 to li_upper
 					If IsValid(idw_requestor.inv_rowselect) Then ls_enabled = SERVICE_ENABLED
 				Case SORT
 					If IsValid(idw_requestor.inv_sort) Then ls_enabled = SERVICE_ENABLED
+				Case ELSE
+					Return -1
 			End Choose
 			dw_services.Object.serviceenabled.Primary[li_row] = ls_enabled
 		End If	

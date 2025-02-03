@@ -3964,7 +3964,7 @@ of_SetDate (RelativeDate (id_date, 7), True)
 Return 1
 end event
 
-event key;call super::key;//////////////////////////////////////////////////////////////////////////////
+event key;//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  			key
 //
@@ -4044,6 +4044,8 @@ Choose Case key
 		this.Event pfc_NextWeek()		
 	Case KeyPageDown!
 		this.Event pfc_NextMonth()
+	Case Else
+		//No Action
 End Choose
 end event
 
@@ -4388,6 +4390,10 @@ Choose Case ls_buttonname
 	Case 'nextmonth'
 		// Request the next month.
 		this.Event pfc_NextMonth()
+		
+	Case Else
+		//No Action
+		
 End Choose
 
 this.SetFocus()

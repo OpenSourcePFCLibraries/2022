@@ -607,7 +607,6 @@ type rb_top from u_rb within pfc_w_toolbars
 integer x = 91
 integer y = 472
 integer width = 1358
-integer height = 68
 string text = "T&op"
 end type
 
@@ -658,7 +657,6 @@ type rb_bottom from u_rb within pfc_w_toolbars
 integer x = 91
 integer y = 536
 integer width = 1358
-integer height = 68
 string text = "&Bottom"
 end type
 
@@ -708,7 +706,6 @@ type rb_left from u_rb within pfc_w_toolbars
 integer x = 91
 integer y = 600
 integer width = 1358
-integer height = 68
 string text = "L&eft"
 end type
 
@@ -758,7 +755,6 @@ type rb_right from u_rb within pfc_w_toolbars
 integer x = 91
 integer y = 664
 integer width = 1358
-integer height = 68
 string text = "&Right"
 end type
 
@@ -808,7 +804,6 @@ type rb_floating from u_rb within pfc_w_toolbars
 integer x = 91
 integer y = 728
 integer width = 1358
-integer height = 68
 string text = "&Floating"
 end type
 
@@ -937,6 +932,8 @@ if ii_toolbarindex	 > 0 then
 			rb_left.checked = true
 		case floating!
 			rb_floating.checked = true
+		case else
+			// Do nothing
 	end choose
 end if
 end event
