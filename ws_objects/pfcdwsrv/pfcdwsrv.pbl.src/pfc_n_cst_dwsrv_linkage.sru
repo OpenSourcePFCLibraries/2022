@@ -162,7 +162,7 @@ protected function string of_getvalue (long al_row, string as_column)
 public function integer of_undomodified (boolean ab_all)
 end prototypes
 
-event pfc_rowfocuschanged;call super::pfc_rowfocuschanged;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_rowfocuschanged(long al_row);//////////////////////////////////////////////////////////////////////////////
 //	Event:  			pfc_rowfocuschanged
 //	Arguments: 		None
 //	Returns:  		Integer: 1 if it succeeds and -1 if an error occurs. 
@@ -259,6 +259,8 @@ For li_detail = 1 to li_numdetails
 		//  The following code is commented because it may
 		//   create extra chain of retrieve in the parent-child-grand child linkage service.
 		//   li_rc = idw_details[li_detail].inv_Linkage.Event pfc_rowfocuschanged (idw_details[li_detail].GetRow() ) 			
+	Else
+		//No Actoin
 	End If
 Next
 
@@ -761,7 +763,7 @@ ib_retrieving = False
 Return 1
 end event
 
-event pfc_rowfocuschanging;call super::pfc_rowfocuschanging;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_rowfocuschanging(long al_prevrow, long al_newrow);//////////////////////////////////////////////////////////////////////////////
 //	Event:		pfc_rowfocuschanging
 //	Arguments:	al_prevrow	The previous row.
 //					al_newrow	The new row.
@@ -848,6 +850,8 @@ If of_UpdateOnRowChange() Then
 		// There was either an error or the user requested not to go to the
 		// clicked row.
 		Return PREVENT_ACTION
+	Else
+		Return CONTINUE_ACTION
 	End If
 	
 End If
@@ -855,7 +859,7 @@ End If
 Return CONTINUE_ACTION
 end event
 
-event pfc_preinsertrow;call super::pfc_preinsertrow;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_preinsertrow();//////////////////////////////////////////////////////////////////////////////
 //	Event:		pfc_preinsertrow
 //	Arguments:	None
 //	Returns:		integer - 1 if it succeeds and the insertrow should continue.
@@ -911,13 +915,15 @@ If of_UpdateOnRowChange() Then
 
 	ElseIf  li_rc <= -1 or li_rc >= 3 Then 	
 		Return PREVENT_ACTION
+	Else
+		Return CONTINUE_ACTION		
 	End If
 End If
 
 Return CONTINUE_ACTION
 end event
 
-event pfc_clicked;call super::pfc_clicked;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_clicked(integer ai_xpos, integer ai_ypos, long al_row, dwobject adwo_obj);//////////////////////////////////////////////////////////////////////////////
 //	Event:		pfc_clicked
 //	Arguments:	ai_xpos:  	x position clicked
 //					ai_ypos:  	y position clicked
@@ -998,6 +1004,8 @@ If of_UpdateOnRowChange() Then
 		// There was either an error or the user requested not to go to the
 		// clicked row.
 		Return PREVENT_ACTION
+	Else
+		Return CONTINUE_ACTION
 	End If
 	
 End If
@@ -1426,6 +1434,8 @@ For li_i = 1 to li_numdetails
 		ElseIf li_rc >= 1 Then 
 			// Store that there is at least one datawindow that has Updates Pending.
 			li_updpending = 1
+		Else
+			//No Action
 		End If
 	End If 
 Next 
@@ -2121,6 +2131,8 @@ For li_i = 1 to li_numlinks
 				lb_performretrieve = True			
 			ElseIf la_args[li_i] <> la_detail Then 
 				lb_performretrieve = True
+			Else
+				//No Action
 			End If
 		End If 
 	End If
@@ -6260,6 +6272,8 @@ If ab_prompt Then
 	ElseIf li_option >= 3 Then
 		// 'Cancel button' Don't want to save but  keep all pending updates.
 		Return CANCEL
+	Else
+		//No Action
 	End If
 End If
 	
@@ -6278,6 +6292,8 @@ If li_rc < 0 Then
 	Return FAILURE
 ElseIf li_rc = 0 Then
 	Return NO_ACTION
+Else
+	//No Action
 End If
 
 // Successfulsave was performed.

@@ -779,6 +779,8 @@ ElseIf idw_requestor.IsSelected(al_row) And ib_rbuttonpressed And &
 	ab_cntrlpressed=False And ab_shiftpressed=False  Then
 	// Right Clicking on an already Highlighted row requires a No Action process.
 	lb_takenoaction = True
+Else
+	//No Action
 End If
 
 If lb_waitforbuttonup Then

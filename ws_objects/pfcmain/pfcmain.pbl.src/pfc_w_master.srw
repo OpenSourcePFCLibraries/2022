@@ -2547,6 +2547,8 @@ If ib_alwaysvalidate Then
 	li_validation_rc = This.Event pfc_validation(apo_control)
 ElseIf li_pending_rc > 0 Then
 	li_validation_rc = This.Event pfc_validation(ipo_pendingupdates)
+Else
+	//No Action
 End If
 If li_validation_rc <0 Then 
 	Return -3
@@ -4036,6 +4038,8 @@ If IsValid(inv_preference) Then
   				"Call of_SetRegistryUserKey on The Application Manager" +&
 				" to Set The property.", &
 				Exclamation!, OK!, 1)
+		Else
+			//No Action
 		End If
 	Else
 		If Len(gnv_app.of_GetUserIniFile()) > 0 Then
@@ -4048,6 +4052,8 @@ If IsValid(inv_preference) Then
   				"Call of_SetUserIniFile on The Application Manager" +&
 				" to Set The property.", &
 				Exclamation!, OK!, 1)		
+		Else
+			//No Action
 		End If
 	End If
 End If
@@ -4171,6 +4177,8 @@ If IsValid(inv_preference) Then
 				" been Set.  Use of_SetRegistryUserKey on The Application Manager" +&
 				" to Set The attribute.", &
 				Exclamation!, OK!, 1)				
+		Else
+			//No Action
 		End If
 	Else
 		If Len(gnv_app.of_GetUserIniFile()) > 0 Then
@@ -4183,6 +4191,8 @@ If IsValid(inv_preference) Then
 				" been Set.  Use of_SetUserIniFile on The Application Manager" +&
 				" to Set The attribute.", &
 				Exclamation!, OK!, 1)
+		Else
+			//No Action
 		End If
 	End If
 End If

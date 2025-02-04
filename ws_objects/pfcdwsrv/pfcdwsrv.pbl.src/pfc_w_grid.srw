@@ -736,6 +736,8 @@ if cbx_restore.checked = true then
 	this.event pfc_apply()
 elseif dw_1.modifiedcount( ) > 0 then
 	this.event pfc_apply()
+else
+	//No Action
 end if
 
 closewithreturn( this, "#DEFAULT#" )

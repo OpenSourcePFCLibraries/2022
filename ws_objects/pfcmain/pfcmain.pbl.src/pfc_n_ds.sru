@@ -461,7 +461,7 @@ return this.event pfc_pagesetupdlg (lstr_pagesetup)
 
 end event
 
-event pfc_pagesetupdlg;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_pagesetupdlg(ref s_pagesetupattrib astr_pagesetup);//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  pfc_pagesetupdlg
 //
@@ -586,6 +586,8 @@ if ls_portraitorientation = "0" then
 	SetNull (astr_pagesetup.b_portraitorientation)
 elseif ls_portraitorientation = "2" then
 	astr_pagesetup.b_portraitorientation = true
+else
+	//No Action
 end if
 
 // Allow pagesetup structure to have additional values
@@ -618,6 +620,8 @@ if ll_rc > 0 then
 		this.object.datawindow.print.orientation = 1
 	elseif astr_pagesetup.b_portraitorientation then
 		this.object.datawindow.print.orientation = 2
+	else
+		//No Action
 	end if
 end if
 

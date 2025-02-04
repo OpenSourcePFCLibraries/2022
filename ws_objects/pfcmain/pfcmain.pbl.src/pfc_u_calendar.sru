@@ -3352,6 +3352,8 @@ If dw_cal.RowCount()=0 Then
 ElseIf dw_cal.RowCount()> 0 Then
 	dw_cal.Reset()
 	dw_cal.InsertRow(0)
+Else
+	//Continue
 End If
 
 //Set the Title.

@@ -1770,6 +1770,8 @@ If ii_style = HORIZONTAL Then
 		li_pointery = li_miny
 	ElseIf li_pointery > li_maxy Then
 		li_pointery = li_maxy
+	Else
+		//No Action
 	End If	
 ElseIf ii_style = VERTICAL Then
 	li_minx = of_GetExtremePoint(LEFTMOST)
@@ -1778,6 +1780,8 @@ ElseIf ii_style = VERTICAL Then
 		li_pointerx = li_minx
 	ElseIf li_pointerx > li_maxx Then
 		li_pointerx = li_maxx
+	Else
+		//No Action
 	End If
 End If
 
@@ -1812,6 +1816,9 @@ ElseIf ii_style = VERTICAL Then
 		End If
 	End If
 		
+Else
+	//No Action
+
 End If
 
 Return 1
@@ -2063,6 +2070,8 @@ Else
 	ElseIf (ii_style = VERTICAL) And &
 		(ai_position = ABOVE OR ai_Position = ABOVE_ANCHORED Or ai_position = BELOW OR ai_Position = BELOW_ANCHORED) Then
 		Return -1
+	Else
+		//No Action
 	End If
 End If
 
@@ -2518,6 +2527,8 @@ If ii_style = HORIZONTAL Then
 		ai_PointerY = li_miny
 	ElseIf ai_PointerY > li_maxy Then
 		ai_PointerY = li_maxy
+	Else
+		//No Action
 	End If	
 ElseIf ii_style = VERTICAL Then
 	li_minx = of_GetExtremePoint(LEFTMOST)
@@ -2526,7 +2537,11 @@ ElseIf ii_style = VERTICAL Then
 		ai_PointerX = li_minx
 	ElseIf ai_PointerX > li_maxx Then
 		ai_PointerX = li_maxx
+	Else
+		//No Action
 	End If
+Else
+	//No Action
 End If
 
 // Calculate delta values.
@@ -2929,6 +2944,8 @@ ElseIf ii_style = VERTICAL Then
 			
 		End If
 	Next
+Else
+	//No Action
 End If
 
 // Reset the Previous position variables to UNITIALIZED.
