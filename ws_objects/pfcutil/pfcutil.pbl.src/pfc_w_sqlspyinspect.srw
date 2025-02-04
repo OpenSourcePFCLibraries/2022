@@ -23,7 +23,6 @@ global type pfc_w_sqlspyinspect from w_response
 integer width = 1673
 integer height = 792
 string title = "SQLSpy - Inspect Current SQL"
-boolean controlmenu = false
 long backcolor = 80263328
 cb_step cb_step
 cb_cancel cb_cancel
@@ -112,6 +111,8 @@ ElseIf acb_pressed = cb_resume Then
 	//Change the BatchMode in the SQLspy service.
 	gnv_app.inv_debug.inv_sqlspy.of_SetBatchMode (True)
 	li_rc	= 0
+Else
+	li_rc = -1
 End If
 
 //Close this window with the appropriate return code.

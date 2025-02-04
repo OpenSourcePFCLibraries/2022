@@ -381,6 +381,8 @@ if message.number = WM_mousewheel then
 			this.position ++
 	elseif wparam = wp_mw_up and lparam = lp_mw_up then
 			this.position --
+	else
+		//No Action
 	end if
 	this.post event pfc_positionchanged( cst_moved , this.position)
 end if

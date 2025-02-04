@@ -1443,7 +1443,7 @@ s_pagesetupattrib	lstr_pagesetup
 return this.event pfc_pagesetupdlg (lstr_pagesetup)
 end event
 
-event pfc_pagesetupdlg;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_pagesetupdlg(ref s_pagesetupattrib astr_pagesetup);//////////////////////////////////////////////////////////////////////////////
 //	Event:			pfc_pagesetupdlg
 //	Arguments:		astr_pagesetup:  page setup structure by ref
 //	Returns:			Integer - 1 if successful, 0 if user cancelled from page setup, -1 if error occured
@@ -1537,6 +1537,8 @@ if ls_portraitorientation = "0" then
 	SetNull (astr_pagesetup.b_portraitorientation)
 elseif ls_portraitorientation = "2" then
 	astr_pagesetup.b_portraitorientation = true
+else
+	//No Action
 end if
 
 // Allow pagesetup structure to have additional values
@@ -1569,6 +1571,8 @@ if ll_rc > 0 then
 		this.Object.DataWindow.Print.Orientation = 1
 	elseif astr_pagesetup.b_portraitorientation then
 		this.Object.DataWindow.Print.Orientation = 2
+	else
+		//No Action
 	end if
 end if
 
@@ -2624,6 +2628,8 @@ if IsValid(inv_Property) then
 	if inv_Property.of_IsPropertyOpen() = false then lb_desired = true
 elseif IsValid(snv_property) then
 	if snv_property.of_IsPropertyOpen() = false then lb_desired = true		
+else
+	//No Action
 end if	
 if lb_desired then
 	am_dw.m_table.m_debug.Visible = true

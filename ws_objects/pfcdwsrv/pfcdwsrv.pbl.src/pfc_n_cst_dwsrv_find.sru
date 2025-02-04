@@ -205,6 +205,8 @@ If ls_coleditstatus = 'editable' Then
 		ElseIf li_rc <= -1 Then
 			/* An unappropriate action was selected */
 			Return li_rc
+		Else
+			//No Action
 		End If
 	End If
 	
@@ -1242,6 +1244,8 @@ Choose Case Left(Lower(ls_coltype),4)
 							ls_maskedfind_selectedtext = ls_maskedfind_selectedtext + Mid(ls_find, li_count, 1)
 						ElseIf li_i > li_maskedfind_startpos + (li_maskedfind_selectedtextlen -1) Then
 								Exit
+						Else
+							//No Action
 						End If
 						li_count ++							
 					End If

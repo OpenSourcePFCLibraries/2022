@@ -921,6 +921,8 @@ If ll_currow > 0 Then
 				li_rc = dw_requestorview.SetItemStatus(ll_currow, 0, Primary!, DataModified!)
 			ElseIf le_currentstatus = DataModified! and le_desiredstatus = New! Then
 				li_rc = dw_requestorview.SetItemStatus(ll_currow, 0, Primary!, NotModified!)
+			Else
+				li_rc = 0
 			End If
 		End If
 		

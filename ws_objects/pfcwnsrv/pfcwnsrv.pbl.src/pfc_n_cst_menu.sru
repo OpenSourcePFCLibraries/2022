@@ -606,6 +606,8 @@ DO WHILE ll_i < ll_upper
 			// this item has children so add it to the list for further searching
 			ll_upper ++
 			lm_list[ll_upper] = lm_list[ll_i].item[ll_cnt]
+		Else	
+			// Keep going
 		End If
 	Next
 LOOP

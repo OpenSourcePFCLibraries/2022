@@ -43,7 +43,7 @@ protected function integer of_deleteitem (integer ai_index)
 public function integer of_unregister ()
 end prototypes
 
-event pfc_editchanged;call super::pfc_editchanged;//////////////////////////////////////////////////////////////////////////////
+event pfc_editchanged(ref long al_row, ref dwobject adwo_obj, ref string as_data);//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  		pfc_editchanged
 //
@@ -167,6 +167,10 @@ ElseIf inv_columns[ii_currentindex].s_editstyle = 'ddlb' Then
 		// Get the text found by discarding the data value (just keep the display value).
 		ls_foundtext = Left (ls_displaydata_value, Pos(ls_displaydata_value,'~t') -1)			
 	End If
+
+Else
+	//No Action
+	
 End If
 
 // For either dddw or ddlb, check if a match was found.
@@ -652,6 +656,8 @@ For li_i=1 to li_colcount
 		li_count = upperbound(inv_columns)+1
 		inv_columns[li_count].s_editstyle	= ls_editstyle
 		inv_columns[li_count].s_columnname = ls_colname		
+	Else
+		//No Action
 	End If
 Next
 
@@ -740,11 +746,13 @@ If ls_editstyle = 'dddw' Then
 		Return 1
 	End If
 ElseIf ls_editstyle = 'ddlb' Then
-		// Add DropDownListBox entry into array.
-		li_count = upperbound(inv_columns) +1
-		inv_columns[li_count].s_editstyle	= ls_editstyle
-		inv_columns[li_count].s_columnname = as_column	
-		Return 1
+	// Add DropDownListBox entry into array.
+	li_count = upperbound(inv_columns) +1
+	inv_columns[li_count].s_editstyle	= ls_editstyle
+	inv_columns[li_count].s_columnname = as_column	
+	Return 1
+Else
+	Return 0		
 End If	
 
 // The column was not added.
@@ -1086,6 +1094,8 @@ For li_i=1 to li_colcount
 		// Add entry into array.
 		li_count = upperbound(ls_allcolumns)+1
 		ls_allcolumns[li_count] = ls_colname		
+	Else
+		//No Action
 	End If
 Next
 

@@ -2333,6 +2333,8 @@ IF Not ab_orig_value Then
 		ELSEIF ls_editstyle = 'checkbox' THEN
 			ls_evaluateexp = "Evaluate('LookUpDisplay(" + as_column + ")', " + String(al_row) + ")"
 			ls_string = ls_string + "~t" + ids_Requestor.Describe (ls_evaluateexp) 
+		ELSE
+			//No Action
 		END IF
 	END IF
 END IF

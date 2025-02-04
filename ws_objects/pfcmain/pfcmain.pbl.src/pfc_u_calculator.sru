@@ -913,7 +913,9 @@ CHOOSE CASE as_key
 			// Perform a Repeat Math operation.
 			If of_PerformMath (ldbl_value, is_repeatoperator, idbl_repeatvalue) < 0 Then
 				Return -1
-			End If			
+			End If	
+		Else
+			//Continue
 		End If
 
 		// Keep track of the last repeat action.

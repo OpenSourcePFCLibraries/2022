@@ -2662,6 +2662,9 @@ ElseIf ienv_object.ostype = WindowsNT! Then
 	Else
 		ls_os = 'windowsnt4x'
 	End If
+Else
+	//Default
+	ls_os = 'windowsnt4x'	
 End If
 
 // Default Micro Help Start Value Height.
@@ -2680,6 +2683,9 @@ li_microhelpheight = li_microhelpheight - ii_microhelpsubtractvalue
 If ls_os = 'windows3x' Then
 	li_microhelpheight = li_microhelpheight - ii_microhelpwin3xsubtractvalue
 ElseIf ls_os = 'windowsnt3x' Then
+	li_microhelpheight = li_microhelpheight - ii_microhelpwinnt3xsubtractvalue
+Else
+	//Default
 	li_microhelpheight = li_microhelpheight - ii_microhelpwinnt3xsubtractvalue
 End If
 
