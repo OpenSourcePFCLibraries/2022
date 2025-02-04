@@ -80,7 +80,7 @@ public function integer of_ConvertToRow (any aa_columnvalues[], ref n_ds ads_obj
 protected function integer of_RegisterDataSource (string as_method, string as_dataobject, n_tr atr_obj, string as_sql, powerobject apo_data[], datawindow adw_control, datastore ads_control, string as_importfile)
 public function integer of_ConfirmDelete (long al_amount)
 public function integer of_RegisterReportColumn ()
-public function boolean of_CanUndo (ref string as_undotype)
+public function boolean of_canundo (ref string as_undotype)
 protected function integer of_SetCache (boolean ab_switch)
 public function integer of_GetTransObject (ref n_tr atr_obj)
 public function integer of_GetDataRow (integer ai_item, ref n_ds ads_source, ref long al_row)
@@ -88,7 +88,7 @@ protected function integer of_Register (string as_labelcolumn, string as_dwobjec
 public function integer of_UnRegister ()
 public function integer of_RegisterReportColumn (n_ds ads_obj, string as_columnname, string as_columnlabel, alignment aal_alignment, integer ai_columnwidth)
 public function integer of_RegisterReportColumn (n_ds ads_obj, string as_columnname, string as_columnlabel, alignment aal_alignment)
-public function integer of_RegisterReportColumn (n_ds ads_obj, string as_columnname, string as_columnlabel)
+public function integer of_registerreportcolumn (n_ds ads_obj, string as_columnname, string as_columnlabel)
 public function integer of_RegisterReportColumn (n_ds ads_obj, string as_columnname)
 public function integer of_UnRegisterReportColumn ()
 public function integer of_UnRegisterReportColumn (integer ai_column)
@@ -396,7 +396,7 @@ if ilv_requestor.SetItem(ll_undohandle, llvi_item) < 1 then return -1
 return 1
 end event
 
-event pfc_Undo;call super::pfc_Undo;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_undo();//////////////////////////////////////////////////////////////////////////////
 //	Event:			pfc_Undo
 //	Arguments:		None
 //	Returns:			integer
@@ -441,6 +441,8 @@ if of_CanUndo(ls_undotype) then
 			return this.event pfc_UndoInsert()
 		case UNDO_EDIT
 			return this.event pfc_UndoEdit()
+		case else
+			return 0
 	end choose
 end if
 
@@ -2312,7 +2314,7 @@ public function integer of_RegisterReportColumn ();/////////////////////////////
 return of_RegisterReportColumn(inv_Attrib.ids_Source)
 end function
 
-public function boolean of_CanUndo (ref string as_undotype);//////////////////////////////////////////////////////////////////////////////
+public function boolean of_canundo (ref string as_undotype);//////////////////////////////////////////////////////////////////////////////
 //	Public Function:	of_CanUndo
 //	Arguments:		as_undotype		The type of undo we are performing.  Passed by reference
 //	Returns:			Boolean
@@ -2355,6 +2357,8 @@ choose case is_UndoType
 		// Good style.
 		as_undotype = is_UndoType
 		return true
+	case else
+		return false
 end choose
 
 return false
@@ -2822,7 +2826,7 @@ li_Width = Integer(ads_obj.Describe(as_ColumnName + ".width"))
 return of_RegisterReportColumn(ads_obj, as_ColumnName, as_ColumnLabel, aal_Alignment, li_Width)
 end function
 
-public function integer of_RegisterReportColumn (n_ds ads_obj, string as_columnname, string as_columnlabel);//////////////////////////////////////////////////////////////////////////////
+public function integer of_registerreportcolumn (n_ds ads_obj, string as_columnname, string as_columnlabel);//////////////////////////////////////////////////////////////////////////////
 //	Public Function:	of_RegisterReportColumn
 //	Arguments:		ads_obj			The data store which holds the column information of as_columnname
 //						as_ColumnName	The column in the DataWindow object to add as a column in the ListView. 
@@ -2873,6 +2877,8 @@ choose case Lower(ads_obj.Describe(as_ColumnName + ".alignment"))
 		lal_Align = Right!
 	case "2"
 		lal_Align = Center!
+	case else
+		//No Action
 end choose
 
 // Add the column to the ListView
@@ -3902,6 +3908,8 @@ if ads_obj <> inv_Attrib.ids_Source then
 			// datamodified! and notmodified!  = notmodified!
 			inv_Attrib.ids_Source.SetItemStatus(ll_rowcount, 0, primary!, datamodified!)
 			inv_Attrib.ids_Source.SetItemStatus(ll_rowcount, 0, primary!, notmodified!)
+		case else
+			//No Action
 	end choose
 	al_row = ll_rowcount
 end if
@@ -3953,11 +3961,11 @@ return li_newindex
 end function
 
 on pfc_n_cst_lvsrv_datasource.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_lvsrv_datasource.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 
 event destructor;//////////////////////////////////////////////////////////////////////////////

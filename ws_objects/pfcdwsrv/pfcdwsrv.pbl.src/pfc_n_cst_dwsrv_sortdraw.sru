@@ -115,6 +115,8 @@ IF Lower(Right(vs_DWObject, 2)) = of_getDefaultHeaderSuffix() THEN
 					END IF
 				CASE RIGHT
 					ll_X				= ll_X + Long(vdw_Sort.Describe(vs_DWObject + '.Width')) - invo_conversion.of_ConvertUnitsX(12, invo_conversion.Pixels, Long(vdw_sort.Describe('DataWindow.Units')))
+				CASE ELSE
+					//No Action
 			END CHOOSE
 			
 			of_drawAscending(vdw_Sort, ll_X, ll_Y)
@@ -137,6 +139,8 @@ IF Lower(Right(vs_DWObject, 2)) = of_getDefaultHeaderSuffix() THEN
 						END IF
 					CASE RIGHT
 						ll_X			= ll_X + Long(vdw_Sort.Describe(vs_DWObject + '.Width')) - invo_conversion.of_ConvertUnitsX(12, invo_conversion.Pixels, Long(vdw_sort.Describe('DataWindow.Units')))
+					CASE ELSE
+						//No Action
 				END CHOOSE
 
 				of_drawDescending(vdw_Sort, ll_X, ll_Y)

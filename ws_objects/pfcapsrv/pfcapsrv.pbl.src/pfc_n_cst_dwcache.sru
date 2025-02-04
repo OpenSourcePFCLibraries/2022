@@ -1527,6 +1527,10 @@ Choose Case inv_cachelist[li_id].s_method
 			Return ll_rows
 		End If
 		Return -1
+		
+	CASE ELSE
+		//No Action
+		
 End Choose
 
 // Cache does not support Refresh operations.
@@ -1632,6 +1636,8 @@ Choose Case as_method
 		If IsNull(as_dwobjectname) or Len(as_dwobjectname)= 0 Then
 			Return -1
 		End If		
+	Case Else
+		//No Action
 End Choose
 
 // Method dependent validation.
@@ -1668,6 +1674,9 @@ Choose Case as_method
 		If IsNull(as_importfile) or Not FileExists(as_importfile) Then
 			Return -1
 		End If
+		
+	Case Else
+		// No Action
 
 End Choose
 
@@ -1785,6 +1794,10 @@ Choose Case as_method
 	
 		// Keep track if an initial load needs to be performed.
 		lb_initialload = ab_initialload
+		
+	Case Else
+		//No Action
+		
 End Choose
 
 // If appropriate, perform the initialload of data.

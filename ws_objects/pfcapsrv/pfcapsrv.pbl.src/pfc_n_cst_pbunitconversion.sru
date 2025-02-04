@@ -670,6 +670,8 @@ CHOOSE CASE vl_FromUnits
 		ll_Width				= of_InchesToPBUnitsX(vdbl_Units / 1000)
 	CASE CENTIMETER_1000ths
 		ll_Width				= of_InchesToPBUnitsX(invo_measurementConversion.of_distance_centimetersToInches(vdbl_Units / 1000))
+	CASE ELSE
+		//No Action
 END CHOOSE
 
 //	Now convert PBUnits to destination units
@@ -682,6 +684,8 @@ CHOOSE CASE vl_ToUnits
 		ll_Width				= Truncate(of_PBUnitsToInchesX(ll_Width) * 1000, 0)
 	CASE CENTIMETER_1000ths
 		ll_Width				= Truncate(invo_measurementConversion.of_distance_inchesToCentimeters(of_PBUnitsToInchesX(ll_Width)) * 1000, 0)
+	CASE ELSE
+		//No Action
 END CHOOSE
 
 Return(ll_Width)
@@ -750,6 +754,8 @@ CHOOSE CASE vl_FromUnits
 		ll_Height			= of_InchesToPBUnitsY(vdbl_Units / 1000)
 	CASE CENTIMETER_1000ths
 		ll_Height			= of_InchesToPBUnitsY(invo_measurementConversion.of_distance_centimetersToInches(vdbl_Units / 1000))
+	CASE ELSE
+		//No Action
 END CHOOSE
 
 //	Now convert PBUnits to destination units
@@ -762,6 +768,8 @@ CHOOSE CASE vl_ToUnits
 		ll_Height			= Truncate(of_PBUnitsToInchesY(ll_Height) * 1000, 0)
 	CASE CENTIMETER_1000ths
 		ll_Height			= Truncate(invo_measurementConversion.of_distance_inchesToCentimeters(of_PBUnitsToInchesY(ll_Height)) * 1000, 0)
+	CASE ELSE
+		//No Action
 END CHOOSE
 
 Return(ll_Height)

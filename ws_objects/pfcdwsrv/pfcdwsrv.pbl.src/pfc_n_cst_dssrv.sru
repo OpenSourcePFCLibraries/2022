@@ -2313,6 +2313,9 @@ CHOOSE CASE Left ( ls_coltype , 5 )
 			else
 				ls_string = String (ltm_time)
 			end if
+		
+	CASE ELSE
+		//No Action
 
 END CHOOSE
 

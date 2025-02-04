@@ -853,6 +853,7 @@ Choose Case inv_errorattrib.ie_icon
 	Case Else
 			li_bmp = 0			
 End Choose
+
 If li_bmp > 0 Then
 	lv_bmp.X = lv_bmp.X - 30
 	llvi_item.PictureIndex = li_bmp
@@ -963,6 +964,10 @@ Choose Case inv_errorattrib.ie_buttonstyle
 			cb_1.visible = True
 			cb_2.visible = True
 			cb_3.visible = True
+			
+		Case Else
+			//No Action
+			
 End Choose
 
 // Size and Move controls around to	match the window information.

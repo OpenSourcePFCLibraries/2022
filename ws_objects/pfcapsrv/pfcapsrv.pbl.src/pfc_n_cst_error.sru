@@ -1777,6 +1777,8 @@ Else
 						inv_errorpass = Message.powerobjectparm
 					End If			
 				End If
+			Case Else
+				//No Action
 	End Choose
 End If
 
@@ -2840,6 +2842,8 @@ CHOOSE CASE ai_style
 	CASE TAB_DELIMITED, NEWLINE_DELIMITED
 		ii_logfilestyle = ai_style
 		Return 1
+	CASE ELSE
+		Return -1
 END CHOOSE
 
 Return -1

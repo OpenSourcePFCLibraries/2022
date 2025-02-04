@@ -423,6 +423,9 @@ CHOOSE CASE ii_style
 			is_filterout = of_GetFilter()
 		End If
 		Return li_rc
+		
+	CASE ELSE
+		Return -1
 
 END CHOOSE
 
@@ -551,8 +554,11 @@ CHOOSE CASE ai_style
 				end if
 			end if
 		end if
-		
 		Return 1
+		
+	CASE ELSE
+		Return -1
+		
 END CHOOSE
 
 Return -1
@@ -741,6 +747,10 @@ CHOOSE CASE of_GetColumNnameSource ( )
 			anv_filterattrib.is_colnamedisplay[li_i] = &
 					of_GetHeaderName ( anv_filterattrib.is_columns[li_i] )
 		NEXT
+		
+	CASE ELSE
+		//No Action
+		
 END CHOOSE
 
 Return 1
@@ -984,10 +994,10 @@ Return 1
 end function
 
 on pfc_n_cst_dwsrv_filter.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_dwsrv_filter.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 
