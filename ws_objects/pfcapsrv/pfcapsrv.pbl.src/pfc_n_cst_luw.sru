@@ -336,6 +336,9 @@ For li_i = 1 to li_max
 				Continue
 			End If
 
+		Case Else
+			//No Action
+			
 	End Choose
 		
 	// -- An object which 'may' be a SUO has been encountered. --		
@@ -1080,6 +1083,9 @@ For li_i = 1 to li_max
 				If li_rc < 0 Then Return -1
 				Continue
 			End If				
+			
+		Case Else
+			//No Action
 
 	End Choose
 			
@@ -1233,6 +1239,9 @@ For li_i = 1 to li_max
 				Continue
 			End If
 
+		Case Else
+			//No Action
+			
 	End Choose 
 			
 	// -- An object which 'may' be a SUO has been encountered. --
@@ -1415,6 +1424,9 @@ For li_i = 1 to li_max
 				Continue
 			End If				
 
+		Case Else
+			//No Action
+	
 	End Choose
 			
 	// -- An object which 'may' be a SUO has been encountered. --			
@@ -1581,7 +1593,8 @@ For li_i = 1 to li_max
 				If li_rc < 0 Then Return -1
 				Continue
 			End If			
-
+		Case Else
+			//No Action
 	End Choose
 			
 	// -- An object which 'may' be a SUO has been encountered. --
@@ -2542,7 +2555,8 @@ For li_i = 1 to li_max
 				If li_rc < 0 Then Return -1
 				Continue
 			End If
-
+		Case Else
+			//No Action
 	End Choose 
 			
 	// -- An object which 'may' be a SUO has been encountered. --

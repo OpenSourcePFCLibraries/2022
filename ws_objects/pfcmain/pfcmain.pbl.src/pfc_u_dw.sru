@@ -454,6 +454,8 @@ if IsValid (inv_QueryMode) then
 							lb_desired = not lb_editstyleattrib
 						case "ddlb", "dddw"
 							lb_desired = lb_editstyleattrib
+						case else
+							//No Action
 					end choose
 					// Enablement based on column				
 					lm_dw.m_table.m_values.Enabled = lb_desired

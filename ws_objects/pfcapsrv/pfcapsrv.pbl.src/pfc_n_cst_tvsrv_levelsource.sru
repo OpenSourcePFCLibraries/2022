@@ -226,7 +226,7 @@ Return CONTINUE_ACTION
 
 end event
 
-event pfc_undo;call super::pfc_undo;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_undo();//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:		pfc_Undo
 //
@@ -283,6 +283,8 @@ If of_CanUndo(ls_undotype) then
 			return this.event pfc_undoinsert()
 		Case UNDO_EDIT
 			return this.event pfc_undoedit()
+		Case Else
+			Return 0
 	End Choose
 End If
 
@@ -3047,6 +3049,8 @@ CHOOSE CASE is_undotype
 		// Good style.
 		as_undotype = is_undotype
 		Return TRUE
+	CASE ELSE
+		Return FALSE
 END CHOOSE
 
 Return FALSE
@@ -3200,6 +3204,8 @@ Do While ll_Child > 0
 		Case DISCARD_ROWS
 			// This will perform Discards on all Children rows for the deleted Master row.
 			If ads_obj.RowsDiscard(ll_Row, ll_Row, Primary!) < 1 Then Return -1
+		CASE ELSE
+			//No Action
 	End Choose
 	
 	ll_Next = itv_requestor.FindItem(NextTreeItem!, ll_Child)
@@ -6156,6 +6162,8 @@ If ads_obj <> inv_attrib[li_Index].ids_obj Then
 			// datamodified! and notmodified!  = notmodified!
 			inv_attrib[li_Index].ids_obj.SetItemStatus(ll_rowcount, 0, primary!, datamodified!)
 			inv_attrib[li_Index].ids_obj.SetItemStatus(ll_rowcount, 0, primary!, notmodified!)
+		case else
+			//No Action
 	end choose
 	al_row = inv_attrib[li_Index].ids_obj.RowCount()
 End If
@@ -6175,6 +6183,8 @@ Choose Case Lower(as_Position)
 		ll_newhandle = itv_requestor.InsertItem(al_Parent, al_After, atvi_Item)
 	Case itv_requestor.INSERT_FIRST
 		ll_newhandle = itv_requestor.InsertItemFirst(al_Parent, atvi_Item)
+	Case Else
+		//No Action
 End Choose
 
 // Remember for Undo capability
@@ -6259,6 +6269,8 @@ If IsValid(gnv_app.inv_debug) Then
 				ls_sqlspymessage = ls_sqlspymessage + 'TOPDOWN: '
 			Case BOTTOMUP
 				 ls_sqlspymessage = ls_sqlspymessage + 'BOTTOMTOP: '
+			Case Else
+				//No Action
 		End Choose
 		If ab_insert Then
 			ls_sqlspymessage = ls_sqlspymessage + 'Insert '
@@ -6296,6 +6308,8 @@ Choose Case ai_direction
 			End If
 		Next 
 		Return 1
+	Case Else
+		Return -1
 End Choose
 
 Return -1
@@ -6556,11 +6570,11 @@ Return ll_NewRows
 end function
 
 on pfc_n_cst_tvsrv_levelsource.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_tvsrv_levelsource.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 
 event constructor;//////////////////////////////////////////////////////////////////////////////

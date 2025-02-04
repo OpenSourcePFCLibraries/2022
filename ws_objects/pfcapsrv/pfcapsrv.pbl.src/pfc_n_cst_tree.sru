@@ -217,6 +217,9 @@ choose case inv_compare.of_compare(anv_keynode,anv_currentnode)
 			return of_search(anv_currentnode,anv_keynode)
 		end if
 		
+	case else
+		Return -1
+		
 end choose
 
 return -1
@@ -339,6 +342,8 @@ else
 						end if
 						anv_currentnode.of_setbalance(0)
 						ab_height = false
+					case else
+						//No Action
 				end choose
 			end if		
 		case inv_compare.GREATERTHAN 
@@ -387,12 +392,16 @@ else
 						end if
 						anv_currentnode.of_setbalance(0)
 						ab_height = false
+					case else
+						//No Action
 				end choose				
 			end if			
 		case inv_compare.EQUAL
 			// return an error (do not allow nodes with the same key)
 			ab_height = false
 			return 0
+		case else
+			//No Action
 	end choose
 end if
 
@@ -496,6 +505,8 @@ choose case anv_currentnode.of_getbalance() // left branch has become less high
 			anv_currentnode = lnv_pivot2
 			lnv_pivot2.of_setbalance(0)
 		end if
+	case else
+		//No Action
 end choose
 return 1
 
@@ -596,6 +607,8 @@ choose case anv_currentnode.of_getbalance() // right branch has become less high
 			anv_currentnode = lnv_pivot2
 			lnv_pivot2.of_setbalance(0)
 		end if
+	case else
+		//No Action
 end choose
 return 1
 
@@ -1339,10 +1352,10 @@ return of_addnode(anv_currentnode,inv_root,lb_height)
 end function
 
 on pfc_n_cst_tree.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_tree.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 

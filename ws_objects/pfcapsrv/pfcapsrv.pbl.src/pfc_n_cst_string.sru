@@ -3168,6 +3168,7 @@ if  ll_tmp = 0 or ll_tmp > ll_length then return false
 
 // Apply specified validation rule for local part of Email Address
 choose case ai_emailaddresscheckrule
+		
 	case cst_hotmail_rule
 		// Do not allow following special characters
 		if match( ls_local_part, '[!#%/`{|}]' ) = true then return false
@@ -3196,6 +3197,9 @@ choose case ai_emailaddresscheckrule
 		
 		// allows special characters but only between quotation marks
 		if this.of_issurroundedby( ls_local_part , '"', "!#$%&'*+-/=?^_`{|}(),:;<>@[\]"+char(34)+char(32) ) = false then return false
+		
+	case else
+		return false
 		
 end choose
 

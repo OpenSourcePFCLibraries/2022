@@ -2565,6 +2565,8 @@ If ii_style = HORIZONTAL Then
 							ir_leftTopY[li_cnt] += li_deltaY		
 							ir_leftTopHeight[li_cnt] += li_deltaY		
 							lln_resize.Move(ir_leftTopX[li_cnt], ir_leftTopY[li_cnt])
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lln_resize.Resize(ir_leftTopWidth[li_cnt], ir_leftTopHeight[li_cnt])
@@ -2579,6 +2581,8 @@ If ii_style = HORIZONTAL Then
 						CASE ABOVE_ANCHORED
 							ir_LeftTopY[li_Cnt] += li_DeltaY		
 							lov_Resize.Move(ir_LeftTopX[li_Cnt], ir_LeftTopY[li_Cnt])
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lov_Resize.Resize(ir_lefttopwidth[li_cnt], ir_lefttopheight[li_cnt])
@@ -2593,6 +2597,8 @@ If ii_style = HORIZONTAL Then
 						CASE ABOVE_ANCHORED
 							ir_LeftTopY[li_Cnt] += li_DeltaY		
 							lrr_Resize.Move(ir_LeftTopX[li_Cnt], ir_LeftTopY[li_Cnt])
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lrr_Resize.Resize(ir_lefttopwidth[li_cnt], ir_lefttopheight[li_cnt])
@@ -2607,6 +2613,8 @@ If ii_style = HORIZONTAL Then
 						CASE ABOVE_ANCHORED
 							ir_LeftTopY[li_Cnt] += li_DeltaY		
 							lr_Resize.Move(ir_LeftTopX[li_Cnt], ir_LeftTopY[li_Cnt])
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lr_Resize.Resize(ir_lefttopwidth[li_cnt], ir_lefttopheight[li_cnt])
@@ -2621,6 +2629,8 @@ If ii_style = HORIZONTAL Then
 						CASE ABOVE_ANCHORED
 							ir_LeftTopY[li_Cnt] += li_DeltaY		
 							ldrg_Resize.Move(ir_LeftTopX[li_Cnt], ir_LeftTopY[li_Cnt])
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					ldrg_Resize.Resize(ir_lefttopwidth[li_cnt], ir_lefttopheight[li_cnt])
@@ -2646,6 +2656,8 @@ If ii_style = HORIZONTAL Then
 						CASE BELOW_ANCHORED
 							ir_rightBottomY[li_cnt] += li_deltaY		
 							ir_rightBottomHeight[li_cnt] += li_deltaY		
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lln_resize.Move(ir_rightBottomX[li_cnt], ir_rightBottomY[li_cnt])
@@ -2661,6 +2673,8 @@ If ii_style = HORIZONTAL Then
 							ir_rightbottomheight[li_cnt] -= li_deltay		
 						CASE BELOW_ANCHORED
 							ir_RightBottomY[li_Cnt] += li_DeltaY
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lov_Resize.Move(ir_rightbottomx[li_cnt], ir_rightbottomy[li_cnt])
@@ -2676,6 +2690,8 @@ If ii_style = HORIZONTAL Then
 							ir_rightbottomheight[li_cnt] -= li_deltay		
 						CASE BELOW_ANCHORED
 							ir_RightBottomY[li_Cnt] += li_DeltaY
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lrr_Resize.Move(ir_rightbottomx[li_cnt], ir_rightbottomy[li_cnt])
@@ -2691,6 +2707,8 @@ If ii_style = HORIZONTAL Then
 							ir_rightbottomheight[li_cnt] -= li_deltay		
 						CASE BELOW_ANCHORED
 							ir_RightBottomY[li_Cnt] += li_DeltaY
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lr_Resize.Move(ir_rightbottomx[li_cnt], ir_rightbottomy[li_cnt])
@@ -2706,6 +2724,8 @@ If ii_style = HORIZONTAL Then
 							ir_rightbottomheight[li_cnt] -= li_deltay		
 						CASE BELOW_ANCHORED
 							ir_RightBottomY[li_Cnt] += li_DeltaY
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					ldrg_Resize.Move(ir_rightbottomx[li_cnt], ir_rightbottomy[li_cnt])
@@ -2739,6 +2759,8 @@ ElseIf ii_style = VERTICAL Then
 							ir_leftTopX[li_cnt] += li_deltaX
 							ir_leftTopWidth[li_cnt] += li_deltaX
 							lln_resize.Move(ir_leftTopX[li_cnt], ir_leftTopY[li_cnt])
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lln_resize.Resize(ir_leftTopWidth[li_cnt], ir_leftTopHeight[li_cnt])
@@ -2753,6 +2775,8 @@ ElseIf ii_style = VERTICAL Then
 						CASE LEFT_ANCHORED
 							ir_LeftTopX[li_cnt] += li_deltax
 							lov_Resize.Move(ir_LeftTopX[li_Cnt], ir_LeftTopY[li_Cnt])
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lov_Resize.Resize(ir_lefttopwidth[li_cnt], ir_lefttopheight[li_cnt])
@@ -2767,6 +2791,8 @@ ElseIf ii_style = VERTICAL Then
 						CASE LEFT_ANCHORED
 							ir_LeftTopX[li_cnt] += li_deltax
 							lrr_Resize.Move(ir_LeftTopX[li_Cnt], ir_LeftTopY[li_Cnt])
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lrr_Resize.Resize(ir_lefttopwidth[li_cnt], ir_lefttopheight[li_cnt])
@@ -2781,6 +2807,8 @@ ElseIf ii_style = VERTICAL Then
 						CASE LEFT_ANCHORED
 							ir_LeftTopX[li_cnt] += li_deltax
 							lr_Resize.Move(ir_LeftTopX[li_Cnt], ir_LeftTopY[li_Cnt])
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					lr_Resize.Resize(ir_lefttopwidth[li_cnt], ir_lefttopheight[li_cnt])
@@ -2795,6 +2823,8 @@ ElseIf ii_style = VERTICAL Then
 						CASE LEFT_ANCHORED
 							ir_LeftTopX[li_cnt] += li_deltax
 							ldrg_Resize.Move(ir_LeftTopX[li_Cnt], ir_LeftTopY[li_Cnt])
+						CASE ELSE
+							//No Action
 					END CHOOSE
 					
 					ldrg_Resize.Resize(ir_lefttopwidth[li_cnt], ir_lefttopheight[li_cnt])

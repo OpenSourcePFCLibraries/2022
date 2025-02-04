@@ -371,6 +371,8 @@ If adrg_object.TypeOf() = DataWindow! Then
 				li_dwborder = of_GetSystemSetting(DWSTYLE_LOWERED)
 			CASE StyleRaised!		
 				li_dwborder = of_GetSystemSetting(DWSTYLE_RAISED)
+			CASE ELSE
+				//No Action
 		END CHOOSE
 	End If
 
@@ -613,6 +615,8 @@ do while IsValid (lpo_parent)
 						li_border = of_GetSystemSetting(STYLE_LOWERED)
 					CASE StyleRaised!		
 						li_border = of_GetSystemSetting(STYLE_RAISED)
+					CASE ELSE
+						li_border = 0
 				END CHOOSE				
 			End If			
 		CASE Tab!
@@ -620,6 +624,8 @@ do while IsValid (lpo_parent)
 			li_parentx = ltab_parent.X 
 			li_parenty = ltab_parent.Y 
 			li_border = of_GetSystemSetting(TAB_BORDER)
+		CASE ELSE
+			//No Action
 	END CHOOSE
 	li_x += li_parentx + li_border
 	li_y += li_parenty + li_border

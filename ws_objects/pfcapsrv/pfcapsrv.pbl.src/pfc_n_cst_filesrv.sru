@@ -89,10 +89,10 @@ public function integer of_ChangeDirectory (string as_NewDirectory)
 public function integer of_RemoveDirectory (string as_directoryname)
 public function string of_AssemblePath (string as_Drive, string as_DirPath, string as_FileName)
 public function integer of_FileCopy (string as_sourcefile, string as_targetfile, boolean ab_append)
-public function long of_FileRead (string as_FileName, ref blob ablb_Data)
+public function long of_fileread (string as_filename, ref blob ablb_data)
 public function long of_fileread (string as_filename, ref string as_text[])
 public function integer of_filewrite (string as_filename, string as_text, boolean ab_append)
-public function integer of_FileWrite (string as_FileName, blob ablb_Data, boolean ab_Append)
+public function integer of_filewrite (string as_filename, blob ablb_data, boolean ab_append)
 public function integer of_FileWrite (string as_filename, string as_text)
 public function integer of_FileWrite (string as_FileName, blob ablb_Data)
 public function integer of_FileCopy (string as_SourceFile, string as_TargetFile)
@@ -1534,6 +1534,8 @@ Choose Case ai_SortType
 		ls_sort = "filegroup A, filesize " + ls_ascending
 		lds_files.SetSort(ls_sort)
 		lds_files.Sort()
+	Case Else
+		//No Action
 End Choose
 	
 // unload datastores
