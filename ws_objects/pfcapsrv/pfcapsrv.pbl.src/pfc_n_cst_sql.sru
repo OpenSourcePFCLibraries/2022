@@ -96,6 +96,8 @@ For li_Cnt = 1 to li_NumStats
 			ls_SQL = ls_SQL + " SET " + astr_sql[li_Cnt].s_Columns
 		Elseif Trim(astr_sql[li_Cnt].s_Columns) <> "" Then
 			ls_SQL = ls_SQL + " " + astr_sql[li_Cnt].s_Columns
+		Else
+			//No Action
 		End if
 	End if
 
@@ -290,6 +292,9 @@ For li_Cnt = 1 to li_NumStats
 		// Parse the DELETE statement (test after 'delete from')
 		ls_Keyword[1] = "DELETE "
 		ls_Keyword[3] = " WHERE "
+		
+	Else
+		//No Action
 		
 	End if
 

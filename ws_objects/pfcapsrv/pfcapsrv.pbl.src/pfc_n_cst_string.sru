@@ -2032,6 +2032,9 @@ ElseIf ab_remove_spaces Then
 	//Remove spaces from the beginning and end of a string.
 	as_source = Trim(as_source)
 
+Else
+	//No Action
+
 End If
 
 return as_source

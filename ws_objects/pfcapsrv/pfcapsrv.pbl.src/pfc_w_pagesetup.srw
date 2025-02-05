@@ -151,7 +151,7 @@ destroy(this.cb_dlghelp)
 destroy(this.gb_margins)
 end on
 
-event open;call w_response::open;//////////////////////////////////////////////////////////////////////////////////////////
+event open;call super::open;//////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  Open
 //
@@ -224,6 +224,8 @@ if istr_pagesetup.i_units >=2 then
 		gb_margins.text = gb_margins.text + " (inches)"
 	elseif istr_pagesetup.i_units = 3 then
 		gb_margins.text = gb_margins.text + " (centimeters)"
+	else	
+		//No Action
 	end if
 end if
 
@@ -572,12 +574,10 @@ type em_left from u_em within pfc_w_pagesetup
 integer x = 1221
 integer y = 540
 integer width = 178
-integer height = 84
 integer taborder = 50
 alignment alignment = right!
 integer accelerator = 108
 string mask = "##0.00#"
-string displaydata = ""
 double increment = 0
 string minmax = ""
 end type
@@ -636,12 +636,10 @@ type em_top from u_em within pfc_w_pagesetup
 integer x = 1221
 integer y = 640
 integer width = 178
-integer height = 84
 integer taborder = 70
 alignment alignment = right!
 integer accelerator = 116
 string mask = "##0.00#"
-string displaydata = ""
 double increment = 0
 string minmax = ""
 end type
@@ -717,12 +715,10 @@ type em_right from u_em within pfc_w_pagesetup
 integer x = 1865
 integer y = 540
 integer width = 178
-integer height = 84
 integer taborder = 60
 alignment alignment = right!
 integer accelerator = 114
 string mask = "##0.00#"
-string displaydata = ""
 double increment = 0
 string minmax = ""
 end type
@@ -780,12 +776,10 @@ type em_bottom from u_em within pfc_w_pagesetup
 integer x = 1865
 integer y = 640
 integer width = 178
-integer height = 84
 integer taborder = 80
 alignment alignment = right!
 integer accelerator = 98
 string mask = "##0.00#"
-string displaydata = ""
 double increment = 0
 string minmax = ""
 end type

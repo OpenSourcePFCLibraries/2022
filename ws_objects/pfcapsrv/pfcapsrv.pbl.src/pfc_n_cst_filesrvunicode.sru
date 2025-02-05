@@ -821,6 +821,8 @@ if lui_year < 50 then
 	lui_year = lui_year + 2000
 elseif lui_year < 100 then
 	lui_year = lui_year + 1900
+else
+	//No Action
 end if 
 
 // make sure year with century is passed in

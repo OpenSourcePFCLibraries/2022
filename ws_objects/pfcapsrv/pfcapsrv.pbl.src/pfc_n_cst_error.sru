@@ -865,6 +865,8 @@ ElseIf is_msgsrc = FILE Then
 	If ids_messages.ImportFile(is_msgfile) >0 Then
 		Return 1
 	End If
+Else
+	Return -1
 End If
 
 Return -1

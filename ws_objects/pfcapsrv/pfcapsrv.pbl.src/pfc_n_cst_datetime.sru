@@ -149,6 +149,8 @@ If (of_IsLeapYear(Date(li_year, 1, 1))) Then
 		Return Date(li_year,li_month,li_day)
 	elseif (al_julian > 59) Then
 		al_julian --
+	else
+		//No Action
 	end if
 end if
 
@@ -1037,6 +1039,8 @@ ElseIf  ll_time_adjust < 0 then
 		lt_stime = time('23:59:59')
 	End If
 	lt_stime = RelativeTime(lt_stime, ll_time_adjust)
+Else
+	//No Action
 End If
 
 return(datetime(ld_sdate,lt_stime))

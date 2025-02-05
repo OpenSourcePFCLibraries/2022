@@ -12,13 +12,12 @@ end type
 end forward
 
 global type pfc_w_selection from w_response
-int X=261
-int Y=412
-int Width=841
-int Height=848
-boolean TitleBar=true
-string Title="Open"
-long BackColor=80263328
+integer x = 261
+integer y = 412
+integer width = 841
+integer height = 848
+string title = "Open"
+long backcolor = 80263328
 dw_1 dw_1
 cb_ok cb_ok
 cb_cancel cb_cancel
@@ -162,6 +161,8 @@ if IsValid (inv_selectionattrib.itr_object) then
 // Populate the DataWindow from the data passed in if supplied
 elseif UpperBound (inv_selectionattrib.ipo_data) > 0 then
 	dw_1.object.data = inv_selectionattrib.ipo_data
+Else
+	//No Action
 end if
 
 ll_rowcount = dw_1.RowCount()
@@ -305,11 +306,11 @@ CloseWithReturn (this, inv_selectionattrib)
 end event
 
 type dw_1 from u_dw within pfc_w_selection
-int X=41
-int Y=36
-int Width=727
-int Height=548
-int TabOrder=20
+integer x = 41
+integer y = 36
+integer width = 727
+integer height = 548
+integer taborder = 20
 end type
 
 event constructor;call u_dw::constructor;// Single rowselection
@@ -411,23 +412,23 @@ end if
 end event
 
 type cb_ok from u_cb within pfc_w_selection
-int X=41
-int Y=628
-int TabOrder=30
-boolean Enabled=false
-string Text="OK"
-boolean Default=true
+integer x = 41
+integer y = 628
+integer taborder = 30
+boolean enabled = false
+string text = "OK"
+boolean default = true
 end type
 
 event clicked;call u_cb::clicked;parent.event pfc_default()
 end event
 
 type cb_cancel from u_cb within pfc_w_selection
-int X=416
-int Y=628
-int TabOrder=10
-string Text="Cancel"
-boolean Cancel=true
+integer x = 416
+integer y = 628
+integer taborder = 10
+string text = "Cancel"
+boolean cancel = true
 end type
 
 event clicked;call u_cb::clicked;parent.event pfc_cancel()

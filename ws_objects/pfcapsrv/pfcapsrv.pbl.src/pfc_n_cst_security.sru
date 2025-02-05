@@ -1643,6 +1643,8 @@ IF len(ls_status) = 1 THEN
 			ab_enabled = false
 		ELSEIF NOT ab_enabled AND (ls_status = ENABLE) THEN
 			ab_enabled = true
+		Else
+			//No Action
 		END IF
 	end if
 	//  If invisible and not already invisible then make invisible
@@ -1651,6 +1653,8 @@ IF len(ls_status) = 1 THEN
 		ab_visible = false
 	ELSEIF ((ls_status = ENABLE) or (ls_status = DISABLE)) AND NOT ab_visible THEN 
 		ab_visible = true
+	ELSE
+		//No Action
 	END IF
 	
 end if
@@ -1920,6 +1924,8 @@ Choose Case typeof(ago_item)
 			// resort in case the filter reordered things
 			ids_items.sort() 
 			li_numset += of_setdatawindowcolumns(l_dw)
+		Else
+			//No Action
 		End If
 		is_currfilter = ls_orig_filter
 		IF ids_items.SetFilter(ls_orig_filter) <> 1 Then Return -1
