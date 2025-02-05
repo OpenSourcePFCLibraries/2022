@@ -1420,7 +1420,8 @@ call super::destroy
 destroy(this.ids_repository)
 end on
 
-event destructor;call super::destructor;f_setfilesrv( inv_file, false)
+event destructor;call super::destructor;
+f_setfilesrv( inv_file, false)
 
 end event
 

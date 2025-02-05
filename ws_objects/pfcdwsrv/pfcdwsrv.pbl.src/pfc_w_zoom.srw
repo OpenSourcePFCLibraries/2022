@@ -672,7 +672,8 @@ string text = "OK"
 boolean default = true
 end type
 
-event clicked;call u_cb::clicked;parent.event pfc_default()
+event clicked;call u_cb::clicked;
+parent.event pfc_default()
 end event
 
 type cb_cancel from u_cb within pfc_w_zoom
@@ -684,7 +685,8 @@ string text = "Cancel"
 boolean cancel = true
 end type
 
-event clicked;call u_cb::clicked;parent.event pfc_cancel()
+event clicked;call u_cb::clicked;
+parent.event pfc_cancel()
 end event
 
 type cb_apply from u_cb within pfc_w_zoom
@@ -696,7 +698,8 @@ boolean enabled = false
 string text = "&Apply"
 end type
 
-event clicked;call u_cb::clicked;parent.event pfc_apply()
+event clicked;call u_cb::clicked;
+parent.event pfc_apply()
 end event
 
 type dw_preview from u_dw within pfc_w_zoom
@@ -708,7 +711,8 @@ integer taborder = 0
 boolean hscrollbar = true
 end type
 
-event constructor;call u_dw::constructor;this.of_SetUpdateable (false)
+event constructor;call u_dw::constructor;
+this.of_SetUpdateable (false)
 end event
 
 type gb_1 from groupbox within pfc_w_zoom

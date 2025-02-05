@@ -258,7 +258,8 @@ end if
 CloseWithReturn (this, inv_selectionattrib)
 end event
 
-event close;call w_response::close;CloseWithReturn (this, inv_selectionattrib)
+event close;call w_response::close;
+CloseWithReturn (this, inv_selectionattrib)
 end event
 
 event pfc_cancel;call w_response::pfc_cancel;//////////////////////////////////////////////////////////////////////////////
@@ -420,7 +421,8 @@ string text = "OK"
 boolean default = true
 end type
 
-event clicked;call u_cb::clicked;parent.event pfc_default()
+event clicked;call u_cb::clicked;
+parent.event pfc_default()
 end event
 
 type cb_cancel from u_cb within pfc_w_selection
@@ -431,6 +433,7 @@ string text = "Cancel"
 boolean cancel = true
 end type
 
-event clicked;call u_cb::clicked;parent.event pfc_cancel()
+event clicked;call u_cb::clicked;
+parent.event pfc_cancel()
 end event
 

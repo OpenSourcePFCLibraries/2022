@@ -378,7 +378,8 @@ string dataobject = "d_json_repository"
 boolean hscrollbar = true
 end type
 
-event constructor;call super::constructor;ib_rmbmenu = false
+event constructor;call super::constructor;
+ib_rmbmenu = false
 end event
 
 type cb_print from u_cb within pfc_w_debugjson

@@ -2600,10 +2600,6 @@ Else
 		// LIKE, NOT LIKE
 		Case "like","not like"
 			ls_expression += "'"+ls_value+"'"
-			
-		// LIKE, NOT LIKE
-		Case "like","not like"
-			ls_expression += "'"+ls_value+"'"
 		
 		// Number
 		Case 	Else

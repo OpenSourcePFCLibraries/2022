@@ -541,7 +541,8 @@ boolean border = false
 borderstyle borderstyle = stylebox!
 end type
 
-event constructor;call super::constructor;this.of_SetUpdateable(False)
+event constructor;call super::constructor;
+this.of_SetUpdateable(False)
 end event
 
 type st_label_rootdw from u_st within pfc_u_tabpg_dwproperty_srvlinkage

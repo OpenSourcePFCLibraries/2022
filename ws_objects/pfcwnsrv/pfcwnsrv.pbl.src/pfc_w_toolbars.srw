@@ -533,7 +533,8 @@ string text = "OK"
 boolean default = true
 end type
 
-event clicked;call u_cb::clicked;parent.Event pfc_default ()
+event clicked;call u_cb::clicked;
+parent.Event pfc_default ()
 end event
 
 type cb_cancel from u_cb within pfc_w_toolbars
@@ -545,7 +546,8 @@ string text = "Cancel"
 boolean cancel = true
 end type
 
-event clicked;call u_cb::clicked;parent.Event pfc_cancel ()
+event clicked;call u_cb::clicked;
+parent.Event pfc_cancel ()
 end event
 
 type cbx_text from u_cbx within pfc_w_toolbars
@@ -558,7 +560,8 @@ long backcolor = 79741120
 string text = "&Large Buttons"
 end type
 
-event clicked;call u_cbx::clicked;cb_apply.Enabled = True
+event clicked;call u_cbx::clicked;
+cb_apply.Enabled = True
 
 end event
 
@@ -572,7 +575,8 @@ long backcolor = 79741120
 string text = "&Show Tooltips"
 end type
 
-event clicked;call u_cbx::clicked;cb_apply.Enabled = True
+event clicked;call u_cbx::clicked;
+cb_apply.Enabled = True
 
 end event
 
@@ -585,7 +589,8 @@ boolean enabled = false
 string text = "&Apply"
 end type
 
-event clicked;call u_cb::clicked;parent.Event pfc_apply ()
+event clicked;call u_cb::clicked;
+parent.Event pfc_apply ()
 end event
 
 type gb_app from groupbox within pfc_w_toolbars
@@ -995,7 +1000,8 @@ if dwo.name = "toolbarvisible" then
 end if
 end event
 
-event constructor;call super::constructor;of_SetRowSelect (true)
+event constructor;call super::constructor;
+of_SetRowSelect (true)
 ib_rmbmenu = FALSE
 end event
 
