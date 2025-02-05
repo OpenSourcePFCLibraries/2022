@@ -1053,7 +1053,8 @@ integer taborder = 10
 string text = "Assist Status change"
 end type
 
-event clicked;call super::clicked;ib_assistrowstatus = this.Checked
+event clicked;call super::clicked;
+ib_assistrowstatus = this.Checked
 end event
 
 type gb_row from u_gb within pfc_u_tabpg_dwproperty_status

@@ -182,7 +182,8 @@ event pfc_apply;call super::pfc_apply;//////////////////////////////////////////
 tab_property.Event pfc_PropertyApply()
 end event
 
-event pfc_cancel;call super::pfc_cancel;Close(This)
+event pfc_cancel;call super::pfc_cancel;
+Close(This)
 end event
 
 type cb_ok from u_cb within pfc_w_dwproperty

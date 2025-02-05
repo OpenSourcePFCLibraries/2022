@@ -386,7 +386,8 @@ string text = "OK"
 boolean default = true
 end type
 
-event clicked;call u_cb::clicked;parent.event pfc_default()
+event clicked;call u_cb::clicked;
+parent.event pfc_default()
 end event
 
 type cb_cancel from u_cb within pfc_w_logon
@@ -397,7 +398,8 @@ string text = "Cancel"
 boolean cancel = true
 end type
 
-event clicked;call u_cb::clicked;parent.event pfc_cancel()
+event clicked;call u_cb::clicked;
+parent.event pfc_cancel()
 end event
 
 type sle_userid from u_sle within pfc_w_logon
@@ -409,7 +411,8 @@ integer taborder = 10
 boolean autohscroll = true
 end type
 
-event constructor;call u_sle::constructor;this.ib_autoselect = true
+event constructor;call u_sle::constructor;
+this.ib_autoselect = true
 end event
 
 type sle_password from u_sle within pfc_w_logon
@@ -422,7 +425,8 @@ boolean autohscroll = true
 boolean password = true
 end type
 
-event constructor;call u_sle::constructor;this.ib_autoselect = true
+event constructor;call u_sle::constructor;
+this.ib_autoselect = true
 end event
 
 type st_2 from u_st within pfc_w_logon

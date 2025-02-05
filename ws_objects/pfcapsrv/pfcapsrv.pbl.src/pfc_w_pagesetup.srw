@@ -448,10 +448,12 @@ end if
 CloseWithReturn (this, istr_pagesetup)
 end event
 
-event pfc_cancel;call w_response::pfc_cancel;CloseWithReturn (this, istr_pagesetup)
+event pfc_cancel;call w_response::pfc_cancel;
+CloseWithReturn (this, istr_pagesetup)
 end event
 
-event close;call w_response::close;CloseWithReturn (this, istr_pagesetup)
+event close;call w_response::close;
+CloseWithReturn (this, istr_pagesetup)
 end event
 
 type st_size from u_st within pfc_w_pagesetup
@@ -537,7 +539,8 @@ string text = "OK"
 boolean default = true
 end type
 
-event clicked;call u_cb::clicked;parent.event pfc_default()
+event clicked;call u_cb::clicked;
+parent.event pfc_default()
 end event
 
 type cb_cancel from u_cb within pfc_w_pagesetup
@@ -549,7 +552,8 @@ string text = "Cancel"
 boolean cancel = true
 end type
 
-event clicked;call u_cb::clicked;parent.event pfc_cancel()
+event clicked;call u_cb::clicked;
+parent.event pfc_cancel()
 end event
 
 type st_left from u_st within pfc_w_pagesetup

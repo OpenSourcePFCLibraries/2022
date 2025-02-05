@@ -924,6 +924,7 @@ on pfc_n_cst_winsrv_sheetmanager.destroy
 TriggerEvent( this, "destructor" )
 end on
 
-event constructor;call super::constructor;SetNull (ie_arrange)
+event constructor;call super::constructor;
+SetNull (ie_arrange)
 end event
 

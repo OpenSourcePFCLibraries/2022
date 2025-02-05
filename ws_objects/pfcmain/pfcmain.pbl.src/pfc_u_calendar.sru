@@ -3792,7 +3792,8 @@ of_SetDate (date(li_year, li_month, li_Day), True)
 Return 1
 end event
 
-event pfc_prevmonth;call super::pfc_prevmonth;Integer li_month
+event pfc_prevmonth;call super::pfc_prevmonth;
+Integer li_month
 Integer li_year
 Integer li_day
 

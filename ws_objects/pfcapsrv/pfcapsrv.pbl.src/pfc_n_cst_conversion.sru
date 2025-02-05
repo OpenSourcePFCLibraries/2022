@@ -5633,10 +5633,7 @@ Choose Case ae_errorreturn
 		Return "eventwrongprototypeerror"
 
 	Case featurenotsupportederror!
-		Return "borderrole"
-
-	Case featurenotsupportederror!
-		Return "buttondropdowngridrole"
+		Return "featurenosupportederror"
 
 	Case filealreadyopenerror!
 		Return "filealreadyopenerror"

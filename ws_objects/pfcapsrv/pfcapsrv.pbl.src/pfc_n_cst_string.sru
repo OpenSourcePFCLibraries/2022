@@ -2019,14 +2019,14 @@ End If
 If ab_remove_spaces and ab_remove_nonprint Then
 	// Remove spaces and nonprintable characters from the beginning and end 
 	// of a string.
-	as_source = of_LeftTrim (as_source, ab_remove_spaces, ab_remove_nonprint)
-	as_source = of_RightTrim(as_source, ab_remove_spaces, ab_remove_nonprint)
+	as_source = of_LeftTrim (as_source, true, true)
+	as_source = of_RightTrim(as_source, true, true)
 
 ElseIf ab_remove_nonprint Then
 	// Remove nonprintable characters from the beginning and end
 	// of a string.
-	as_source = of_LeftTrim (as_source, ab_remove_spaces, ab_remove_nonprint)
-	as_source = of_RightTrim(as_source, ab_remove_spaces, ab_remove_nonprint)
+	as_source = of_LeftTrim (as_source, false, true)
+	as_source = of_RightTrim(as_source, false, true)
 
 ElseIf ab_remove_spaces Then
 	//Remove spaces from the beginning and end of a string.
@@ -3958,7 +3958,8 @@ on pfc_n_cst_string.destroy
 call super::destroy
 end on
 
-event constructor;call super::constructor;SetNull( cst_null )
+event constructor;call super::constructor;
+SetNull( cst_null )
 
 end event
 

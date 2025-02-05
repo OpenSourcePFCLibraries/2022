@@ -677,7 +677,7 @@ END CHOOSE
 //	Now convert PBUnits to destination units
 CHOOSE CASE vl_ToUnits
 	CASE PBUNITS
-		ll_Width				= ll_Width
+		//No Action ( we're already in PB Units)
 	CASE PIXELS
 		ll_Width				= UnitsToPixels(ll_Width, XUnitsToPixels!)
 	CASE INCHES_1000ths
@@ -761,7 +761,7 @@ END CHOOSE
 //	Now convert PBUnits to destination units
 CHOOSE CASE vl_ToUnits
 	CASE PBUNITS
-		ll_Height			= ll_Height
+		//No Action ( We're already in PB Units)
 	CASE PIXELS
 		ll_Height			= UnitsToPixels(ll_Height, YUnitsToPixels!)
 	CASE INCHES_1000ths
@@ -1556,6 +1556,7 @@ on pfc_n_cst_pbunitconversion.destroy
 call super::destroy
 end on
 
-event destructor;call super::destructor;f_setPlatform(invo_platform, FALSE)
+event destructor;call super::destructor;
+f_setPlatform(invo_platform, FALSE)
 end event
 

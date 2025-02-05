@@ -814,7 +814,8 @@ string facename = "Wingdings"
 string text = "ò"
 end type
 
-event clicked;call super::clicked;parent.event pfc_down()
+event clicked;call super::clicked;
+parent.event pfc_down()
 end event
 
 type cb_up from pfc_u_cb within pfc_w_grid
@@ -829,7 +830,8 @@ string facename = "Wingdings"
 string text = "ñ"
 end type
 
-event clicked;call super::clicked;parent.event pfc_up()
+event clicked;call super::clicked;
+parent.event pfc_up()
 end event
 
 type cb_invisible_all from pfc_u_cb within pfc_w_grid
@@ -839,7 +841,8 @@ integer taborder = 60
 string text = "Invisible All"
 end type
 
-event clicked;call super::clicked;parent.event pfc_invisibleall()
+event clicked;call super::clicked;
+parent.event pfc_invisibleall()
 end event
 
 type cb_visible_all from pfc_u_cb within pfc_w_grid
@@ -849,7 +852,8 @@ integer taborder = 50
 string text = "Visible All"
 end type
 
-event clicked;call super::clicked;parent.event pfc_visibleall()
+event clicked;call super::clicked;
+parent.event pfc_visibleall()
 end event
 
 type cb_apply from pfc_u_cb within pfc_w_grid
@@ -859,7 +863,8 @@ integer taborder = 40
 string text = "Apply"
 end type
 
-event clicked;call super::clicked;parent.event pfc_apply()
+event clicked;call super::clicked;
+parent.event pfc_apply()
 end event
 
 type cb_ok from pfc_u_cb within pfc_w_grid
@@ -870,7 +875,8 @@ string text = "OK"
 boolean default = true
 end type
 
-event clicked;call super::clicked;parent.event pfc_default()
+event clicked;call super::clicked;
+parent.event pfc_default()
 end event
 
 type cb_cancel from pfc_u_cb within pfc_w_grid
@@ -881,7 +887,8 @@ string text = "Cancel"
 boolean cancel = true
 end type
 
-event clicked;call super::clicked;parent.event pfc_cancel()
+event clicked;call super::clicked;
+parent.event pfc_cancel()
 end event
 
 type dw_1 from u_dw within pfc_w_grid

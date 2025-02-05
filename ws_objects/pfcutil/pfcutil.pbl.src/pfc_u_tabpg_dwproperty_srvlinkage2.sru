@@ -604,9 +604,6 @@ End If
 
 Return ls_syntax
 
-
-Return ls_syntax
-
 end event
 
 event constructor;call super::constructor;//////////////////////////////////////////////////////////////////////////////
@@ -656,7 +653,6 @@ type cbx_confirmondelete from u_cbx within pfc_u_tabpg_dwproperty_srvlinkage2
 integer x = 247
 integer y = 976
 integer width = 1207
-integer height = 68
 integer taborder = 70
 string text = "Confirm on &delete"
 end type
@@ -665,7 +661,6 @@ type cbx_confirmonrowchange from u_cbx within pfc_u_tabpg_dwproperty_srvlinkage2
 integer x = 247
 integer y = 852
 integer width = 1207
-integer height = 68
 integer taborder = 60
 boolean bringtotop = true
 string text = "Confirm on row &change"
@@ -675,7 +670,6 @@ type cbx_synconkeychange from u_cbx within pfc_u_tabpg_dwproperty_srvlinkage2
 integer x = 27
 integer y = 36
 integer width = 1678
-integer height = 68
 integer taborder = 10
 boolean bringtotop = true
 string text = "&Synchronize key on change"
@@ -921,7 +915,6 @@ type cbx_updateonrowchange from u_cbx within pfc_u_tabpg_dwproperty_srvlinkage2
 integer x = 174
 integer y = 724
 integer width = 1207
-integer height = 68
 integer taborder = 50
 boolean bringtotop = true
 string text = "Update on &row change"

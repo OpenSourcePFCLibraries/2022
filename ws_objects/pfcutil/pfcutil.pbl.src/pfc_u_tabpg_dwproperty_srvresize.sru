@@ -556,6 +556,7 @@ boolean border = false
 borderstyle borderstyle = stylebox!
 end type
 
-event constructor;call super::constructor;of_SetUpdateable(False)
+event constructor;call super::constructor;
+of_SetUpdateable(False)
 end event
 
