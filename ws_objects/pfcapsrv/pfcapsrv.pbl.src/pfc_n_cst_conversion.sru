@@ -869,6 +869,8 @@ ElseIf Pos (as_source, "retrieve") > 0 or &
 		Pos (as_source, "select") > 0 Then
 	a_sqlpreviewtype = PreviewSelect!
 	Return 1
+Else
+	Return -1
 End If
 
 //Invalid parameter.
@@ -946,6 +948,9 @@ ElseIf Pos (as_windowstate, "minimized") > 0 Then
 ElseIf Pos (as_windowstate, "normal") > 0 Then
 	aws_windowstate = Normal!
 	Return 1
+	
+Else
+	Return -1
 	
 End If
 
@@ -1677,6 +1682,9 @@ ElseIf Pos (as_align, "right") > 0 Then
 ElseIf Pos (as_align, "floating") > 0 Then
 	ae_toolbaralign = floating!
 	Return 1
+
+Else
+	Return -1
 	
 End If
 

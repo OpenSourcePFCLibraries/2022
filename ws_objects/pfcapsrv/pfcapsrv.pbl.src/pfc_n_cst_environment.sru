@@ -475,6 +475,8 @@ If GetSystemMetrics(SM_REMOTESESSION) > 0 Then
 	ib_IsRTSAvail   = True
 ElseIf lnv_num.of_BitwiseAnd(iui_OSSuiteMask, VER_SUITE_TERMINAL) <> 0 Then
 	ib_IsRTSAvail = True
+Else
+	//No Action
 End If
 
 // Is this session currently under remote control?

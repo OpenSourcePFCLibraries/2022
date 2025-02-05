@@ -33,9 +33,9 @@ public function integer of_rgb2xyz (s_rgb_colorattrib astr_from, ref s_xyz_color
 public function integer of_xyz2yxy (s_xyz_colorattrib astr_from, ref s_yxy_colorattrib astr_to)
 public function integer of_xyz2hunterlab (s_xyz_colorattrib astr_from, ref s_hunterlab_colorattrib astr_to)
 public function integer of_hunterlab2xyz (s_hunterlab_colorattrib astr_from, ref s_xyz_colorattrib astr_to)
-public function integer of_xyz2cielab (s_xyz_colorattrib astr_from, ref s_cielab_colorattrib astr_to)
-protected function decimal of_deg2rad (decimal adec_deg)
-public function integer of_xyz2cieluv (s_xyz_colorattrib astr_from, ref s_cieluv_colorattrib astr_to)
+protected function integer of_xyz2cielab (s_xyz_colorattrib astr_from, ref s_cielab_colorattrib astr_to)
+public function decimal of_deg2rad (decimal adec_deg)
+protected function integer of_xyz2cieluv (s_xyz_colorattrib astr_from, ref s_cieluv_colorattrib astr_to)
 public function integer of_rgb2hsl (s_rgb_colorattrib astr_from, ref s_hsl_colorattrib astr_to)
 public function integer of_hsl2rgb (s_hsl_colorattrib astr_from, ref s_rgb_colorattrib astr_to)
 public function integer of_hsv2rgb (s_hsv_colorattrib astr_from, ref s_rgb_colorattrib astr_to)
@@ -817,6 +817,8 @@ else                                    //Chromatic data...
 		astr_to.H = ( 1 / 3 ) + ldec_del_R - ldec_del_B
 	elseif ( ldec_B = ldec_var_Max ) then
 		astr_to.H = ( 2 / 3 ) + ldec_del_G - ldec_del_R
+	else
+		//No Action 
 	end if
 	
 	if ( astr_to.H < 0 ) then astr_to.H += 1
@@ -1104,6 +1106,8 @@ else                                    //Chromatic data...
 		astr_to.H = ( 1 / 3 ) + ldec_del_R - ldec_del_B
    elseif ( ldec_var_B = ldec_var_Max ) then
 		astr_to.H = ( 2 / 3 ) + ldec_del_G - ldec_del_R
+	else
+		//No Action
 	end if
 	
    if ( astr_to.H < 0 ) then astr_to.H += 1

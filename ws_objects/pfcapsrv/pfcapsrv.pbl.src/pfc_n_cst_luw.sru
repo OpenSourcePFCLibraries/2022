@@ -371,6 +371,8 @@ For li_i = 1 to li_max
 		If lds_nonpfc.ResetUpdate() < 0 Then
 			Return -1
 		End If
+	Else
+		//No Action
 	End If	
 				
 Next
@@ -697,7 +699,10 @@ If ib_alwaysvalidate Then
 	li_validation_rc = This.of_validation(apo_control)
 ElseIf li_pending_rc > 0 Then
 	li_validation_rc = This.of_validation(lpo_pending)
+Else
+	//No Action	
 End If
+
 If li_validation_rc <0 Then 
 	Return -3
 End If	
@@ -1631,6 +1636,8 @@ For li_i = 1 to li_max
 			// object to process.
 			Return -1
 		End If
+	Else
+		//No Action
 	End If	
 Next
 
@@ -2608,6 +2615,8 @@ For li_i = 1 to li_max
 				Return -1
 			End If
 		End If
+	Else
+		//No Action
 	End If
 		
 Next

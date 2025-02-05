@@ -445,6 +445,8 @@ If lnv_Platform.of_gettextsize(lw_this, "X", ls_FontFace, &
 		ii_charwidth *= 1.3		
 	ElseIf li_width >= 10 Then
 		ii_charwidth *= 1.1				
+	Else
+		//No Action
 	End If			
 
 	// If appropriate, update the line length value.
@@ -456,6 +458,8 @@ If lnv_Platform.of_gettextsize(lw_this, "X", ls_FontFace, &
 		ii_lineheight *= 1.3		
 	ElseIf li_height >= 16 Then
 		ii_lineheight *= 1.1				
+	Else
+		//No Action
 	End If		
 Else
 	// Set up an Error return value.
