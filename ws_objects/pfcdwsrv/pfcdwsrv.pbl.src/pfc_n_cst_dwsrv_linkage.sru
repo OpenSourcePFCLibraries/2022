@@ -2127,12 +2127,8 @@ For li_i = 1 to li_numlinks
 									1, inv_linkargs.is_detailcolarg[li_i] ) 
 								
 			// Handle comparisons between any variables casted to different datatypes.								
-			If IsNull(la_args[li_i]) or IsNull(la_detail) Then
-				lb_performretrieve = True			
-			ElseIf la_args[li_i] <> la_detail Then 
+			If ( IsNull(la_args[li_i]) or IsNull(la_detail) ) Or ( la_args[li_i] <> la_detail ) Then 
 				lb_performretrieve = True
-			Else
-				//No Action
 			End If
 		End If 
 	End If

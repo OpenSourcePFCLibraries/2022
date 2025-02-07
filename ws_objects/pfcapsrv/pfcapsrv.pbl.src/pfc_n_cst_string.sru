@@ -59,8 +59,8 @@ public function boolean of_isempty (string as_source)
 public function boolean of_isprintable (string as_source)
 public function boolean of_isformat (string as_source)
 public function string of_removewhitespace (string as_source)
-public function boolean of_IsComparisonOperator (string as_source)
-public function boolean of_IsArithmeticOperator (string as_source)
+public function boolean of_iscomparisonoperator (string as_source)
+public function boolean of_isarithmeticoperator (string as_source)
 public function long of_countoccurrences (string as_source, string as_target)
 public function long of_arraytostring (string as_source[], string as_delimiter, ref string as_ref_string)
 public function long of_arraytostring (string as_source[], string as_delimiter, boolean ab_processempty, ref string as_ref_string)
@@ -574,7 +574,7 @@ public function boolean of_iswhitespace (string as_source);/////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-long 		ll_count=0
+long 		ll_index
 long 		ll_length
 char		lc_char[]
 integer	li_ascii
@@ -600,11 +600,10 @@ lc_char = as_source
 
 //Perform loop around all characters
 //Quit loop if Non WhiteSpace character is found
-do while ll_count<ll_length
-	ll_count ++
-	
+For ll_Index = 1 TO ll_length
+		
 	//Get ASC code of character.
-	li_ascii = Asc (lc_char[ll_count])
+	li_ascii = Asc (lc_char[ll_index])
 	
 	If li_ascii=8	or			/* BackSpae */		 		& 
 		li_ascii=9 	or			/* Tab */		 			& 
@@ -615,11 +614,12 @@ do while ll_count<ll_length
 		li_ascii=32 Then		/* Space */		
 		//Character is a WhiteSpace.
 		//Continue with the next character.
+		Continue
 	Else
 		/* Character is Not a White Space. */
 		Return False
 	End If
-loop
+Next
 	
 // Entire string is White Space.
 return True
@@ -980,7 +980,7 @@ public function boolean of_ispunctuation (string as_source);////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-long		ll_count=0
+long		ll_index
 long		ll_length
 char		lc_char[]
 integer	li_ascii
@@ -1005,11 +1005,10 @@ lc_char = as_source
 
 //Perform loop around all characters
 //Quit loop if Non Punctuation character is found
-do while ll_count<ll_length
-	ll_count ++
+FOR ll_index = 1 TO ll_length
 	
 	//Get ASC code of character.
-	li_ascii = Asc (lc_char[ll_count])
+	li_ascii = Asc (lc_char[ll_index])
 	
 	If li_ascii=33 or			/* '!' */		 & 
 		li_ascii=34 or			/* '"' */		 & 
@@ -1021,10 +1020,11 @@ do while ll_count<ll_length
 		li_ascii=63 Then 		/* '?' */
 		//Character is a punctuation.
 		//Continue with the next character.
+		Continue
 	Else
 		Return False
 	End If
-loop
+Next
 	
 // Entire string is punctuation.
 return True
@@ -2509,7 +2509,7 @@ public function boolean of_isformat (string as_source);/////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-long		ll_count=0
+long		ll_index
 long		ll_length
 char		lc_char[]
 integer	li_ascii
@@ -2534,11 +2534,10 @@ lc_char = as_source
 
 //Perform loop around all characters
 //Quit loop if Non Operator character is found
-do while ll_count<ll_length
-	ll_count ++
+FOR ll_index = 1 TO ll_length
 	
 	//Get ASC code of character.
-	li_ascii = Asc (lc_char[ll_count])
+	li_ascii = Asc (lc_char[ll_index])
 	
 	If (li_ascii>=33 and li_ascii<=47) or &
 		(li_ascii>=58 and li_ascii<=64) or &
@@ -2546,10 +2545,11 @@ do while ll_count<ll_length
 		(li_ascii>=123 and li_ascii<=126) Then
 		//Character is a Format.
 		//Continue with the next character.
+		Continue
 	Else
 		Return False
 	End If
-loop
+Next
 	
 // Entire string is made of Format characters.
 return True
@@ -2633,7 +2633,7 @@ Return ls_source
 
 end function
 
-public function boolean of_IsComparisonOperator (string as_source);//////////////////////////////////////////////////////////////////////////////
+public function boolean of_iscomparisonoperator (string as_source);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_IsComparisonOperator
 //
@@ -2681,7 +2681,7 @@ public function boolean of_IsComparisonOperator (string as_source);/////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-long		ll_count=0
+long		ll_index
 long		ll_length
 char		lc_char[]
 integer	li_ascii
@@ -2706,28 +2706,28 @@ lc_char = as_source
 
 //Perform loop around all characters
 //Quit loop if Non Operator character is found
-do while ll_count<ll_length
-	ll_count ++
+FOR ll_index = 1 TO ll_length 
 	
 	//Get ASC code of character.
-	li_ascii = Asc (lc_char[ll_count])
+	li_ascii = Asc (lc_char[ll_index])
 	
 	If li_ascii=60 or			/* < less than */	 & 
 		li_ascii=61 or			/* = equal */		 & 
 		li_ascii=62 Then		/* > greater than */
 		//Character is an Comparison Operator.
 		//Continue with the next character.
+		Continue
 	Else
 		Return False
 	End If
-loop
+Next
 	
 // Entire string is made of Comparison Operators.
 return True
 
 end function
 
-public function boolean of_IsArithmeticOperator (string as_source);//////////////////////////////////////////////////////////////////////////////
+public function boolean of_isarithmeticoperator (string as_source);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_IsArithmeticOperator
 //
@@ -2775,7 +2775,7 @@ public function boolean of_IsArithmeticOperator (string as_source);/////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-long		ll_count=0
+long		ll_index
 long		ll_length
 char		lc_char[]
 integer	li_ascii
@@ -2800,11 +2800,10 @@ lc_char = as_source
 
 //Perform loop around all characters
 //Quit loop if Non Operator character is found
-do while ll_count<ll_length
-	ll_count ++
+For ll_index = 1 To ll_length
 	
 	//Get ASC code of character.
-	li_ascii = Asc (lc_char[ll_count])
+	li_ascii = Asc (lc_char[ll_index])
 	
 	If li_ascii=40 or			/* ( left parenthesis */	 & 
 		li_ascii=41 or			/* ) right parenthesis */	 & 
@@ -2815,10 +2814,11 @@ do while ll_count<ll_length
 		li_ascii=94 Then		/* ^ power */	
 		//Character is an operator.
 		//Continue with the next character.
+		Continue
 	Else
 		Return False
 	End If
-loop
+Next
 	
 // Entire string is made of arithmetic operators.
 return True

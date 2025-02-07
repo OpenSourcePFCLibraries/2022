@@ -5633,7 +5633,7 @@ Choose Case ae_errorreturn
 		Return "eventwrongprototypeerror"
 
 	Case featurenotsupportederror!
-		Return "featurenosupportederror"
+		Return "featurenotsupportederror"
 
 	Case filealreadyopenerror!
 		Return "filealreadyopenerror"

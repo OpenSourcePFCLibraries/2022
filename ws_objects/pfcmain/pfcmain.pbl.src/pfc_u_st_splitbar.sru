@@ -2064,14 +2064,9 @@ End If
 If IsNull(ai_position) Or ai_position < LEFT Or ai_position > BELOW_ANCHORED Then 
 	Return -1
 Else
-	If (ii_style = HORIZONTAL) And &
-		(ai_position = LEFT OR ai_Position = LEFT_ANCHORED Or ai_position = RIGHT OR ai_Position = RIGHT_ANCHORED) Then
+	If (ii_style = HORIZONTAL And (ai_position = LEFT OR ai_Position = LEFT_ANCHORED Or ai_position = RIGHT OR ai_Position = RIGHT_ANCHORED)) Or &
+	   (ii_style = VERTICAL And (ai_position = ABOVE OR ai_Position = ABOVE_ANCHORED Or ai_position = BELOW OR ai_Position = BELOW_ANCHORED)) Then
 		Return -1
-	ElseIf (ii_style = VERTICAL) And &
-		(ai_position = ABOVE OR ai_Position = ABOVE_ANCHORED Or ai_position = BELOW OR ai_Position = BELOW_ANCHORED) Then
-		Return -1
-	Else
-		//No Action
 	End If
 End If
 

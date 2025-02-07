@@ -333,7 +333,7 @@ ElseIf cb_1.Visible And cb_2.Visible And cb_3.Visible=False Then
 	cb_1.x = li_widthmidpoint - (cb_1.Width +20)
 	cb_2.x = li_widthmidpoint +20
 Else
-	cb_1.x = li_widthmidpoint - ((cb_1.Width +20) + (cb_1.width/2))
+	cb_1.x = li_widthmidpoint - (cb_1.Width +20) + (cb_1.width/2)
 	cb_2.x = li_widthmidpoint - (cb_2.width/2)
 	cb_3.x = li_widthmidpoint + (cb_3.width/2 +20)
 End If
