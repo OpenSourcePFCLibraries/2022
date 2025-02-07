@@ -1639,7 +1639,7 @@ ls_status = ids_items.GetItemString(ll_rownbr, "status")
 IF len(ls_status) = 1 THEN
 	//   do not reset the enabled attribute if it is already what we want
 	if not isnull(ab_enabled) then // if ab_enabled is null then do not change the attribute
-		IF ab_enabled AND ((ls_status = DISABLE) OR (ls_status = INVISIBLE)) THEN
+		IF ab_enabled AND (ls_status = DISABLE OR ls_status = INVISIBLE) THEN
 			ab_enabled = false
 		ELSEIF NOT ab_enabled AND (ls_status = ENABLE) THEN
 			ab_enabled = true
@@ -1651,7 +1651,7 @@ IF len(ls_status) = 1 THEN
 	//  otherwise if enabled and invisible then make visible
 	IF ls_status = INVISIBLE AND ab_visible THEN 
 		ab_visible = false
-	ELSEIF ((ls_status = ENABLE) or (ls_status = DISABLE)) AND NOT ab_visible THEN 
+	ELSEIF (ls_status = ENABLE or ls_status = DISABLE) AND NOT ab_visible THEN 
 		ab_visible = true
 	ELSE
 		//No Action

@@ -524,14 +524,10 @@ If ib_CanWow64BeChecked Then
 	If lstr_si.ui_wProcessorArchitecture = PROCESSOR_ARCHITECTURE_AMD64 &
 		Or lstr_si.ui_wProcessorArchitecture = PROCESSOR_ARCHITECTURE_IA64 Then
 		ii_OSBitness = 64
+	ElseIf lstr_si.ui_wProcessorArchitecture = PROCESSOR_ARCHITECTURE_INTEL Then
+		ii_OSBitness = 32
 	Else
-		If lstr_si.ui_wProcessorArchitecture = PROCESSOR_ARCHITECTURE_INTEL Then
-			ii_OSBitness = 32
-		Else
-			// The processor architecture value is either undefined or reserved,
-			// so assume it is 32-bit.
-			ii_OSBitness = 32
-		End If
+		ii_OSBitness = -1 // We don't know until this routine is updated
 	End If
 End If
 

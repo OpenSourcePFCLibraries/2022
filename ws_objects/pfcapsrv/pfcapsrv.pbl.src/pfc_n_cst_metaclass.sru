@@ -95,7 +95,7 @@ public function boolean of_isskipsystemmodeenabled ()
 public function boolean of_issystemdefined (classdefinition acd_class)
 public function boolean of_isystsemdefined (variabledefinition avd_variable)
 public function boolean of_issystemdefined (scriptdefinition asd_script)
-public function integer of_getnesstedclasses (classdefinition acd_class, integer ai_handlingmode, ref string as_classeslist[], readonly boolean ab_append)
+public function integer of_getnestedclasses (classdefinition acd_class, integer ai_handlingmode, ref string as_classeslist[], readonly boolean ab_append)
 public function integer of_getnestedclasses (classdefinition acd_class, integer ai_handlingmode, ref string as_classeslist[])
 public function integer of_getnestedclasses (classdefinition acd_class, ref string as_classeslist[])
 public function integer of_getnestedclasses (classdefinition acd_class, ref string as_classeslist[], boolean ab_append)
@@ -4856,7 +4856,7 @@ return (asd_script.SystemFunction <> "")
 
 end function
 
-public function integer of_getnesstedclasses (classdefinition acd_class, integer ai_handlingmode, ref string as_classeslist[], readonly boolean ab_append);//////////////////////////////////////////////////////////////////////////////
+public function integer of_getnestedclasses (classdefinition acd_class, integer ai_handlingmode, ref string as_classeslist[], readonly boolean ab_append);//////////////////////////////////////////////////////////////////////////////
 //
 // Function:		of_getnestedclasses - Syntax 1
 //
@@ -4928,8 +4928,8 @@ classdefinition	lcd_class
 if isnull( acd_class ) or not isvalid( acd_class ) then return -1
 
 // Prepare handling mode specified
-lb_handleLocalStructure = ((ai_handlingmode = cst_all) or (ai_handlingmode = cst_structure ))
-lb_handleNonVisual = ((ai_handlingmode = cst_all) or (ai_handlingmode = cst_nonvisual ))
+lb_handleLocalStructure = (ai_handlingmode = cst_all) or (ai_handlingmode = cst_structure )
+lb_handleNonVisual = (ai_handlingmode = cst_all) or (ai_handlingmode = cst_nonvisual )
 
 // if asked, append nested classes found to the specified result list
 if ab_append = true then
@@ -5012,7 +5012,7 @@ public function integer of_getnestedclasses (classdefinition acd_class, integer 
 //
 //////////////////////////////////////////////////////////////////////////////
 
-return this.of_getnesstedclasses( acd_class, ai_handlingmode, as_classeslist[], false )
+return this.of_getnestedclasses( acd_class, ai_handlingmode, as_classeslist[], false )
 
 end function
 
@@ -5069,7 +5069,7 @@ public function integer of_getnestedclasses (classdefinition acd_class, ref stri
 //
 //////////////////////////////////////////////////////////////////////////////
 
-return this.of_getnesstedclasses( acd_class, this.CST_ALL, as_classeslist, false )
+return this.of_getnestedclasses( acd_class, this.CST_ALL, as_classeslist, false )
 
 end function
 
@@ -5127,7 +5127,7 @@ public function integer of_getnestedclasses (classdefinition acd_class, ref stri
 //
 //////////////////////////////////////////////////////////////////////////////
 
-return this.of_getnesstedclasses( acd_class, this.CST_ALL, as_classeslist, ab_append )
+return this.of_getnestedclasses( acd_class, this.CST_ALL, as_classeslist, ab_append )
 
 end function
 
@@ -5185,7 +5185,7 @@ public function integer of_getnestednonvisual (classdefinition acd_class, ref st
 //
 //////////////////////////////////////////////////////////////////////////////
 
-return this.of_getnesstedclasses( acd_class, this.CST_NONVISUAL, as_classeslist, ab_append )
+return this.of_getnestedclasses( acd_class, this.CST_NONVISUAL, as_classeslist, ab_append )
 
 end function
 
@@ -5243,7 +5243,7 @@ public function integer of_getnestedstructure (classdefinition acd_class, ref st
 //
 //////////////////////////////////////////////////////////////////////////////
 
-return this.of_getnesstedclasses( acd_class, this.cst_structure, as_classeslist, ab_append )
+return this.of_getnestedclasses( acd_class, this.cst_structure, as_classeslist, ab_append )
 
 end function
 
@@ -5300,7 +5300,7 @@ public function integer of_getnestedstructure (classdefinition acd_class, ref st
 //
 //////////////////////////////////////////////////////////////////////////////
 
-return this.of_getnesstedclasses( acd_class, this.cst_structure, as_classeslist, false )
+return this.of_getnestedclasses( acd_class, this.cst_structure, as_classeslist, false )
 
 end function
 
@@ -5358,7 +5358,7 @@ public function integer of_getnestednonvisual (classdefinition acd_class, ref st
 //
 //////////////////////////////////////////////////////////////////////////////
 
-return this.of_getnesstedclasses( acd_class, this.CST_NONVISUAL, as_classeslist, false )
+return this.of_getnestedclasses( acd_class, this.CST_NONVISUAL, as_classeslist, false )
 
 end function
 
@@ -5421,7 +5421,7 @@ classdefinition lcd_class
 
 lcd_class = this.of_getclassdefinition( as_classname, as_librarylist )
 
-return this.of_getnesstedclasses( lcd_class, this.CST_STRUCTURE, as_classeslist, ab_append )
+return this.of_getnestedclasses( lcd_class, this.CST_STRUCTURE, as_classeslist, ab_append )
 
 end function
 
@@ -5484,7 +5484,7 @@ classdefinition lcd_class
 
 lcd_class = this.of_getclassdefinition( as_classname )
 
-return this.of_getnesstedclasses( lcd_class, this.CST_STRUCTURE, as_classeslist, ab_append )
+return this.of_getnestedclasses( lcd_class, this.CST_STRUCTURE, as_classeslist, ab_append )
 
 end function
 
@@ -5544,7 +5544,7 @@ classdefinition lcd_class
 
 lcd_class = this.of_getclassdefinition( as_classname )
 
-return this.of_getnesstedclasses( lcd_class, this.CST_STRUCTURE, as_classeslist, false )
+return this.of_getnestedclasses( lcd_class, this.CST_STRUCTURE, as_classeslist, false )
 
 end function
 
@@ -5608,7 +5608,7 @@ classdefinition lcd_class
 
 lcd_class = this.of_getclassdefinition( as_classname, as_librarylist)
 
-return this.of_getnesstedclasses( lcd_class, this.CST_NONVISUAL, as_classeslist, ab_append )
+return this.of_getnestedclasses( lcd_class, this.CST_NONVISUAL, as_classeslist, ab_append )
 
 end function
 
@@ -5670,7 +5670,7 @@ classdefinition lcd_class
 
 lcd_class = this.of_getclassdefinition( as_classname )
 
-return this.of_getnesstedclasses( lcd_class, this.CST_NONVISUAL, as_classeslist, ab_append )
+return this.of_getnestedclasses( lcd_class, this.CST_NONVISUAL, as_classeslist, ab_append )
 
 end function
 

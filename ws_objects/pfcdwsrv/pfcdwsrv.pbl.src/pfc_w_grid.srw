@@ -732,12 +732,8 @@ event pfc_default;call super::pfc_default;//////////////////////////////////////
 
 // Apply changes only if modifications have been made
 // or restore of original layout has been requested
-if cbx_restore.checked = true then
+if cbx_restore.checked = true or dw_1.modifiedcount( ) > 0 then
 	this.event pfc_apply()
-elseif dw_1.modifiedcount( ) > 0 then
-	this.event pfc_apply()
-else
-	//No Action
 end if
 
 closewithreturn( this, "#DEFAULT#" )

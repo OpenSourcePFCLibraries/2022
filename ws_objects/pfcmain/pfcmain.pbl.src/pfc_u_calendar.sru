@@ -1810,7 +1810,7 @@ If IsNull(as_type) Then
 	Return False
 End If
 
-lb_date = ((as_type = 'date') or (as_type = 'datetime'))
+lb_date = (as_type = 'date') or (as_type = 'datetime')
 Return lb_date
 
 end function
