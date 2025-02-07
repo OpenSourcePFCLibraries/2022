@@ -11,11 +11,11 @@ end type
 forward prototypes
 protected function boolean of_IsInArray (integer ai_barindexarray[], integer ai_barindex)
 public function integer of_getmdiframe (menu am_source, ref window aw_frame)
-public function integer of_getalltoolbarindex (menu am_source, ref integer ai_barindex[])
 public function boolean of_toolbarexists (menu am_source)
 public function integer of_triggerevent (menu am_source, string as_event)
 public function integer of_sendmessage (menu am_source, string as_message)
 public function integer of_getmenureference (ref menu am_source, string as_findmenuitem, ref menu am_menureference)
+public function long of_getalltoolbarindex (menu am_source, ref integer ai_barindex[])
 end prototypes
 
 protected function boolean of_IsInArray (integer ai_barindexarray[], integer ai_barindex);//////////////////////////////////////////////////////////////////////////////
@@ -162,80 +162,6 @@ End If
 //MDI Frame was found
 aw_frame = lw_obj
 Return 1
-
-end function
-
-public function integer of_getalltoolbarindex (menu am_source, ref integer ai_barindex[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetAllToolbarIndex
-//
-//	Access:  		public
-//
-//	Arguments:		
-//	am_source			The menu that should be searched.
-//	ai_barindex[]	Array to hold all unique ToolbarItemBarIndex found.
-//
-//	Returns:  		integer
-//						The size of the array holding the unique entries found.
-//						-1 if an error occurs.
-//
-//	Description:  	Returns an array holding all unique ToolbarItemBarIndex
-//						found.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	5.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-integer	li_limit
-integer	li_cnt
-
-//Check arguments
-If Not IsValid(am_source) or IsNull(am_source) Then
-	Return -1
-End If
-
-//Hold in array those ToolbarItemBarIndex that have not been previously
-//stored.
-if Len (am_source.toolbaritemname) > 0 then
-	If Not of_IsInArray(ai_barindex, am_source.ToolbarItemBarIndex) Then
-		ai_barindex[UpperBound(ai_barindex)+1] = am_source.ToolbarItemBarIndex
-	End If
-End If
-	
-//Search through the rest of the menu	
-li_limit = UpperBound (am_source.item)
-For li_cnt = 1 to li_limit
-	of_GetAllToolbarIndex (am_source.item[li_cnt], ai_barindex)
-Next
-
-return upperbound(ai_barindex)
 
 end function
 
@@ -613,6 +539,80 @@ DO WHILE ll_i < ll_upper
 LOOP
 
 return 0
+
+end function
+
+public function long of_getalltoolbarindex (menu am_source, ref integer ai_barindex[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetAllToolbarIndex
+//
+//	Access:  		public
+//
+//	Arguments:		
+//	am_source			The menu that should be searched.
+//	ai_barindex[]	Array to hold all unique ToolbarItemBarIndex found.
+//
+//	Returns:  		long
+//						The size of the array holding the unique entries found.
+//						-1 if an error occurs.
+//
+//	Description:  	Returns an array holding all unique ToolbarItemBarIndex
+//						found.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	5.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+long	ll_limit
+long	ll_cnt
+
+//Check arguments
+If Not IsValid(am_source) or IsNull(am_source) Then
+	Return -1
+End If
+
+//Hold in array those ToolbarItemBarIndex that have not been previously
+//stored.
+if Len (am_source.toolbaritemname) > 0 then
+	If Not of_IsInArray(ai_barindex, am_source.ToolbarItemBarIndex) Then
+		ai_barindex[UpperBound(ai_barindex)+1] = am_source.ToolbarItemBarIndex
+	End If
+End If
+	
+//Search through the rest of the menu	
+ll_limit = UpperBound (am_source.item)
+For ll_cnt = 1 to ll_limit
+	of_GetAllToolbarIndex (am_source.item[ll_cnt], ai_barindex)
+Next
+
+return upperbound(ai_barindex)
 
 end function
 

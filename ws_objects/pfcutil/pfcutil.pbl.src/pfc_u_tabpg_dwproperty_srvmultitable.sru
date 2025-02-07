@@ -67,8 +67,8 @@ end variables
 
 forward prototypes
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
-protected function integer of_setdata (string as_option)
 public function integer of_getpropertyinfo (ref n_cst_propertyattrib anv_attrib)
+protected function long of_setdata (string as_option)
 end prototypes
 
 event pfc_propertypopulateds;call super::pfc_propertypopulateds;//////////////////////////////////////////////////////////////////////////////
@@ -622,7 +622,67 @@ anv_infoattrib.is_description = 'DW Property Multitable Service'
 Return 1
 end function
 
-protected function integer of_setdata (string as_option);//////////////////////////////////////////////////////////////////////////////
+public function integer of_getpropertyinfo (ref n_cst_propertyattrib anv_attrib);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetPropertyInfo
+//
+//	Access:   		Public
+//
+//	Arguments:		
+//		anv_attrib	(By ref.) The Property Information attributes.
+//
+//	Returns:  		Integer
+//	 1 for success.
+//	-1 for error.
+//
+//	Description:  
+//	 Gets the Service Property Information.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0    Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+n_cst_infoattrib lnv_infoattrib
+
+// Get the first two attributes from the Main Information attributes.
+of_GetInfo(lnv_infoattrib)
+anv_attrib.is_name = lnv_infoattrib.is_name
+anv_attrib.is_description = lnv_infoattrib.is_description
+
+// The Property Tab Text.
+anv_attrib.is_propertytabtext ='General'
+
+Return 1
+end function
+
+protected function long of_setdata (string as_option);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_SetData
 //
@@ -631,7 +691,7 @@ protected function integer of_setdata (string as_option);///////////////////////
 //	Arguments:		
 //		as_option	The option desired, If unknown then a table name.
 //
-//	Returns:  		Integer
+//	Returns:  		Long
 //	 # of rows in the object.
 //	-1 for error.
 //
@@ -694,66 +754,6 @@ If ids_data.SetSort(ls_sortexp) < 0 Then Return -1
 If ids_data.Sort() < 0 Then Return -1
 
 Return ids_data.RowCount()
-end function
-
-public function integer of_getpropertyinfo (ref n_cst_propertyattrib anv_attrib);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetPropertyInfo
-//
-//	Access:   		Public
-//
-//	Arguments:		
-//		anv_attrib	(By ref.) The Property Information attributes.
-//
-//	Returns:  		Integer
-//	 1 for success.
-//	-1 for error.
-//
-//	Description:  
-//	 Gets the Service Property Information.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0    Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-n_cst_infoattrib lnv_infoattrib
-
-// Get the first two attributes from the Main Information attributes.
-of_GetInfo(lnv_infoattrib)
-anv_attrib.is_name = lnv_infoattrib.is_name
-anv_attrib.is_description = lnv_infoattrib.is_description
-
-// The Property Tab Text.
-anv_attrib.is_propertytabtext ='General'
-
-Return 1
 end function
 
 on pfc_u_tabpg_dwproperty_srvmultitable.create
@@ -1510,7 +1510,6 @@ type cbx_register from u_cbx within pfc_u_tabpg_dwproperty_srvmultitable
 integer x = 1129
 integer y = 104
 integer width = 608
-integer height = 68
 integer taborder = 20
 string text = "&Register"
 end type
@@ -1565,7 +1564,6 @@ type rb_wherekey from u_rb within pfc_u_tabpg_dwproperty_srvmultitable
 integer x = 101
 integer y = 292
 integer width = 1568
-integer height = 68
 string text = "&Key Columns"
 end type
 
@@ -1573,7 +1571,6 @@ type rb_wherekeyandupd from u_rb within pfc_u_tabpg_dwproperty_srvmultitable
 integer x = 101
 integer y = 364
 integer width = 1568
-integer height = 68
 string text = "Key and U&pdateable Columns"
 end type
 
@@ -1581,7 +1578,6 @@ type rb_wherekeyandmod from u_rb within pfc_u_tabpg_dwproperty_srvmultitable
 integer x = 101
 integer y = 436
 integer width = 1568
-integer height = 68
 boolean bringtotop = true
 string text = "Key and &Modified Columns"
 end type
@@ -1590,7 +1586,6 @@ type rb_keydelthenins from u_rb within pfc_u_tabpg_dwproperty_srvmultitable
 integer x = 101
 integer y = 632
 integer width = 1568
-integer height = 68
 string text = "Use &Delete then Insert"
 end type
 
@@ -1598,7 +1593,6 @@ type rb_keyupdate from u_rb within pfc_u_tabpg_dwproperty_srvmultitable
 integer x = 101
 integer y = 704
 integer width = 1568
-integer height = 68
 boolean bringtotop = true
 string text = "Use &Update"
 end type
