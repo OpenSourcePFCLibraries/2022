@@ -2582,7 +2582,7 @@ String	ls_modifyexp
 Date		ldt_holiday[], ldt_markedday[]
 Boolean  lb_sundaybold, lb_saturdaybold, lb_holidaybold, lb_markeddaybold
 Long		ll_sundaycolor, ll_saturdaycolor, ll_holidaycolor, ll_markeddaycolor
-Integer	li_x, li_minx, li_firstweekdaynum
+Integer	li_x, li_minx, li_firstweekdaynum, li_start, li_end
 String	ls_weekdaytext[7] = {"t_sunday", "t_monday", "t_tuesday", "t_wednesday", &
 										"t_thursday", "t_friday", "t_saturday"}
 
@@ -2611,7 +2611,9 @@ ll_markeddaycolor = of_GetMarkeddayColor()
 // get position and first week day in datawindow
 li_minx = Integer (dw_cal.Describe (ls_weekdaytext[1] + ".X"))
 li_day = 1
-FOR li_loop = 2 TO 7
+li_start = 2
+li_end = 7
+FOR li_loop = li_start TO li_end
 	li_x = Integer (dw_cal.Describe (ls_weekdaytext[li_loop] + ".X"))
 	IF li_x < li_minx THEN
 		li_minx = li_x
@@ -2621,7 +2623,9 @@ NEXT
 // if the first week day in datawindow is not the right one
 IF li_day <> li_firstweekdaynum THEN
 	// change position of week days
-	FOR li_loop = 1 TO 7
+	li_start = 1
+	li_end = 7
+	FOR li_loop = li_start TO li_end
 		li_x = Integer (dw_cal.Describe ("cell" + String (Mod (7 + li_loop - li_firstweekdaynum, 7) + 1) + ".X"))
 		ls_modifyexp += ls_weekdaytext[li_loop] + ".X=" + string (li_x) + " "
 	NEXT
@@ -2681,13 +2685,15 @@ For li_loop = 1 to li_daysinmonth
 	dw_cal.SetItem(1,li_daycount,String(li_loop))
 Next
 //Blank cells after the last day of the month.
-For li_loop = li_daycount +1 to 42 
+li_end = 42
+For li_loop = li_daycount +1 to li_end
 	dw_cal.SetItem(1,li_loop,"") 
 Next
 
 // Restore all cells back to default color and fontweight.
 ls_modifyexp = ''
-For li_loop = 1 to 42
+li_end = 42
+For li_loop = 1 to li_end
 	ls_modifyexp += "cell"+string(li_loop)+".Color='"+string(il_fontcolor)+"' " + &
 						 "cell"+string(li_loop)+".Font.Weight='"+string(ii_normalfontweight)+"' "
 Next
@@ -2697,7 +2703,8 @@ dw_cal.Modify(ls_modifyexp)
 ls_modifyexp = ''
 If lb_sundaybold Then li_weight = ii_boldfontweight &
 						Else li_weight = ii_normalfontweight
-For li_loop = 1 to 36 step 7
+li_end = 36							
+For li_loop = 1 to li_end step 7
 	ls_modifyexp += "cell"+string(Mod (7 + li_loop - li_firstweekdaynum, 7) + li_loop)+".Color='"+string(ll_sundaycolor)+"' " + &
 						 "cell"+string(Mod (7 + li_loop - li_firstweekdaynum, 7) + li_loop)+".Font.Weight='"+string(li_weight)+"' "
 Next
@@ -2707,7 +2714,8 @@ dw_cal.Modify(ls_modifyexp)
 ls_modifyexp = ''
 If lb_saturdaybold Then li_weight = ii_boldfontweight &
 						Else li_weight = ii_normalfontweight
-For li_loop = 7 to 42 step 7
+li_end = 42							
+For li_loop = 7 to li_end step 7
 	ls_modifyexp += "cell"+string(Mod (7 + li_loop - li_firstweekdaynum, 7) + li_loop - 6)+".Color='"+string(ll_saturdaycolor)+"' " + &
 						 "cell"+string(Mod (7 + li_loop - li_firstweekdaynum, 7) + li_loop - 6)+".Font.Weight='"+string(li_weight)+"' "
 Next

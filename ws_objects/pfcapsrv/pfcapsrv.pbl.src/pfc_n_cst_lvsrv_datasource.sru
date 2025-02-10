@@ -91,7 +91,7 @@ public function integer of_RegisterReportColumn (n_ds ads_obj, string as_columnn
 public function integer of_registerreportcolumn (n_ds ads_obj, string as_columnname, string as_columnlabel)
 public function integer of_RegisterReportColumn (n_ds ads_obj, string as_columnname)
 public function integer of_UnRegisterReportColumn ()
-public function integer of_UnRegisterReportColumn (integer ai_column)
+public function integer of_unregisterreportcolumn (integer ai_column)
 public function integer of_GetColumnInfo (integer ai_column, ref n_cst_columnattrib anv_colattrib)
 public function integer of_RegisterReportColumn (n_ds ads_obj)
 public function string of_FormatData (string as_columnname, string as_colformat, string as_coltype, n_ds ads_obj, long al_row)
@@ -99,8 +99,6 @@ public function integer of_SetUndo (boolean ab_switch)
 protected function boolean of_ConfirmOnDelete ()
 public function string of_DecodeKey (string as_decodekey)
 public function integer of_DeleteItem (integer ai_index)
-public function integer of_GetIndex (n_ds ads_obj, long al_row)
-public function integer of_GetIndex (long al_row)
 public function string of_EncodeKey (n_ds ads_source, long al_row)
 public function integer of_DeleteItem ()
 public function integer of_GetAttributes (ref n_cst_lvsrvattrib anv_attrib)
@@ -108,6 +106,8 @@ public function long of_Refresh ()
 public function long of_Retrieve (any aa_args[20], ref n_ds ads_data)
 public function boolean of_canundo ()
 public function integer of_insertitem (ref n_ds ads_obj, long al_row, listviewitem alvi_new, string as_position, integer ai_item)
+public function long of_getindex (n_ds ads_obj, long al_row)
+public function long of_getindex (long al_row)
 end prototypes
 
 event pfc_EndLabelEdit;//////////////////////////////////////////////////////////////////////////////
@@ -174,7 +174,7 @@ end if
 return CONTINUE_ACTION
 end event
 
-event pfc_UndoDelete;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_undodelete();//////////////////////////////////////////////////////////////////////////////
 //	Event:			pfc_UndoDelete
 //	Arguments:		None
 //	Returns:			integer
@@ -207,7 +207,7 @@ event pfc_UndoDelete;///////////////////////////////////////////////////////////
  * Libraries see https://github.com/OpenSourcePFCLibraries
 */
 //////////////////////////////////////////////////////////////////////////////
-integer	li_rc, li_numbertoundo, li_cnt
+integer	li_rc, li_numbertoundo, li_cnt, li_end = 1
 long		ll_row, ll_rowcount, ll_undohandle, ll_deleterowid
 long		ll_emptyhandle[], ll_numbertoundo, ll_cnt
 string	ls_key, ls_undokey
@@ -225,7 +225,7 @@ li_numbertoundo = UpperBound(il_UndoDeleteHandle)
 if li_numbertoundo < 1 then return 0
 
 //ilv_requestor.SetRedraw(false)
-for li_cnt = li_numbertoundo to 1 step -1
+for li_cnt = li_numbertoundo to li_end step -1
 
 	ll_undohandle = il_UndoDeleteHandle[li_cnt]
 //	ls_undokey = string( ilvi_UndoDeleteItem[ll_cnt].Data )
@@ -2984,7 +2984,7 @@ inv_ColAttrib = lnv_empty
 return 1
 end function
 
-public function integer of_UnRegisterReportColumn (integer ai_column);//////////////////////////////////////////////////////////////////////////////
+public function integer of_unregisterreportcolumn (integer ai_column);//////////////////////////////////////////////////////////////////////////////
 //	Public Function:	of_UnRegisterReportColumn
 //	Arguments:		ai_column	the column to be removed.
 //	Returns:			Integer
@@ -3017,7 +3017,7 @@ public function integer of_UnRegisterReportColumn (integer ai_column);//////////
  * Libraries see https://github.com/OpenSourcePFCLibraries
 */
 //////////////////////////////////////////////////////////////////////////////
-integer					li_cols, li_cnt, li_index
+integer					li_cols, li_cnt, li_index, li_end
 n_cst_columnattrib	lnv_empty[], lnv_columns[]
 
 li_Cols = UpperBound(inv_ColAttrib)
@@ -3030,7 +3030,8 @@ if IsNull(ai_column) or (ai_column > li_cols) or (ai_column < 1) then return -1
 if ilv_requestor.DeleteColumn(ai_column) < 1 then return -1
 
 // Sync internal arrays
-for li_Cnt = 1 to (ai_column - 1)
+li_end = ai_column - 1
+for li_Cnt = 1 to li_end
 	lnv_Columns[li_Cnt] = inv_ColAttrib[li_Cnt]
 next
 
@@ -3407,105 +3408,6 @@ if ib_Undo then
 end if
 
 return ilv_requestor.DeleteItem(ai_index)
-end function
-
-public function integer of_GetIndex (n_ds ads_obj, long al_row);//////////////////////////////////////////////////////////////////////////////
-//	Public Function:	of_GetIndex
-//	Arguments:		ads_obj		The handle to the DataStore (of type n_ds) for the Listview.
-//						al_Row		The row in the DataStore that the item points to.
-//	Returns:			Integer
-//						The Index of the ListView item that points to that row
-//						0 if the item was not found
-//						-1 if an error occurrs
-//	Description:	Return the ListView item index that points to a particular row 
-//						in the source DataStore.
-//////////////////////////////////////////////////////////////////////////////
-//	Rev. History:	Version
-//						6.0   Initial version
-//////////////////////////////////////////////////////////////////////////////
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//////////////////////////////////////////////////////////////////////////////
-long				ll_Cnt, ll_items
-string			ls_Key
-listviewitem	llvi_Item
-
-// check reference variables
-if IsNull(ilv_requestor) or not IsValid(ilv_requestor) then return -1
-
-// Check Arguments
-if not IsValid(ads_obj) then return -1
-if IsNull(al_Row) or (al_row < 1) then return -1
-
-// Get the generated key for the row
-ls_key = of_EncodeKey(ads_obj, al_Row)
-if ls_key = "!" then return -1
-
-// Find the item
-ll_items = ilv_requestor.TotalItems()
-for ll_Cnt = 1 to ll_items
-	if ilv_requestor.GetItem(ll_Cnt, llvi_Item) = 1 then
-		if String(llvi_Item.Data) = ls_Key then return ll_Cnt
-	end if
-Next
-
-return 0
-end function
-
-public function integer of_GetIndex (long al_row);//////////////////////////////////////////////////////////////////////////////
-//	Public Function:	of_GetIndex
-//	Arguments:		al_Row		The row in the DataStore that the item points to.
-//	Returns:			Integer
-//						The Index of the ListView item that points to that row
-//						0 if the item was not found
-//						-1 if an error occurrs
-//	Description:	Return the ListView item index that points to a particular row 
-//						in the source DataStore.
-//////////////////////////////////////////////////////////////////////////////
-//	Rev. History:	Version
-//						6.0   Initial version
-//////////////////////////////////////////////////////////////////////////////
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//////////////////////////////////////////////////////////////////////////////
-// Check Arguments
-if IsNull(al_Row) or (al_row < 1) then return -1
-
-return of_GetIndex(inv_Attrib.ids_Source, al_row)
 end function
 
 public function string of_EncodeKey (n_ds ads_source, long al_row);//////////////////////////////////////////////////////////////////////////////
@@ -3958,6 +3860,105 @@ if ib_Undo then
 end if
 
 return li_newindex
+end function
+
+public function long of_getindex (n_ds ads_obj, long al_row);//////////////////////////////////////////////////////////////////////////////
+//	Public Function:	of_GetIndex
+//	Arguments:		ads_obj		The handle to the DataStore (of type n_ds) for the Listview.
+//						al_Row		The row in the DataStore that the item points to.
+//	Returns:			long
+//						The Index of the ListView item that points to that row
+//						0 if the item was not found
+//						-1 if an error occurrs
+//	Description:	Return the ListView item index that points to a particular row 
+//						in the source DataStore.
+//////////////////////////////////////////////////////////////////////////////
+//	Rev. History:	Version
+//						6.0   Initial version
+//////////////////////////////////////////////////////////////////////////////
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//////////////////////////////////////////////////////////////////////////////
+long				ll_Cnt, ll_items
+string			ls_Key
+listviewitem	llvi_Item
+
+// check reference variables
+if IsNull(ilv_requestor) or not IsValid(ilv_requestor) then return -1
+
+// Check Arguments
+if not IsValid(ads_obj) then return -1
+if IsNull(al_Row) or (al_row < 1) then return -1
+
+// Get the generated key for the row
+ls_key = of_EncodeKey(ads_obj, al_Row)
+if ls_key = "!" then return -1
+
+// Find the item
+ll_items = ilv_requestor.TotalItems()
+for ll_Cnt = 1 to ll_items
+	if ilv_requestor.GetItem(ll_Cnt, llvi_Item) = 1 then
+		if String(llvi_Item.Data) = ls_Key then return ll_Cnt
+	end if
+Next
+
+return 0
+end function
+
+public function long of_getindex (long al_row);//////////////////////////////////////////////////////////////////////////////
+//	Public Function:	of_GetIndex
+//	Arguments:		al_Row		The row in the DataStore that the item points to.
+//	Returns:			Integer
+//						The Index of the ListView item that points to that row
+//						0 if the item was not found
+//						-1 if an error occurrs
+//	Description:	Return the ListView item index that points to a particular row 
+//						in the source DataStore.
+//////////////////////////////////////////////////////////////////////////////
+//	Rev. History:	Version
+//						6.0   Initial version
+//////////////////////////////////////////////////////////////////////////////
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//////////////////////////////////////////////////////////////////////////////
+// Check Arguments
+if IsNull(al_Row) or (al_row < 1) then return -1
+
+return of_GetIndex(inv_Attrib.ids_Source, al_row)
 end function
 
 on pfc_n_cst_lvsrv_datasource.create

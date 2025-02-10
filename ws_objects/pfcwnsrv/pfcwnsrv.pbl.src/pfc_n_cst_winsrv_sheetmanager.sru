@@ -337,7 +337,7 @@ return li_sheetcount
 
 end event
 
-event pfc_undoarrange;call n_cst_winsrv::pfc_undoarrange;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_undoarrange();//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  pfc_undoarrange
 //
@@ -379,17 +379,18 @@ event pfc_undoarrange;call n_cst_winsrv::pfc_undoarrange;///////////////////////
 */
 //
 //////////////////////////////////////////////////////////////////////////////
-integer	li_cnt
+integer	li_index
 integer	li_count
+integer	li_end = 1
 
 li_count = UpperBound (inv_sheet)
-for li_cnt = li_count to 1 step -1
-		if IsValid (inv_sheet[li_cnt].w_obj) then
-			inv_sheet[li_cnt].w_obj.windowstate = inv_sheet[li_cnt].e_state
-			inv_sheet[li_cnt].w_obj.width = inv_sheet[li_cnt].i_width
-			inv_sheet[li_cnt].w_obj.height = inv_sheet[li_cnt].i_height
-			inv_sheet[li_cnt].w_obj.x = inv_sheet[li_cnt].i_x
-			inv_sheet[li_cnt].w_obj.y = inv_sheet[li_cnt].i_y
+for li_index = li_count to li_end step -1
+		if IsValid (inv_sheet[li_index].w_obj) then
+			inv_sheet[li_index].w_obj.windowstate = inv_sheet[li_index].e_state
+			inv_sheet[li_index].w_obj.width = inv_sheet[li_index].i_width
+			inv_sheet[li_index].w_obj.height = inv_sheet[li_index].i_height
+			inv_sheet[li_index].w_obj.x = inv_sheet[li_index].i_x
+			inv_sheet[li_index].w_obj.y = inv_sheet[li_index].i_y
 		end if
 next
 
@@ -917,11 +918,11 @@ return li_rc
 end function
 
 on pfc_n_cst_winsrv_sheetmanager.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_winsrv_sheetmanager.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 
 event constructor;call super::constructor;

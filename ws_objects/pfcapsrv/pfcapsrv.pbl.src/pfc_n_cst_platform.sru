@@ -70,7 +70,6 @@ string		is_ClassName[] = {"FNWND3", "FNWNS3"}
 end variables
 
 forward prototypes
-public function unsignedinteger of_findwindow (string as_window_name)
 public function integer of_getactivewindowborder ()
 public function string of_getcomputername ()
 public function integer of_getfreeresources (integer ai_type)
@@ -94,13 +93,8 @@ public function unsignedinteger of_getsystemmetrics (integer ai_index)
 public function boolean of_getclientrect (unsignedlong vul_hwnd, ref long rl_left, ref long rl_top, ref long rl_right, ref long rl_bottom)
 public function longlong of_getfreememory ()
 public function longlong of_getphysicalmemory ()
+public function ulong of_findwindow (string as_window_name)
 end prototypes
-
-public function unsignedinteger of_findwindow (string as_window_name);//////////////////////////////////////////////////////////////////////////////
-//	In case this function is not found in descendant
-//////////////////////////////////////////////////////////////////////////////
-return 0
-end function
 
 public function integer of_getactivewindowborder ();//////////////////////////////////////////////////////////////////////////////
 //	In case this function is not found in descendant
@@ -659,6 +653,12 @@ public function longlong of_getphysicalmemory ();///////////////////////////////
 //	In case this function is not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 return -1
+end function
+
+public function ulong of_findwindow (string as_window_name);//////////////////////////////////////////////////////////////////////////////
+//	In case this function is not found in descendant
+//////////////////////////////////////////////////////////////////////////////
+return 0
 end function
 
 on pfc_n_cst_platform.create

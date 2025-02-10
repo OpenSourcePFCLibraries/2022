@@ -127,7 +127,6 @@ public function integer of_sortdirlist (ref n_cst_dirattrib anv_dirlist[], integ
 public function integer of_getvolumes (ref string as_volumes[])
 protected function integer of_dirattribtods (ref n_ds ads_source, n_cst_dirattrib anv_entry, string as_sortfilename, integer ai_filegroup)
 protected function integer of_dstodirattrib (ref n_ds ads_source, ref n_cst_dirattrib anv_entry, long al_row)
-public function integer of_getdrivetype (string as_drive)
 public function integer of_getdiskspace (string as_drive, ref long al_totalspace, ref long al_freespace)
 public function string of_getallfilesspecifier ()
 public function integer of_getdiskspaceex (string as_drive, ref decimal adec_totalspace, ref decimal adec_freespace)
@@ -145,6 +144,7 @@ public function string of_gettempfilename (string vs_prefix)
 public function integer of_setfiletype (string as_filetype)
 public function string of_getfiletype ()
 public function long of_dirlist (string as_filespec, ref string as_dirlist[])
+public function ulong of_getdrivetype (string as_drive)
 end prototypes
 
 public function string of_getseparator ();//////////////////////////////////////////////////////////////////////////////
@@ -1758,12 +1758,6 @@ anv_entry.id_lastaccessdate = date(ls_lastaccessdate)
 return 1
 end function
 
-public function integer of_getdrivetype (string as_drive);//////////////////////////////////////////////////////////////////////////////
-//	Function not found in descendant
-//////////////////////////////////////////////////////////////////////////////
-Return -1
-end function
-
 public function integer of_getdiskspace (string as_drive, ref long al_totalspace, ref long al_freespace);//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
@@ -2521,6 +2515,12 @@ public function long of_dirlist (string as_filespec, ref string as_dirlist[]);//
 //////////////////////////////////////////////////////////////////////////////
 
 return -1
+end function
+
+public function ulong of_getdrivetype (string as_drive);//////////////////////////////////////////////////////////////////////////////
+//	Function not found in descendant
+//////////////////////////////////////////////////////////////////////////////
+Return -1
 end function
 
 on pfc_n_cst_filesrv.create

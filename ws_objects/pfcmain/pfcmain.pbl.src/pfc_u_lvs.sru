@@ -101,7 +101,6 @@ public function integer of_getupdaterequestor (ref powerobject apo_updaterequest
 public function integer of_update (boolean ab_accepttext, boolean ab_resetflag)
 public function integer of_setbase (boolean ab_switch)
 public function integer of_Setalwaysvalidate (boolean ab_validate)
-protected function integer of_getobjects (ref powerobject apo_objects[])
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
 public function integer of_setsort (boolean ab_switch)
 protected function integer of_messagebox (string as_id, string as_title, string as_text, icon ae_icon, button ae_button, integer ai_default)
@@ -118,6 +117,7 @@ public function integer of_setrmbmenu (boolean ab_switch)
 public function boolean of_isrmbmenu ()
 public function long of_retrieve (any aa_args[20], ref n_ds ads_data)
 public function long of_populate ()
+protected function long of_getobjects (ref powerobject apo_objects[])
 end prototypes
 
 event pfc_prermbmenu;//////////////////////////////////////////////////////////////////////////////
@@ -2913,65 +2913,6 @@ ib_alwaysvalidate =  ab_validate
 return 1
 end function
 
-protected function integer of_getobjects (ref powerobject apo_objects[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  of_GetObjects
-//
-//	Access:  protected
-//
-//	Arguments:		
-//	apo_objects[] (by reference) An array of objects on which the update process 
-//				will take effect.
-//
-//	Returns:  integer
-//	 # of objects in the array if successful
-//	-1 = error
-//
-//	Description:
-//	Gets the current objects for which an updates will be attempted.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-n_ds	lds_source
-
-// Determine the datasource.
-If IsValid(inv_datasource) Then
-	If inv_datasource.of_GetDataSource(lds_source) < 1 then Return -1
-	apo_objects[1] = lds_source
-	Return upperbound(apo_objects)
-End If
-
-Return -1
-end function
-
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_GetInfo
@@ -3938,6 +3879,65 @@ If this.event pfc_retrieve(lds_data) < 0 Then Return -1
 Return this.event pfc_addall(lds_data) 
 
 
+end function
+
+protected function long of_getobjects (ref powerobject apo_objects[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  of_GetObjects
+//
+//	Access:  protected
+//
+//	Arguments:		
+//	apo_objects[] (by reference) An array of objects on which the update process 
+//				will take effect.
+//
+//	Returns:  long
+//	 # of objects in the array if successful
+//	-1 = error
+//
+//	Description:
+//	Gets the current objects for which an updates will be attempted.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+n_ds	lds_source
+
+// Determine the datasource.
+If IsValid(inv_datasource) Then
+	If inv_datasource.of_GetDataSource(lds_source) < 1 then Return -1
+	apo_objects[1] = lds_source
+	Return upperbound(apo_objects)
+End If
+
+Return -1
 end function
 
 event destructor;//////////////////////////////////////////////////////////////////////////////

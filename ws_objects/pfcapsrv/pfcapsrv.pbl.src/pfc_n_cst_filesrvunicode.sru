@@ -128,7 +128,7 @@ public function integer of_setlastwritedatetime (string as_filename, date ad_dat
 public function integer of_getlastaccessdate (string as_filename, ref date ad_date)
 public function integer of_setcreationdatetime (string as_filename, date ad_date, time at_time)
 public function integer of_setlastaccessdate (string as_filename, date ad_date)
-public function integer of_getdrivetype (string as_drive)
+public function ulong of_getdrivetype (string as_drive)
 public function integer of_getdiskspace (string as_drive, ref long al_totalspace, ref long al_freespace)
 public function integer of_getdiskspaceex (string as_drive, ref decimal adec_totalspace, ref decimal adec_freespace)
 protected function long of_maxpath ()
@@ -436,7 +436,7 @@ public function long of_dirlist (string as_filespec, long al_filetype, ref n_cst
 //////////////////////////////////////////////////////////////////////////////
 Boolean					lb_Found
 Char						lc_Drive
-long						ll_Cnt, ll_Entries
+long						ll_Cnt, ll_Entries, ll_end = 25
 Long						ll_handle
 Time						lt_Time
 os_finddata				lstr_FindData
@@ -497,7 +497,7 @@ If al_FileType >=32768 Then al_FileType = al_FileType - 32768
 
 // If the type is > 16384, then a list of drives should be included
 If al_FileType >= 16384 Then
-	For ll_Cnt = 0 To 25
+	For ll_Cnt = 0 To ll_end
 		lc_Drive = Char(ll_Cnt + 97)
 		If of_GetDriveType(lc_Drive) > 1 Then
 			ll_Entries ++
@@ -1238,10 +1238,10 @@ Else
 End If
 end function
 
-public function integer of_getdrivetype (string as_drive);//////////////////////////////////////////////////////////////////////////////
+public function ulong of_getdrivetype (string as_drive);//////////////////////////////////////////////////////////////////////////////
 //	Public Function:  of_GetDriveType
 //	Arguments:		as_Drive					The letter of the drive to be checked.
-//	Returns:			Integer
+//	Returns:			ulong
 //						The type of the drive:
 //						2 - floppy drive,
 //						3 - hard drive,

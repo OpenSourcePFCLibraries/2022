@@ -1081,7 +1081,7 @@ public function long of_lastpos (string as_source, string as_target, long al_sta
 //
 //////////////////////////////////////////////////////////////////////////////
 
-Long	ll_Cnt, ll_Pos
+Long	ll_Cnt, ll_Pos, ll_end = 1
 
 //Check for Null Parameters.
 IF IsNull(as_source) or IsNull(as_target) or IsNull(al_start) Then
@@ -1100,7 +1100,7 @@ If al_start=0 Then
 End If
 
 //Perform find
-For ll_Cnt = al_start to 1 Step -1
+For ll_Cnt = al_start to ll_end Step -1
 	ll_Pos = Pos(as_Source, as_Target, ll_Cnt)
 	If ll_Pos = ll_Cnt Then 
 		//String was found
@@ -3280,7 +3280,8 @@ if  ll_end = 0 then return false
 if ll_begin > ll_end then return false
 
 // Check that the characters between surrounding characters are included in the allowed characters to be surrounded
-for ll_i = ll_begin +1  to ll_end - 1
+ll_end = ll_end - 1
+for ll_i = ll_begin +1  to ll_end 
 	ls_tmp = mid(as_source, ll_i, 1)
 	ll_pos = pos( as_tobe_surrounded, ls_tmp )
 	if ll_pos = 0 then return false

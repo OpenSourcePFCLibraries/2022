@@ -753,11 +753,11 @@ public function integer of_additems (string as_items[], integer ai_picture, bool
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 integer	li_i
-integer 	li_limit
+integer 	li_limit, li_end = 1
 integer	li_pictures[]
 
 li_limit = UpperBound( as_items )
-for li_i = li_limit to 1 step -1
+for li_i = li_limit to li_end step -1
 	li_pictures[li_i] = ai_picture
 next
 

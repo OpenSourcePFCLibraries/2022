@@ -3289,7 +3289,7 @@ protected function integer of_printtree (long al_handle, boolean ab_canceldialog
 //
 //////////////////////////////////////////////////////////////////////////////
 
-Integer	li_Cnt, li_RC
+Integer	li_index, li_RC, li_count
 String	ls_Picts, ls_LevelPicts
 n_ds		lds_Print
 
@@ -3310,13 +3310,15 @@ Else
 	ls_Picts = ls_Picts + as_SelPictName
 End If
 
-For li_Cnt = 1 To 10
-	ls_LevelPicts = ls_LevelPicts + as_LevelPicts[li_Cnt] + "~t"
+li_count = UpperBound(as_LevelPicts)
+For li_index = 1 To li_count
+	ls_LevelPicts = ls_LevelPicts + as_LevelPicts[li_index] + "~t"
 Next
 	
 ls_LevelPicts = ls_LevelPicts + as_LevelSelPicts[1]
-For li_Cnt = 2 To 10
-	ls_LevelPicts = ls_LevelPicts + "~t" + as_LevelSelPicts[li_Cnt]
+li_count = UpperBound(as_LevelSelPicts)
+For li_index = 2 To li_count
+	ls_LevelPicts = ls_LevelPicts + "~t" + as_LevelSelPicts[li_index]
 Next
 
 // Create the DataStore to be used to print the TreeView
@@ -3569,7 +3571,7 @@ public function integer of_getargs (long al_parent, integer ai_level, ref any aa
 //////////////////////////////////////////////////////////////////////////////
 
 Integer				li_Limit, li_Cnt, li_Cnt2, li_ArgItem, li_Index, &
-						li_ArgIndex, li_RetrieveArgLevel[]
+						li_ArgIndex, li_RetrieveArgLevel[], li_end = 1
 Long 					ll_row
 String				ls_ArgCol, ls_Arg, ls_RetrieveArgColumn[]
 Long					ll_Arg
@@ -3591,7 +3593,7 @@ of_ParseArgs(inv_ds[li_Index].s_RetrieveArgs, ai_Level, li_RetrieveArgLevel, ls_
 
 li_Limit = UpperBound(li_RetrieveArgLevel)
 
-For li_Cnt = (ai_Level - 1) To 1 Step - 1
+For li_Cnt = (ai_Level - 1) To li_end Step - 1
 	If This.GetItem(al_Parent, ltvi_Item) = -1 Then Return -1
 	
 	// Determine if there an argument is needed from this level

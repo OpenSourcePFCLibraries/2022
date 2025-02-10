@@ -3,16 +3,16 @@ global type f_removeduplicate from function_object
 end type
 
 forward prototypes
-global function integer f_removeduplicate (ref any aa_array[])
+global function long f_removeduplicate (ref any aa_array[])
 end prototypes
 
-global function integer f_removeduplicate (ref any aa_array[]);//////////////////////////////////////////////////////////////////////////////
+global function long f_removeduplicate (ref any aa_array[]);//////////////////////////////////////////////////////////////////////////////
 //
 // Function:		f_RemoveDuplicate
 //
 // Access:			Public
 //
-// Returns:			integer
+// Returns:			long
 //						the number of remaining entries
 //
 // Description:	Remove all adjacent duplicated  entries from the

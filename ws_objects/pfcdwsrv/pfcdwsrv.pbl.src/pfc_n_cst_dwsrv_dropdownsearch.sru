@@ -30,17 +30,17 @@ public function integer of_removecolumn (string as_column)
 public function integer of_addcolumn (string as_column)
 public function integer of_getcolumn (ref string as_columns[])
 protected function integer of_searchitem (string as_column)
-public function integer of_register ()
 public function integer of_register (string as_column)
 public function integer of_addcolumn ()
 public function integer of_getregistered (ref string as_columns[])
 public function boolean of_isregistered (string as_column)
 public function integer of_unregister (string as_column)
-public function integer of_getregisterable (ref string as_allcolumns[])
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
 public function integer of_getpropertyinfo (ref n_cst_propertyattrib anv_attrib)
 protected function integer of_deleteitem (integer ai_index)
 public function integer of_unregister ()
+public function long of_getregisterable (ref string as_allcolumns[])
+public function long of_register ()
 end prototypes
 
 event pfc_editchanged(ref long al_row, ref dwobject adwo_obj, ref string as_data);//////////////////////////////////////////////////////////////////////////////
@@ -569,101 +569,6 @@ next
 return 0
 end function
 
-public function integer of_register ();//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_Register
-//
-//	Access: 			public
-//
-//	Arguments:		None
-//
-//	Returns: 		integer
-//						The number of columns registered.
-//						-1 if an error is encountered.
-//
-//	Description:	
-//	 Register all the appropriate dropdowndatawindow and dropdownlistboxe 
-//	 columns from the datawindow to have dropdown search capabilities.
-//
-//	 *Note: For a dropdowndatawindow column to be registered it most have
-//	 a display value type char.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version - Replaces obsoleted function of_AddColumn.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-integer		li_colcount, li_i, li_count, li_rc
-string		ls_editstyle, ls_displayvaluecolumn, ls_displayvaluecoltype
-string		ls_colname
-datawindowchild ldwc_obj
-
-// Get the number of columns in the datawindow object
-li_colcount = integer(idw_requestor.object.datawindow.Column.Count)
-
-// Loop around all columns looking for dddw or ddlb columns.
-For li_i=1 to li_colcount
-	//Get-Validate the name and edit style of the column.
-	ls_editstyle = idw_requestor.Describe("#"+string(li_i)+".Edit.Style")
-	ls_colname = idw_requestor.Describe("#"+string(li_i)+".Name")
-	If ls_colname = '!' or ls_editstyle = '!' Then Return -1	
-
-	If ls_editstyle = 'dddw' Then
-		// Get the displayvalue column name.
-		ls_displayvaluecolumn = idw_requestor.Describe(ls_colname+".dddw.displaycolumn")
-		If ls_displayvaluecolumn = '!' Then Return -1
-
-		// Get a reference to the DropDownDatawindow.
-		li_rc = idw_requestor.GetChild(ls_colname, ldwc_obj)
-		If li_rc<>1 Then Return -1
-		
-		// If displayvalue column is not of type "Char," skip it.	
-		ls_displayvaluecoltype = ldwc_obj.Describe(ls_displayvaluecolumn+".coltype")
-		If pos(ls_displayvaluecoltype, "char") >= 1 Then
-			// Add entry into array.
-			li_count = upperbound(inv_columns)+1
-			inv_columns[li_count].s_editstyle	= ls_editstyle
-			inv_columns[li_count].s_columnname = ls_colname
-			inv_columns[li_count].dwc_object   = ldwc_obj
-		End If
-	ElseIf ls_editstyle = 'ddlb' Then
-		// Add entry into array.
-		li_count = upperbound(inv_columns)+1
-		inv_columns[li_count].s_editstyle	= ls_editstyle
-		inv_columns[li_count].s_columnname = ls_colname		
-	Else
-		//No Action
-	End If
-Next
-
-Return upperbound(inv_columns)
-end function
-
 public function integer of_register (string as_column);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_Register
@@ -1007,103 +912,6 @@ Return of_DeleteItem(li_index)
 
 end function
 
-public function integer of_getregisterable (ref string as_allcolumns[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetRegisterable
-//
-//	Access:  		public
-//
-//	Arguments:
-//	as_allcolumns[] By Reference.  All columns belonging to the requestor which
-//						could be registered.
-//
-//	Returns:  		Integer
-//	 The column count.
-//	-1 if an error is encountered.
-//
-//	Description:
-//	 Determines all columns belonging to the requestor which could be registered.
-//
-//	 *Note: For a dropdowndatawindow column to be of registering it most have a 
-//		display value type char.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-integer		li_colcount, li_i, li_count, li_rc
-string		ls_editstyle, ls_displayvaluecolumn, ls_displayvaluecoltype
-string		ls_colname
-datawindowchild ldwc_obj
-string		ls_allcolumns[]
-
-// Get the number of columns in the datawindow object
-li_colcount = integer(idw_requestor.object.datawindow.Column.Count)
-
-// Loop around all columns looking for dddw or ddlb columns.
-For li_i=1 to li_colcount
-	//Get-Validate the name and edit style of the column.
-	ls_editstyle = idw_requestor.Describe("#"+string(li_i)+".Edit.Style")
-	ls_colname = idw_requestor.Describe("#"+string(li_i)+".Name")
-	If ls_colname = '!' or ls_editstyle = '!' Then Return -1	
-
-	If ls_editstyle = 'dddw' Then
-		// Get the displayvalue column name.
-		ls_displayvaluecolumn = idw_requestor.Describe(ls_colname+".dddw.displaycolumn")
-		If ls_displayvaluecolumn = '!' Then Return -1
-
-		// Get a reference to the DropDownDatawindow.
-		li_rc = idw_requestor.GetChild(ls_colname, ldwc_obj)
-		If li_rc<>1 Then Return -1
-		
-		// If displayvalue column is not of type "Char," skip it.	
-		ls_displayvaluecoltype = ldwc_obj.Describe(ls_displayvaluecolumn+".coltype")
-		If pos(ls_displayvaluecoltype, "char") >= 1 Then
-			// Add entry into array.
-			li_count = upperbound(ls_allcolumns)+1
-			ls_allcolumns[li_count] = ls_colname
-		End If
-	ElseIf ls_editstyle = 'ddlb' Then
-		// Add entry into array.
-		li_count = upperbound(ls_allcolumns)+1
-		ls_allcolumns[li_count] = ls_colname		
-	Else
-		//No Action
-	End If
-Next
-
-as_allcolumns = ls_allcolumns
-Return UpperBound(as_allcolumns)
-
-end function
-
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_GetInfo
@@ -1269,7 +1077,7 @@ protected function integer of_deleteitem (integer ai_index);////////////////////
 */
 //
 //////////////////////////////////////////////////////////////////////////////
-integer		li_i, li_count
+integer		li_i, li_count, li_end
 n_cst_dwsrv_dropdownsearchattrib	lnv_columns[]
 
 // Get the size of the array.
@@ -1280,7 +1088,8 @@ If IsNull(ai_index) or ai_index <=0 or ai_index > li_count Then Return -1
 
 // Copy from the begining to the entry prior the passed value.
 If ai_index >= 2 Then
-	For li_i=1 To ai_index -1
+	li_end = ai_index -1
+	For li_i=1 To li_end
 		lnv_columns[li_i] = inv_columns[li_i]	
 	Next
 End If	
@@ -1350,6 +1159,198 @@ n_cst_dwsrv_dropdownsearchattrib	lnv_columns[]
 // Unregister all information.
 inv_columns = lnv_columns
 Return 1
+end function
+
+public function long of_getregisterable (ref string as_allcolumns[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetRegisterable
+//
+//	Access:  		public
+//
+//	Arguments:
+//	as_allcolumns[] By Reference.  All columns belonging to the requestor which
+//						could be registered.
+//
+//	Returns:  		long
+//	 The column count.
+//	-1 if an error is encountered.
+//
+//	Description:
+//	 Determines all columns belonging to the requestor which could be registered.
+//
+//	 *Note: For a dropdowndatawindow column to be of registering it most have a 
+//		display value type char.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+integer		li_colcount, li_i, li_count, li_rc
+string		ls_editstyle, ls_displayvaluecolumn, ls_displayvaluecoltype
+string		ls_colname
+datawindowchild ldwc_obj
+string		ls_allcolumns[]
+
+// Get the number of columns in the datawindow object
+li_colcount = integer(idw_requestor.object.datawindow.Column.Count)
+
+// Loop around all columns looking for dddw or ddlb columns.
+For li_i=1 to li_colcount
+	//Get-Validate the name and edit style of the column.
+	ls_editstyle = idw_requestor.Describe("#"+string(li_i)+".Edit.Style")
+	ls_colname = idw_requestor.Describe("#"+string(li_i)+".Name")
+	If ls_colname = '!' or ls_editstyle = '!' Then Return -1	
+
+	If ls_editstyle = 'dddw' Then
+		// Get the displayvalue column name.
+		ls_displayvaluecolumn = idw_requestor.Describe(ls_colname+".dddw.displaycolumn")
+		If ls_displayvaluecolumn = '!' Then Return -1
+
+		// Get a reference to the DropDownDatawindow.
+		li_rc = idw_requestor.GetChild(ls_colname, ldwc_obj)
+		If li_rc<>1 Then Return -1
+		
+		// If displayvalue column is not of type "Char," skip it.	
+		ls_displayvaluecoltype = ldwc_obj.Describe(ls_displayvaluecolumn+".coltype")
+		If pos(ls_displayvaluecoltype, "char") >= 1 Then
+			// Add entry into array.
+			li_count = upperbound(ls_allcolumns)+1
+			ls_allcolumns[li_count] = ls_colname
+		End If
+	ElseIf ls_editstyle = 'ddlb' Then
+		// Add entry into array.
+		li_count = upperbound(ls_allcolumns)+1
+		ls_allcolumns[li_count] = ls_colname		
+	Else
+		//No Action
+	End If
+Next
+
+as_allcolumns = ls_allcolumns
+Return UpperBound(as_allcolumns)
+
+end function
+
+public function long of_register ();//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_Register
+//
+//	Access: 			public
+//
+//	Arguments:		None
+//
+//	Returns: 		long
+//						The number of columns registered.
+//						-1 if an error is encountered.
+//
+//	Description:	
+//	 Register all the appropriate dropdowndatawindow and dropdownlistboxe 
+//	 columns from the datawindow to have dropdown search capabilities.
+//
+//	 *Note: For a dropdowndatawindow column to be registered it most have
+//	 a display value type char.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version - Replaces obsoleted function of_AddColumn.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+integer		li_colcount, li_i, li_count, li_rc
+string		ls_editstyle, ls_displayvaluecolumn, ls_displayvaluecoltype
+string		ls_colname
+datawindowchild ldwc_obj
+
+// Get the number of columns in the datawindow object
+li_colcount = integer(idw_requestor.object.datawindow.Column.Count)
+
+// Loop around all columns looking for dddw or ddlb columns.
+For li_i=1 to li_colcount
+	//Get-Validate the name and edit style of the column.
+	ls_editstyle = idw_requestor.Describe("#"+string(li_i)+".Edit.Style")
+	ls_colname = idw_requestor.Describe("#"+string(li_i)+".Name")
+	If ls_colname = '!' or ls_editstyle = '!' Then Return -1	
+
+	If ls_editstyle = 'dddw' Then
+		// Get the displayvalue column name.
+		ls_displayvaluecolumn = idw_requestor.Describe(ls_colname+".dddw.displaycolumn")
+		If ls_displayvaluecolumn = '!' Then Return -1
+
+		// Get a reference to the DropDownDatawindow.
+		li_rc = idw_requestor.GetChild(ls_colname, ldwc_obj)
+		If li_rc<>1 Then Return -1
+		
+		// If displayvalue column is not of type "Char," skip it.	
+		ls_displayvaluecoltype = ldwc_obj.Describe(ls_displayvaluecolumn+".coltype")
+		If pos(ls_displayvaluecoltype, "char") >= 1 Then
+			// Add entry into array.
+			li_count = upperbound(inv_columns)+1
+			inv_columns[li_count].s_editstyle	= ls_editstyle
+			inv_columns[li_count].s_columnname = ls_colname
+			inv_columns[li_count].dwc_object   = ldwc_obj
+		End If
+	ElseIf ls_editstyle = 'ddlb' Then
+		// Add entry into array.
+		li_count = upperbound(inv_columns)+1
+		inv_columns[li_count].s_editstyle	= ls_editstyle
+		inv_columns[li_count].s_columnname = ls_colname		
+	Else
+		//No Action
+	End If
+Next
+
+Return upperbound(inv_columns)
 end function
 
 on pfc_n_cst_dwsrv_dropdownsearch.destroy

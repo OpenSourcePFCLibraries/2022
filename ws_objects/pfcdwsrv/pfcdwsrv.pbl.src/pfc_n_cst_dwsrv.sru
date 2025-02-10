@@ -39,7 +39,6 @@ public function string of_modify (string as_attribute, string as_value, string a
 public function string of_modify (string as_attribute, string as_value, string as_objtype, string as_band, boolean ab_visible_only)
 public function string of_Modify (string as_attribute, string as_value)
 public function string of_getheadername (string as_column, string as_suffix)
-public function integer of_refreshdddws ()
 public function any of_GetItemany (long al_row, integer ai_column)
 public function any of_GetItemany (long al_row, integer ai_column, dwbuffer adw_buffer, boolean ab_orig_value)
 public function any of_GetItemany (long al_row, string as_column)
@@ -67,20 +66,21 @@ public function integer of_populatedddw (string as_dddwname)
 public function integer of_populatedddw (integer ai_dddwnumber)
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
 public function integer of_getpropertyinfo (ref n_cst_propertyattrib anv_attrib)
-public function integer of_PopulateDDDW ()
 public function any of_getitemany (long al_row, string as_column, dwbuffer adw_buffer, boolean ab_orig_value)
 public function string of_getitem (long al_row, string as_column, dwbuffer adw_buffer, boolean ab_orig_value)
 public function any of_buildcomparison (long al_row, string as_column)
 public function any of_buildexpression (long al_row, string as_column, string as_operator, string as_optionalvalue)
 public function string of_getname ()
 public function any of_buildcomparison (long al_row, string as_column, string as_optionalvalue)
-public function integer of_dwarguments (ref string as_argnames[], ref string as_argdatatypes[])
-public function integer of_dwarguments (datawindowchild adwc_obj, ref string as_argnames[], ref string as_argdatatypes[])
 public function integer of_setitem (long al_row, string as_column, string as_value)
 public function integer of_getobjects (ref string as_objlist[], string as_objtype, string as_band, boolean ab_visibleonly, boolean ab_append)
 public function integer of_getobjects (ref string as_objlist[], string as_objtype, string as_band, boolean ab_visibleonly)
 public function integer of_describe (ref string as_values[], string as_attribute, string as_objects[])
 public function string of_getcolumneditstatus (string as_column, long al_row)
+public function long of_dwarguments (datawindowchild adwc_obj, ref string as_argnames[], ref string as_argdatatypes[])
+public function long of_dwarguments (ref string as_argnames[], ref string as_argdatatypes[])
+public function long of_populatedddw ()
+public function long of_refreshdddws ()
 end prototypes
 
 public function integer of_getcolumnnamesource ();// ##OBSOLETE##
@@ -753,116 +753,6 @@ IF NOT lb_found THEN
 END IF
 
 Return ls_colhead
-end function
-
-public function integer of_refreshdddws ();//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  of_RefreshDDDWs
-//
-//	Access:    Public
-//
-//	Arguments:  None
-//
-//	Returns:   Integer
-//	  The number of dddw-style columns found and refreshed.
-//		-1 if an error occurs.
-//
-//	Description:  To determine what columns have a DropDownDataWindow style 
-//					  and to refresh the dddw. 
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	5.0	Initial version
-//	5.0.02 Handle cases where the column having a child datawindow does not 
-//			equal the dropdowndatawindow column name. 
-//	5.0.02 Check for required references and added error checking.
-// 6.0	Marked obsolete Replaced by of_PopulateDDDWs(...).
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-Long		ll_rc
-Long 		ll_cnt
-Long		ll_columncount
-Long		ll_dddwcount
-String 	ls_colname
-String	ls_dddwdatacolumn
-String 	ls_args[]
-String	ls_types[]
-boolean	lb_dddwrefreshed=False
-DataWindowChild ldwc_obj
-
-// Check required references.
-If IsNull(idw_Requestor) or Not IsValid(idw_Requestor) Then Return -1
-
-// Get the number of columns on the datawindow.
-ll_columncount = Long (idw_Requestor.Describe("DataWindow.Column.Count")) 
-
-// Loop around all columns.
-FOR ll_cnt=1 TO ll_columncount
-	// Reset boolean which states if dddw is refreshed.
-	lb_dddwrefreshed=False
-	
-	// Get the current column name.
-	ls_colname = idw_Requestor.Describe ( "#" + String ( ll_cnt ) + ".Name" )
-	// Determine if the current column is a DropDownDataWindow.
-	ls_dddwdatacolumn = idw_Requestor.Describe ( ls_colname + ".DDDW.DataColumn" )
-	IF ls_dddwdatacolumn = "" OR ls_dddwdatacolumn = "?" THEN
-		// Not a DropDownDataWindow.
-		CONTINUE
-	ELSE
-		// Get the Child reference.
-		ll_rc = idw_Requestor.GetChild (ls_colname, ldwc_obj) 
-		If ll_rc > 0 Then
-			// A DropDownDataWindow has been found.			
-			IF of_DWArguments ( ldwc_obj, ls_args, ls_types ) > 0 THEN 
-				// DropDownDataWindow has arguments, call event which will handle this case.
-				ll_rc = idw_Requestor.Event pfc_retrievedddw(ls_colname)
-				If ll_rc < 0 Then Return -1
-				lb_dddwrefreshed = True
-			ELSE 
-				// DropDownDataWindow does not have arguments, refresh the data.
-				If IsValid(idw_Requestor.itr_object) Then
-					ll_rc = ldwc_obj.SetTransObject(idw_Requestor.itr_object) 
-					If ll_rc < 0 Then Return -1					
-					ll_rc = ldwc_obj.Retrieve() 
-					If ll_rc < 0 Then Return -1
-					lb_dddwrefreshed = True				
-				End If
-			END IF
-			If lb_dddwrefreshed Then
-				// Increment the DropDownDataWindow count.
-				ll_dddwcount++			
-			End If
-		End If
-	END IF 
-NEXT 
- 
-Return ll_dddwcount
 end function
 
 public function any of_GetItemany (long al_row, integer ai_column);//////////////////////////////////////////////////////////////////////////////
@@ -2480,96 +2370,6 @@ anv_attrib.ib_switchbuttons = False
 Return 1
 end function
 
-public function integer of_PopulateDDDW ();//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:
-//	of_PopulateDDDW
-//
-//	Access:
-//	Public
-//
-//	Arguments:
-//	None
-//
-//	Returns:
-//	integer
-//	The number of dddw-style columns populated
-//	-1 if an error occurs.
-//
-//	Description:
-//	Populates all DDDWs on the DataWindow
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version - Replaces obsoleted function of_RefreshDDDWs(...)
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-Long		ll_rc
-Long 		ll_cnt
-Long		ll_columncount
-Long		ll_dddwcount
-String 	ls_colname
-String	ls_dddwdatacolumn
-DataWindowChild ldwc_obj
-
-// Check required references.
-If IsNull(idw_Requestor) or Not IsValid(idw_Requestor) Then Return -1
-
-// Get the number of columns on the datawindow.
-ll_columncount = Long (idw_Requestor.Describe("DataWindow.Column.Count")) 
-
-// Loop around all columns.
-FOR ll_cnt=1 TO ll_columncount
-	
-	// Get the current column name.
-	ls_colname = idw_Requestor.Describe ( "#" + String ( ll_cnt ) + ".Name" )
-	// Determine if the current column is a DropDownDataWindow.
-	ls_dddwdatacolumn = idw_Requestor.Describe ( ls_colname + ".DDDW.DataColumn" )
-	IF ls_dddwdatacolumn = "" OR ls_dddwdatacolumn = "?" or ls_dddwdatacolumn = "!" THEN
-		// Not a DropDownDataWindow.
-		CONTINUE
-	ELSE
-		// Get the Child reference.
-		ll_rc = idw_Requestor.GetChild (ls_colname, ldwc_obj) 
-		If ll_rc > 0 Then
-			ll_rc = idw_requestor.event pfc_populatedddw (ls_colname, ldwc_obj)
-			if ll_rc < 0 then return -1
-			
-			// Increment the DropDownDataWindow count.
-			ll_dddwcount++			
-		End If
-	END IF 
-NEXT 
- 
-Return ll_dddwcount
-end function
-
 public function any of_getitemany (long al_row, string as_column, dwbuffer adw_buffer, boolean ab_orig_value);//////////////////////////////////////////////////////////////////////////////
 //	Public Function:  of_GetItemAny (FORMAT 4) 
 //	Arguments:   	al_row			   : The row reference
@@ -3179,131 +2979,6 @@ End If
 Return ls_expression
 end function
 
-public function integer of_dwarguments (ref string as_argnames[], ref string as_argdatatypes[]);//////////////////////////////////////////////////////////////////////////////
-//	Public Function:  	of_DWArguments (Format 2)
-//	Arguments:			as_argnames[]:  A string array (by reference) to hold the argument names
-//							as_argdatatypes[]:  A string array (by reference) to hold argument datatypes
-//	Returns:  			Integer -	The number of arguments found
-//	Description:  		Determines if a DataWindow has arguments and what they are.
-//							Note: This function has a (Format 1) which is very similar.
-//////////////////////////////////////////////////////////////////////////////
-//	Rev. History			Version
-//							5.0  	Initial version
-//							5.0.01 Fixed bug so that reference arguments are populated correctly
-//							5.0.01 Function returns -1 if DataWindowChild reference is not valid
-// 							5.0.02 Added Stored Procedures support.
-// 							5.0.04 Fixed bug which prevented the looping around multiple arguments.
-//							8.0		Switched to use new Describe String to get arguments
-//							9.0	Fix CR305452
-//////////////////////////////////////////////////////////////////////////////
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//////////////////////////////////////////////////////////////////////////////
-string ls_dwargs, ls_dwargswithtype[], ls_args[], ls_types[]
-long ll_a, ll_args, ll_pos
-n_cst_string lnv_string
-
-// Check DW requestor
-if IsNull(idw_Requestor) or not IsValid(idw_Requestor) then
-	return -1
-end if
-
-ls_dwargs = idw_Requestor.Describe ( "DataWindow.Table.Arguments" ) 
-
-// Fix CR305452 to remove ~r
-ll_args = lnv_string.of_ParseToArray ( ls_dwargs, "~n", ls_dwargswithtype ) 
-
-For ll_a = 1 to ll_args
-	ll_pos = Pos ( ls_dwargswithtype[ll_a], "~t", 1 )
-	If ll_pos > 0 Then
-		as_argnames[UpperBound(as_argnames)+1] = Left ( ls_dwargswithtype[ll_a], ll_pos - 1 ) 
-		as_argdatatypes[UpperBound(as_argdatatypes)+1] = Mid ( ls_dwargswithtype[ll_a], ll_pos + 1 ) 
-	End If
-Next
-
-Return UpperBound ( as_argnames )
-end function
-
-public function integer of_dwarguments (datawindowchild adwc_obj, ref string as_argnames[], ref string as_argdatatypes[]);//////////////////////////////////////////////////////////////////////////////
-//	Public Function:  	of_DWArguments (Format 1)
-//	Arguments:			adwc_obj:  DataWindow child to determine if there are arguments
-//							as_argnames[]:  A string array (by reference) to hold the argument names
-//							as_argdatatypes[]:  A string array (by reference) to hold argument datatypes
-//	Returns:  			Integer -	The number of arguments found
-//	Description:  		Determines if a DataWindowChild has arguments and what they are.
-//							Note: This function has a (Format 2) which is very similar.
-//////////////////////////////////////////////////////////////////////////////
-//	Rev. History			Version
-//							5.0  	Initial version
-//							5.0.01 Fixed bug so that reference arguments are populated correctly
-//							5.0.01 Function returns -1 if DataWindowChild reference is not valid
-// 							5.0.02 Added Stored Procedures support.
-// 							5.0.04 Fixed bug which prevented the looping around multiple arguments.
-//							8.0		Switched to use new Describe String to get arguments
-//							9.0	Fix CR305452
-//////////////////////////////////////////////////////////////////////////////
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//////////////////////////////////////////////////////////////////////////////
-string ls_dwargs, ls_dwargswithtype[], ls_args[], ls_types[]
-long ll_a, ll_args, ll_pos
-n_cst_string lnv_string
-
-// Check arguments
-if IsNull (adwc_obj) or not IsValid (adwc_obj) then
-	return -1
-end if
-
-ls_dwargs = adwc_obj.Describe ( "DataWindow.Table.Arguments" ) 
-
-// Fix CR305452 to remove ~r
-ll_args = lnv_string.of_ParseToArray ( ls_dwargs, "~n", ls_dwargswithtype ) 
-
-For ll_a = 1 to ll_args
-	ll_pos = Pos ( ls_dwargswithtype[ll_a], "~t", 1 )
-	If ll_pos > 0 Then
-		as_argnames[UpperBound(as_argnames)+1] = Left ( ls_dwargswithtype[ll_a], ll_pos - 1 ) 
-		as_argdatatypes[UpperBound(as_argdatatypes)+1] = Mid ( ls_dwargswithtype[ll_a], ll_pos + 1 ) 
-	End If
-Next
-
-Return UpperBound ( as_argnames )
-end function
-
 public function integer of_setitem (long al_row, string as_column, string as_value);//////////////////////////////////////////////////////////////////////////////
 //	Public Function:		of_SetItem (FORMAT 2) 
 //	Arguments:			al_row			:  The row reference for the value to be set
@@ -3879,6 +3554,331 @@ End If
 // If None of the above then the field is editable.
 //////////////////////////////////////////////////////////////////////////////
 Return EDITABLE_COLUMN
+end function
+
+public function long of_dwarguments (datawindowchild adwc_obj, ref string as_argnames[], ref string as_argdatatypes[]);//////////////////////////////////////////////////////////////////////////////
+//	Public Function:  	of_DWArguments (Format 1)
+//	Arguments:			adwc_obj:  DataWindow child to determine if there are arguments
+//							as_argnames[]:  A string array (by reference) to hold the argument names
+//							as_argdatatypes[]:  A string array (by reference) to hold argument datatypes
+//	Returns:  			long -	The number of arguments found
+//	Description:  		Determines if a DataWindowChild has arguments and what they are.
+//							Note: This function has a (Format 2) which is very similar.
+//////////////////////////////////////////////////////////////////////////////
+//	Rev. History			Version
+//							5.0  	Initial version
+//							5.0.01 Fixed bug so that reference arguments are populated correctly
+//							5.0.01 Function returns -1 if DataWindowChild reference is not valid
+// 							5.0.02 Added Stored Procedures support.
+// 							5.0.04 Fixed bug which prevented the looping around multiple arguments.
+//							8.0		Switched to use new Describe String to get arguments
+//							9.0	Fix CR305452
+//////////////////////////////////////////////////////////////////////////////
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//////////////////////////////////////////////////////////////////////////////
+string ls_dwargs, ls_dwargswithtype[], ls_args[], ls_types[]
+long ll_a, ll_args, ll_pos
+n_cst_string lnv_string
+
+// Check arguments
+if IsNull (adwc_obj) or not IsValid (adwc_obj) then
+	return -1
+end if
+
+ls_dwargs = adwc_obj.Describe ( "DataWindow.Table.Arguments" ) 
+
+// Fix CR305452 to remove ~r
+ll_args = lnv_string.of_ParseToArray ( ls_dwargs, "~n", ls_dwargswithtype ) 
+
+For ll_a = 1 to ll_args
+	ll_pos = Pos ( ls_dwargswithtype[ll_a], "~t", 1 )
+	If ll_pos > 0 Then
+		as_argnames[UpperBound(as_argnames)+1] = Left ( ls_dwargswithtype[ll_a], ll_pos - 1 ) 
+		as_argdatatypes[UpperBound(as_argdatatypes)+1] = Mid ( ls_dwargswithtype[ll_a], ll_pos + 1 ) 
+	End If
+Next
+
+Return UpperBound ( as_argnames )
+end function
+
+public function long of_dwarguments (ref string as_argnames[], ref string as_argdatatypes[]);//////////////////////////////////////////////////////////////////////////////
+//	Public Function:  	of_DWArguments (Format 2)
+//	Arguments:			as_argnames[]:  A string array (by reference) to hold the argument names
+//							as_argdatatypes[]:  A string array (by reference) to hold argument datatypes
+//	Returns:  			long -	The number of arguments found
+//	Description:  		Determines if a DataWindow has arguments and what they are.
+//							Note: This function has a (Format 1) which is very similar.
+//////////////////////////////////////////////////////////////////////////////
+//	Rev. History			Version
+//							5.0  	Initial version
+//							5.0.01 Fixed bug so that reference arguments are populated correctly
+//							5.0.01 Function returns -1 if DataWindowChild reference is not valid
+// 							5.0.02 Added Stored Procedures support.
+// 							5.0.04 Fixed bug which prevented the looping around multiple arguments.
+//							8.0		Switched to use new Describe String to get arguments
+//							9.0	Fix CR305452
+//////////////////////////////////////////////////////////////////////////////
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//////////////////////////////////////////////////////////////////////////////
+string ls_dwargs, ls_dwargswithtype[], ls_args[], ls_types[]
+long ll_a, ll_args, ll_pos
+n_cst_string lnv_string
+
+// Check DW requestor
+if IsNull(idw_Requestor) or not IsValid(idw_Requestor) then
+	return -1
+end if
+
+ls_dwargs = idw_Requestor.Describe ( "DataWindow.Table.Arguments" ) 
+
+// Fix CR305452 to remove ~r
+ll_args = lnv_string.of_ParseToArray ( ls_dwargs, "~n", ls_dwargswithtype ) 
+
+For ll_a = 1 to ll_args
+	ll_pos = Pos ( ls_dwargswithtype[ll_a], "~t", 1 )
+	If ll_pos > 0 Then
+		as_argnames[UpperBound(as_argnames)+1] = Left ( ls_dwargswithtype[ll_a], ll_pos - 1 ) 
+		as_argdatatypes[UpperBound(as_argdatatypes)+1] = Mid ( ls_dwargswithtype[ll_a], ll_pos + 1 ) 
+	End If
+Next
+
+Return UpperBound ( as_argnames )
+end function
+
+public function long of_populatedddw ();//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:
+//	of_PopulateDDDW
+//
+//	Access:
+//	Public
+//
+//	Arguments:
+//	None
+//
+//	Returns:
+//	long
+//	The number of dddw-style columns populated
+//	-1 if an error occurs.
+//
+//	Description:
+//	Populates all DDDWs on the DataWindow
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version - Replaces obsoleted function of_RefreshDDDWs(...)
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+Long		ll_rc
+Long 		ll_cnt
+Long		ll_columncount
+Long		ll_dddwcount
+String 	ls_colname
+String	ls_dddwdatacolumn
+DataWindowChild ldwc_obj
+
+// Check required references.
+If IsNull(idw_Requestor) or Not IsValid(idw_Requestor) Then Return -1
+
+// Get the number of columns on the datawindow.
+ll_columncount = Long (idw_Requestor.Describe("DataWindow.Column.Count")) 
+
+// Loop around all columns.
+FOR ll_cnt=1 TO ll_columncount
+	
+	// Get the current column name.
+	ls_colname = idw_Requestor.Describe ( "#" + String ( ll_cnt ) + ".Name" )
+	// Determine if the current column is a DropDownDataWindow.
+	ls_dddwdatacolumn = idw_Requestor.Describe ( ls_colname + ".DDDW.DataColumn" )
+	IF ls_dddwdatacolumn = "" OR ls_dddwdatacolumn = "?" or ls_dddwdatacolumn = "!" THEN
+		// Not a DropDownDataWindow.
+		CONTINUE
+	ELSE
+		// Get the Child reference.
+		ll_rc = idw_Requestor.GetChild (ls_colname, ldwc_obj) 
+		If ll_rc > 0 Then
+			ll_rc = idw_requestor.event pfc_populatedddw (ls_colname, ldwc_obj)
+			if ll_rc < 0 then return -1
+			
+			// Increment the DropDownDataWindow count.
+			ll_dddwcount++			
+		End If
+	END IF 
+NEXT 
+ 
+Return ll_dddwcount
+end function
+
+public function long of_refreshdddws ();//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  of_RefreshDDDWs
+//
+//	Access:    Public
+//
+//	Arguments:  None
+//
+//	Returns:   long
+//	  The number of dddw-style columns found and refreshed.
+//		-1 if an error occurs.
+//
+//	Description:  To determine what columns have a DropDownDataWindow style 
+//					  and to refresh the dddw. 
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	5.0	Initial version
+//	5.0.02 Handle cases where the column having a child datawindow does not 
+//			equal the dropdowndatawindow column name. 
+//	5.0.02 Check for required references and added error checking.
+// 6.0	Marked obsolete Replaced by of_PopulateDDDWs(...).
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+Long		ll_rc
+Long 		ll_cnt
+Long		ll_columncount
+Long		ll_dddwcount
+String 	ls_colname
+String	ls_dddwdatacolumn
+String 	ls_args[]
+String	ls_types[]
+boolean	lb_dddwrefreshed=False
+DataWindowChild ldwc_obj
+
+// Check required references.
+If IsNull(idw_Requestor) or Not IsValid(idw_Requestor) Then Return -1
+
+// Get the number of columns on the datawindow.
+ll_columncount = Long (idw_Requestor.Describe("DataWindow.Column.Count")) 
+
+// Loop around all columns.
+FOR ll_cnt=1 TO ll_columncount
+	// Reset boolean which states if dddw is refreshed.
+	lb_dddwrefreshed=False
+	
+	// Get the current column name.
+	ls_colname = idw_Requestor.Describe ( "#" + String ( ll_cnt ) + ".Name" )
+	// Determine if the current column is a DropDownDataWindow.
+	ls_dddwdatacolumn = idw_Requestor.Describe ( ls_colname + ".DDDW.DataColumn" )
+	IF ls_dddwdatacolumn = "" OR ls_dddwdatacolumn = "?" THEN
+		// Not a DropDownDataWindow.
+		CONTINUE
+	ELSE
+		// Get the Child reference.
+		ll_rc = idw_Requestor.GetChild (ls_colname, ldwc_obj) 
+		If ll_rc > 0 Then
+			// A DropDownDataWindow has been found.			
+			IF of_DWArguments ( ldwc_obj, ls_args, ls_types ) > 0 THEN 
+				// DropDownDataWindow has arguments, call event which will handle this case.
+				ll_rc = idw_Requestor.Event pfc_retrievedddw(ls_colname)
+				If ll_rc < 0 Then Return -1
+				lb_dddwrefreshed = True
+			ELSE 
+				// DropDownDataWindow does not have arguments, refresh the data.
+				If IsValid(idw_Requestor.itr_object) Then
+					ll_rc = ldwc_obj.SetTransObject(idw_Requestor.itr_object) 
+					If ll_rc < 0 Then Return -1					
+					ll_rc = ldwc_obj.Retrieve() 
+					If ll_rc < 0 Then Return -1
+					lb_dddwrefreshed = True				
+				End If
+			END IF
+			If lb_dddwrefreshed Then
+				// Increment the DropDownDataWindow count.
+				ll_dddwcount++			
+			End If
+		End If
+	END IF 
+NEXT 
+ 
+Return ll_dddwcount
 end function
 
 on pfc_n_cst_dwsrv.create

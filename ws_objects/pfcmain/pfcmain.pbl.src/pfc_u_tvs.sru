@@ -97,7 +97,6 @@ public function integer of_update (boolean ab_accepttext, boolean ab_resetflag, 
 public function integer of_setupdaterequestor (powerobject apo_updaterequestor)
 public function integer of_getupdaterequestor (ref powerobject apo_updaterequestor)
 public function integer of_Setalwaysvalidate (boolean ab_validate)
-protected function integer of_getobjects (ref powerobject apo_objects[])
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
 protected function integer of_messagebox (string as_id, string as_title, string as_text, icon ae_icon, button ae_button, integer ai_default)
 public function integer of_getnextlevel (long al_parent)
@@ -112,6 +111,7 @@ public function boolean of_isrmbmenu ()
 public function long of_retrieve (long al_parent, any aa_args[20], ref n_ds ads_data)
 public function long of_insertitem (long al_parent, n_ds ads_obj, long al_row)
 public function long of_populate (long al_parent)
+protected function long of_getobjects (ref powerobject apo_objects[])
 end prototypes
 
 event pfc_prermbmenu;//////////////////////////////////////////////////////////////////////////////
@@ -2078,46 +2078,6 @@ ib_alwaysvalidate =  ab_validate
 return 1
 end function
 
-protected function integer of_getobjects (ref powerobject apo_objects[]);//////////////////////////////////////////////////////////////////////////////
-//	Protected Function: of_GetObjects
-//	Arguments: 		apo_objects[] 	An array of objects on which the update process will take effect 	passed by reference.
-//	Returns:  		integer:  # of objects in the array, -1 = error
-//	Description:  	Gets the current objects for which an updates will be attempted.
-//						If another service is added to the tree, this event will need to be extended or 
-//						overridden to get those objects which need updates.
-//////////////////////////////////////////////////////////////////////////////
-//	Rev. History:	Version
-//						6.0   Initial version
-//////////////////////////////////////////////////////////////////////////////
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//////////////////////////////////////////////////////////////////////////////
-// Determine the datasource.
-If IsValid(inv_levelsource) Then
-	If inv_levelsource.of_GetObjects(apo_objects) < 1 then Return -1
-	Return upperbound(apo_objects)
-End If
-
-Return -1
-end function
-
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib);//////////////////////////////////////////////////////////////////////////////
 //	Public Function: of_GetInfo
 //	Arguments: 		anv_infoattrib	(By reference) The Information attributes.
@@ -2745,6 +2705,46 @@ IF this.event pfc_retrieve(al_parent, lds_data) < 0 Then Return -1
 
 // add the treeview data
 Return this.event pfc_AddAll(al_parent, lds_data) 
+end function
+
+protected function long of_getobjects (ref powerobject apo_objects[]);//////////////////////////////////////////////////////////////////////////////
+//	Protected Function: of_GetObjects
+//	Arguments: 		apo_objects[] 	An array of objects on which the update process will take effect 	passed by reference.
+//	Returns:  		long:  # of objects in the array, -1 = error
+//	Description:  	Gets the current objects for which an updates will be attempted.
+//						If another service is added to the tree, this event will need to be extended or 
+//						overridden to get those objects which need updates.
+//////////////////////////////////////////////////////////////////////////////
+//	Rev. History:	Version
+//						6.0   Initial version
+//////////////////////////////////////////////////////////////////////////////
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//////////////////////////////////////////////////////////////////////////////
+// Determine the datasource.
+If IsValid(inv_levelsource) Then
+	If inv_levelsource.of_GetObjects(apo_objects) < 1 then Return -1
+	Return upperbound(apo_objects)
+End If
+
+Return -1
 end function
 
 event destructor//////////////////////////////////////////////////////////////////////////////

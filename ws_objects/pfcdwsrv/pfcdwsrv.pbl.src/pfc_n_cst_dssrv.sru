@@ -68,11 +68,11 @@ public function any of_buildcomparison (long al_row, string as_column)
 public function any of_buildexpression (long al_row, string as_column, string as_operator, string as_optionalvalue)
 public function string of_getname ()
 public function any of_buildcomparison (long al_row, string as_column, string as_optionalvalue)
-public function integer of_dwarguments (datawindowchild adwc_obj, ref string as_argnames[], ref string as_argdatatypes[])
-public function integer of_dwarguments (ref string as_argnames[], ref string as_argdatatypes[])
 public function integer of_setitem (long al_row, string as_column, string as_value)
 public function integer of_getobjects (ref string as_objlist[], string as_objtype, string as_band, boolean ab_visibleonly, boolean ab_append)
 public function integer of_getobjects (ref string as_objlist[], string as_objtype, string as_band, boolean ab_visibleonly)
+public function long of_dwarguments (datawindowchild adwc_obj, ref string as_argnames[], ref string as_argdatatypes[])
+public function long of_dwarguments (ref string as_argnames[], ref string as_argdatatypes[])
 end prototypes
 
 public function integer of_getcolumnnamesource ();// ##Obsolete##
@@ -2781,132 +2781,6 @@ End If
 Return ls_expression
 end function
 
-public function integer of_dwarguments (datawindowchild adwc_obj, ref string as_argnames[], ref string as_argdatatypes[]);//////////////////////////////////////////////////////////////////////////////
-//	Public Function:  	of_DWArguments (Format 1)
-//	Arguments:			adwc_obj:  DataWindow child to determine if there are arguments
-//							as_argnames[]:  A string array (by reference) to hold the argument names
-//							as_argdatatypes[]:  A string array (by reference) to hold argument datatypes
-//	Returns:  			Integer -	The number of arguments found
-//	Description:  		Determines if a DataWindowChild has arguments and what they are.
-//							Note: This function has a (Format 2) which is very similar.
-//////////////////////////////////////////////////////////////////////////////
-//	Rev. History			Version
-//							5.0  	Initial version
-//							5.0.01 Fixed bug so that reference arguments are populated correctly
-//							5.0.01 Function returns -1 if DataWindowChild reference is not valid
-// 							5.0.02 Added Stored Procedures support.
-// 							5.0.04 Fixed bug which prevented the looping around multiple arguments.
-//							8.0		Switched to use new Describe String to get arguments
-//							9.0	Fix CR305452
-//////////////////////////////////////////////////////////////////////////////
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//////////////////////////////////////////////////////////////////////////////
-string ls_dwargs, ls_dwargswithtype[], ls_args[], ls_types[]
-long ll_a, ll_args, ll_pos
-n_cst_string lnv_string
-
-// Check arguments
-if IsNull (adwc_obj) or not IsValid (adwc_obj) then
-	return -1
-end if
-
-ls_dwargs = adwc_obj.Describe ( "DataWindow.Table.Arguments" ) 
-
-// Fix CR305452 to remove ~r
-ll_args = lnv_string.of_ParseToArray ( ls_dwargs, "~n", ls_dwargswithtype ) 
-
-For ll_a = 1 to ll_args
-	ll_pos = Pos ( ls_dwargswithtype[ll_a], "~t", 1 )
-	If ll_pos > 0 Then
-		as_argnames[UpperBound(as_argnames)+1] = Left ( ls_dwargswithtype[ll_a], ll_pos - 1 ) 
-		as_argdatatypes[UpperBound(as_argdatatypes)+1] = Mid ( ls_dwargswithtype[ll_a], ll_pos + 1 ) 
-	End If
-Next
-
-Return UpperBound ( as_argnames )
-end function
-
-public function integer of_dwarguments (ref string as_argnames[], ref string as_argdatatypes[]);//////////////////////////////////////////////////////////////////////////////
-//	Public Function:  	of_DWArguments (Format 2)
-//	Arguments:			as_argnames[]:  A string array (by reference) to hold the argument names
-//							as_argdatatypes[]:  A string array (by reference) to hold argument datatypes
-//	Returns:  			Integer -	The number of arguments found
-//	Description:  		Determines if a Datastore has arguments and what they are.
-//							Note: This function has a (Format 1) which is very similar.
-//////////////////////////////////////////////////////////////////////////////
-//	Rev. History			Version
-//							5.0  	Initial version
-//							5.0.01 Fixed bug so that reference arguments are populated correctly
-//							5.0.01 Function returns -1 if DataWindowChild reference is not valid
-// 							5.0.02 Added Stored Procedures support.
-// 							5.0.04 Fixed bug which prevented the looping around multiple arguments.
-//							8.0		Switched to use new Describe String to get arguments
-//							9.0	Fix CR305452
-//////////////////////////////////////////////////////////////////////////////
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//////////////////////////////////////////////////////////////////////////////
-string ls_dwargs, ls_dwargswithtype[], ls_args[], ls_types[]
-long ll_a, ll_args, ll_pos
-n_cst_string lnv_string
-
-// Check DW requestor
-if IsNull(ids_requestor) or not IsValid(ids_requestor) then
-	return -1
-end if
-
-ls_dwargs = ids_requestor.Describe ( "DataWindow.Table.Arguments" ) 
-
-// Fix CR305452 to remove ~r
-ll_args = lnv_string.of_ParseToArray ( ls_dwargs, "~n", ls_dwargswithtype ) 
-
-For ll_a = 1 to ll_args
-	ll_pos = Pos ( ls_dwargswithtype[ll_a], "~t", 1 )
-	If ll_pos > 0 Then
-		as_argnames[UpperBound(as_argnames)+1] = Left ( ls_dwargswithtype[ll_a], ll_pos - 1 ) 
-		as_argdatatypes[UpperBound(as_argdatatypes)+1] = Mid ( ls_dwargswithtype[ll_a], ll_pos + 1 ) 
-	End If
-Next
-
-Return UpperBound ( as_argnames )
-
-end function
-
 public function integer of_setitem (long al_row, string as_column, string as_value);//////////////////////////////////////////////////////////////////////////////
 //	Public Function:		of_SetItem (FORMAT 2) 
 //	Arguments:			al_row			:  The row reference for the value to be set
@@ -3279,6 +3153,132 @@ public function integer of_getobjects (ref string as_objlist[], string as_objtyp
 //////////////////////////////////////////////////////////////////////////////
 
 return this.of_Getobjects( as_objlist, as_objtype, as_band, ab_visibleonly, FALSE )
+end function
+
+public function long of_dwarguments (datawindowchild adwc_obj, ref string as_argnames[], ref string as_argdatatypes[]);//////////////////////////////////////////////////////////////////////////////
+//	Public Function:  	of_DWArguments (Format 1)
+//	Arguments:			adwc_obj:  DataWindow child to determine if there are arguments
+//							as_argnames[]:  A string array (by reference) to hold the argument names
+//							as_argdatatypes[]:  A string array (by reference) to hold argument datatypes
+//	Returns:  			long -	The number of arguments found
+//	Description:  		Determines if a DataWindowChild has arguments and what they are.
+//							Note: This function has a (Format 2) which is very similar.
+//////////////////////////////////////////////////////////////////////////////
+//	Rev. History			Version
+//							5.0  	Initial version
+//							5.0.01 Fixed bug so that reference arguments are populated correctly
+//							5.0.01 Function returns -1 if DataWindowChild reference is not valid
+// 							5.0.02 Added Stored Procedures support.
+// 							5.0.04 Fixed bug which prevented the looping around multiple arguments.
+//							8.0		Switched to use new Describe String to get arguments
+//							9.0	Fix CR305452
+//////////////////////////////////////////////////////////////////////////////
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//////////////////////////////////////////////////////////////////////////////
+string ls_dwargs, ls_dwargswithtype[], ls_args[], ls_types[]
+long ll_a, ll_args, ll_pos
+n_cst_string lnv_string
+
+// Check arguments
+if IsNull (adwc_obj) or not IsValid (adwc_obj) then
+	return -1
+end if
+
+ls_dwargs = adwc_obj.Describe ( "DataWindow.Table.Arguments" ) 
+
+// Fix CR305452 to remove ~r
+ll_args = lnv_string.of_ParseToArray ( ls_dwargs, "~n", ls_dwargswithtype ) 
+
+For ll_a = 1 to ll_args
+	ll_pos = Pos ( ls_dwargswithtype[ll_a], "~t", 1 )
+	If ll_pos > 0 Then
+		as_argnames[UpperBound(as_argnames)+1] = Left ( ls_dwargswithtype[ll_a], ll_pos - 1 ) 
+		as_argdatatypes[UpperBound(as_argdatatypes)+1] = Mid ( ls_dwargswithtype[ll_a], ll_pos + 1 ) 
+	End If
+Next
+
+Return UpperBound ( as_argnames )
+end function
+
+public function long of_dwarguments (ref string as_argnames[], ref string as_argdatatypes[]);//////////////////////////////////////////////////////////////////////////////
+//	Public Function:  	of_DWArguments (Format 2)
+//	Arguments:			as_argnames[]:  A string array (by reference) to hold the argument names
+//							as_argdatatypes[]:  A string array (by reference) to hold argument datatypes
+//	Returns:  			long -	The number of arguments found
+//	Description:  		Determines if a Datastore has arguments and what they are.
+//							Note: This function has a (Format 1) which is very similar.
+//////////////////////////////////////////////////////////////////////////////
+//	Rev. History			Version
+//							5.0  	Initial version
+//							5.0.01 Fixed bug so that reference arguments are populated correctly
+//							5.0.01 Function returns -1 if DataWindowChild reference is not valid
+// 							5.0.02 Added Stored Procedures support.
+// 							5.0.04 Fixed bug which prevented the looping around multiple arguments.
+//							8.0		Switched to use new Describe String to get arguments
+//							9.0	Fix CR305452
+//////////////////////////////////////////////////////////////////////////////
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//////////////////////////////////////////////////////////////////////////////
+string ls_dwargs, ls_dwargswithtype[], ls_args[], ls_types[]
+long ll_a, ll_args, ll_pos
+n_cst_string lnv_string
+
+// Check DW requestor
+if IsNull(ids_requestor) or not IsValid(ids_requestor) then
+	return -1
+end if
+
+ls_dwargs = ids_requestor.Describe ( "DataWindow.Table.Arguments" ) 
+
+// Fix CR305452 to remove ~r
+ll_args = lnv_string.of_ParseToArray ( ls_dwargs, "~n", ls_dwargswithtype ) 
+
+For ll_a = 1 to ll_args
+	ll_pos = Pos ( ls_dwargswithtype[ll_a], "~t", 1 )
+	If ll_pos > 0 Then
+		as_argnames[UpperBound(as_argnames)+1] = Left ( ls_dwargswithtype[ll_a], ll_pos - 1 ) 
+		as_argdatatypes[UpperBound(as_argdatatypes)+1] = Mid ( ls_dwargswithtype[ll_a], ll_pos + 1 ) 
+	End If
+Next
+
+Return UpperBound ( as_argnames )
+
 end function
 
 on pfc_n_cst_dssrv.create

@@ -30,13 +30,13 @@ protected function integer of_delnode (n_cst_treenode anv_keynode, ref n_cst_tre
 public function integer of_getroot (ref n_cst_treenode anv_node)
 protected function integer of_balance (ref n_cst_treenode anv_delnode, ref boolean ab_height)
 public function long of_count ()
-public function integer of_get (ref n_cst_treenode anv_list[])
 public function long of_destroy ()
 protected function integer of_traverse (n_cst_treenode anv_currentnode, ref n_cst_treenode anv_list[], ref long al_cnt)
 public function integer of_remove (ref n_cst_treenode anv_currentnode)
 public function integer of_find (ref n_cst_treenode anv_currentnode, n_cst_treenode anv_keynode)
 public function integer of_setcompare (n_cst_treenodecompare anv_compare)
 public function integer of_add (n_cst_treenode anv_currentnode)
+public function long of_get (ref n_cst_treenode anv_list[])
 end prototypes
 
 public function integer of_create (ref n_cst_treenode anv_currentnode);//////////////////////////////////////////////////////////////////////////////
@@ -882,65 +882,6 @@ setpointer(hourglass!)
 return of_get(ln_node)
 end function
 
-public function integer of_get (ref n_cst_treenode anv_list[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  of_Get
-//
-//	Access:  public
-//
-//	Arguments : 
-//	anv_list[]  (by reference) an array of nodes.
-//
-//	Returns:  long
-//	The number of nodes in the list.
-//	 -1 : Error
-//
-//	Description:  
-//	Returns an unbounded array of nodes. In left node first order
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-long ll_cnt = 0
-integer li_rc
-
-setpointer(hourglass!)
-if isvalid(inv_root) then 
-	of_traverse(inv_root,anv_list,ll_cnt)
-end if
-
-return ll_cnt
-
-end function
-
 public function long of_destroy ();//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  of_destroy
@@ -1348,6 +1289,65 @@ end if
 // call the recursive function of_addnode
 lb_height = false
 return of_addnode(anv_currentnode,inv_root,lb_height) 
+
+end function
+
+public function long of_get (ref n_cst_treenode anv_list[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  of_Get
+//
+//	Access:  public
+//
+//	Arguments : 
+//	anv_list[]  (by reference) an array of nodes.
+//
+//	Returns:  long
+//	The number of nodes in the list.
+//	 -1 : Error
+//
+//	Description:  
+//	Returns an unbounded array of nodes. In left node first order
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+long ll_cnt = 0
+integer li_rc
+
+setpointer(hourglass!)
+if isvalid(inv_root) then 
+	of_traverse(inv_root,anv_list,ll_cnt)
+end if
+
+return ll_cnt
 
 end function
 
