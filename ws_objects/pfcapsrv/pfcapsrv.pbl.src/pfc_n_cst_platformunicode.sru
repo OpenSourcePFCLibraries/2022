@@ -172,7 +172,7 @@ constant integer FOLDER_CDBURN_AREA             = 59    // Temporary burn direct
 end variables
 
 forward prototypes
-public function unsignedinteger of_findwindow (string as_window_name)
+public function unsignedlong of_findwindow (string as_window_name)
 public function integer of_GetActiveWindowBorder ()
 public function string of_GetComputerName ()
 public function longlong of_getfreememory ()
@@ -188,10 +188,10 @@ public function integer of_getknownfolderpath (integer ai_foldercode, boolean ab
 public function integer of_maxpath ()
 end prototypes
 
-public function unsignedinteger of_findwindow (string as_window_name);//////////////////////////////////////////////////////////////////////////////
+public function unsignedlong of_findwindow (string as_window_name);//////////////////////////////////////////////////////////////////////////////
 //	Public Function:	of_FindWindow
 //	Arguments: 			as_window_name - window text to search for
-//	Returns:  			uint  - window handle
+//	Returns:  			ulong  - window handle
 //	Description:  		Return the handle of the window passed in by window name (Window Title)
 //////////////////////////////////////////////////////////////////////////////
 //	Rev. History		Version

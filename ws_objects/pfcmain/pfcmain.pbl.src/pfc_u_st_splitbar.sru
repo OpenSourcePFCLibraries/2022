@@ -94,12 +94,10 @@ protected function integer of_updateobjectdata ()
 public function integer of_getextremepoint (integer ai_extremetype)
 public function integer of_SetMinObjectSize (integer ai_minsize)
 public function integer of_getminobjectsize ()
-public function integer of_getbarcolor ()
 public function string of_GetHorizontalPointer ()
 public function string of_GetVerticalPointer ()
 public function integer of_sethorizontalpointer (string as_icon)
 public function integer of_setverticalpointer (string as_icon)
-public function integer of_GetBarMoveColor ()
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
 protected function boolean of_issupported ()
 protected function integer of_mousemove (unsignedlong aul_flags, integer ai_xpos, integer ai_ypos)
@@ -110,6 +108,8 @@ public function integer of_unregister (windowobject awo_object)
 public subroutine of_move (long al_newx, long al_newy)
 private subroutine of_moved (integer ai_pointerx, integer ai_pointery)
 private subroutine of_previousposition (integer ai_prevpositionx, integer ai_prevpositiony)
+public function long of_getbarmovecolor ()
+public function long of_getbarcolor ()
 end prototypes
 
 event mousemove;//////////////////////////////////////////////////////////////////////////////
@@ -1245,54 +1245,6 @@ public function integer of_getminobjectsize ();/////////////////////////////////
 Return ii_minobjectsize
 end function
 
-public function integer of_getbarcolor ();//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetBarColor
-//
-//	Access:  		Public
-//
-//	Arguments:		None
-//
-//	Returns:  		Integer
-//		The non-moving Split Bar color.
-//
-//	Description: 	
-//		Gets the Non-Moving Split Bar Color.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-Return il_barcolor
-end function
-
 public function string of_GetHorizontalPointer ();//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_GetHorizontalPointer
@@ -1509,54 +1461,6 @@ If ii_style = VERTICAL Then
 End If
 
 Return 1
-end function
-
-public function integer of_GetBarMoveColor ();//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetBarMoveColor
-//
-//	Access:  		Public
-//
-//	Arguments:		None
-//
-//	Returns:  		Integer
-//		The moving Split Bar color.
-//
-//	Description: 	
-//		Gets the Moving Split Bar Color.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-Return il_barmovecolor
 end function
 
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib);//////////////////////////////////////////////////////////////////////////////
@@ -2998,6 +2902,102 @@ ii_PrevPositionY			= ai_PrevPositionY
 
 RETURN
 end subroutine
+
+public function long of_getbarmovecolor ();//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetBarMoveColor
+//
+//	Access:  		Public
+//
+//	Arguments:		None
+//
+//	Returns:  		long
+//		The moving Split Bar color.
+//
+//	Description: 	
+//		Gets the Moving Split Bar Color.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+Return il_barmovecolor
+end function
+
+public function long of_getbarcolor ();//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetBarColor
+//
+//	Access:  		Public
+//
+//	Arguments:		None
+//
+//	Returns:  		long
+//		The non-moving Split Bar color.
+//
+//	Description: 	
+//		Gets the Non-Moving Split Bar Color.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+Return il_barcolor
+end function
 
 event constructor;//////////////////////////////////////////////////////////////////////////////
 //

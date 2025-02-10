@@ -50,7 +50,6 @@ public function integer of_setstyle (integer ai_style)
 public function integer of_getstyle ()
 public function integer of_setcolumnheader (boolean ab_switch)
 public function boolean of_getcolumnheader ()
-public function integer of_getregisterable (ref string as_allcolumns[])
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
 public function integer of_getpropertyinfo (ref n_cst_propertyattrib anv_attrib)
 public subroutine of_sortindicatornone ()
@@ -58,6 +57,7 @@ public subroutine of_sortindicatordraw ()
 public function string of_getsort (datawindow vdw_getsort)
 private function integer of_setsort (string as_format, boolean ab_pfcclicked)
 private function integer of_setsortdraw (boolean ab_switch)
+public function long of_getregisterable (ref string as_allcolumns[])
 end prototypes
 
 event type integer pfc_clicked(integer ai_xpos, integer ai_ypos, long al_row, ref dwobject adwo_obj);//////////////////////////////////////////////////////////////////////////////
@@ -1340,75 +1340,6 @@ public function boolean of_getcolumnheader ();//////////////////////////////////
 Return ib_columnheadersort
 end function
 
-public function integer of_getregisterable (ref string as_allcolumns[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetRegisterable
-//
-//	Access:    		Public
-//
-//	Arguments:
-//   as_allcolumns[]		Passed by reference, that will hold all the columns 
-//			(including computed columns) that the service can use to perform sorts.
-//
-//	Returns:   		Integer
-//	# of entries
-// -1 if an error occurs
-//
-//	Description:  
-//	To get the list of all the columns (including computed columns) that the service
-//	can use to perform sorts.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-integer	li_numcols
-integer	li_numcomputes
-integer	li_i
-string	ls_sortcolumns_all[]
-string	ls_computes[]
-
-// Get all the column names on the datawindow.
-li_numcols = of_GetObjects(ls_sortcolumns_all, "column", "*", ib_visibleonly) 
-
-// Get all the computed column names on the datawindow and add them to the array.
-li_numcomputes =  of_GetObjects( ls_computes, "compute", "*", ib_visibleonly)
-FOR li_i = 1 to li_numcomputes
-	li_numcols++
-	ls_sortcolumns_all[li_numcols] = ls_computes[li_i] 
-NEXT 
-
-as_allcolumns = ls_sortcolumns_all
-Return UpperBound(as_allcolumns)
-end function
-
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_GetInfo
@@ -1825,6 +1756,75 @@ ELSE
 END IF
 
 Return(NO_ACTION)
+end function
+
+public function long of_getregisterable (ref string as_allcolumns[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetRegisterable
+//
+//	Access:    		Public
+//
+//	Arguments:
+//   as_allcolumns[]		Passed by reference, that will hold all the columns 
+//			(including computed columns) that the service can use to perform sorts.
+//
+//	Returns:   		long
+//	# of entries
+// -1 if an error occurs
+//
+//	Description:  
+//	To get the list of all the columns (including computed columns) that the service
+//	can use to perform sorts.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+integer	li_numcols
+integer	li_numcomputes
+integer	li_i
+string	ls_sortcolumns_all[]
+string	ls_computes[]
+
+// Get all the column names on the datawindow.
+li_numcols = of_GetObjects(ls_sortcolumns_all, "column", "*", ib_visibleonly) 
+
+// Get all the computed column names on the datawindow and add them to the array.
+li_numcomputes =  of_GetObjects( ls_computes, "compute", "*", ib_visibleonly)
+FOR li_i = 1 to li_numcomputes
+	li_numcols++
+	ls_sortcolumns_all[li_numcols] = ls_computes[li_i] 
+NEXT 
+
+as_allcolumns = ls_sortcolumns_all
+Return UpperBound(as_allcolumns)
 end function
 
 on pfc_n_cst_dwsrv_sort.create

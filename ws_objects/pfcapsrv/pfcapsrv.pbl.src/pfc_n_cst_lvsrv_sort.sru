@@ -25,9 +25,9 @@ forward prototypes
 public function boolean of_iscolumnheader ()
 public function integer of_setcolumnheader (boolean ab_switch)
 public function integer of_setexclude (string as_excludecols[])
-public function integer of_getexclude (ref string as_excludecols[])
 public function boolean of_isexclude (integer ai_column)
 public function boolean of_isexclude (string as_columnlabel)
+public function long of_getexclude (ref string as_excludecols[])
 end prototypes
 
 event pfc_columnclick;//////////////////////////////////////////////////////////////////////////////
@@ -429,60 +429,6 @@ is_excludecolumns = as_excludecols
 Return 1
 end function
 
-public function integer of_getexclude (ref string as_excludecols[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetExclude
-//
-//	Access:    		Public
-//
-//	Arguments:
-//	as_excludecols		A string array, passed by reference, that will
-//			   			 	hold the exclude columns returned.
-//
-//	Returns:   		Integer
-//   					# of columns returned
-//						-1 if an error occurs
-//
-//	Description:	Get the list of exclude columns set in of_SetExclude.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-string	ls_empty[]
-
-as_excludecols = ls_empty
-as_excludecols = is_excludecolumns
-
-Return upperbound(as_excludecols)
-end function
-
 public function boolean of_isexclude (integer ai_column);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_IsExclude
@@ -604,11 +550,65 @@ NEXT
 Return lb_exclude
 end function
 
+public function long of_getexclude (ref string as_excludecols[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetExclude
+//
+//	Access:    		Public
+//
+//	Arguments:
+//	as_excludecols		A string array, passed by reference, that will
+//			   			 	hold the exclude columns returned.
+//
+//	Returns:   		long
+//   					# of columns returned
+//						-1 if an error occurs
+//
+//	Description:	Get the list of exclude columns set in of_SetExclude.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+string	ls_empty[]
+
+as_excludecols = ls_empty
+as_excludecols = is_excludecolumns
+
+Return upperbound(as_excludecols)
+end function
+
 on pfc_n_cst_lvsrv_sort.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_lvsrv_sort.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 

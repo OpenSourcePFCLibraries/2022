@@ -46,7 +46,6 @@ public function integer of_setrequestor (powerobject apo_requestor)
 public function integer of_settypetoprocess (string as_types)
 public function integer of_setupdaterequestor (powerobject apo_updaterequestor)
 public function integer of_updateprep (powerobject apo_control[])
-protected function integer of_updatespending (powerobject apo_control[])
 public function integer of_validation (powerobject apo_control[])
 public function integer of_update (powerobject apo_control[], boolean ab_accepttext, boolean ab_resetflag)
 protected function string of_getclassnames (powerobject apo_control[])
@@ -55,11 +54,12 @@ protected function boolean of_isselfupdatingobject (powerobject apo_control)
 public function integer of_setdberrormsg (n_cst_dberrorattrib anv_dberrorattrib)
 protected function integer of_dberror (n_cst_dberrorattrib anv_dberrorattrib)
 protected function integer of_endtranerror (n_tr atr_performed[], n_tr atr_secondary[], integer ai_secondaryrc[], integer ai_saverc)
-public function integer of_updatespending (powerobject apo_control[], ref powerobject apo_controlpending[])
 public function integer of_begintran (n_tr atr_control[])
 public function integer of_endtran (n_tr atr_control[], integer ai_saverc)
 public function integer of_accepttext (powerobject apo_control[], boolean ab_focusonerror)
 protected function string of_gettype (powerobject apo_control)
+protected function long of_updatespending (powerobject apo_control[])
+public function long of_updatespending (powerobject apo_control[], ref powerobject apo_controlpending[])
 end prototypes
 
 public function string of_gettypetoprocess ();//////////////////////////////////////////////////////////////////////////////
@@ -1129,198 +1129,6 @@ Return 1
 
 end function
 
-protected function integer of_updatespending (powerobject apo_control[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  
-//	of_UpdatesPending
-//
-//	Access:  protected
-//
-//	Arguments:
-//	apo_control array of controls to check for any updates pending
-//
-//	Returns:  integer
-//	 # of objects with updates pending
-//	-1 = error
-//
-//	Description:
-//	Check in each object for updatespending for the specified array and store
-//	references in ipo_pendingupdates
-//
-//	Note:
-//	This function is called recursively to handle tab controls and UserObjects
-//
-//////////////////////////////////////////////////////////////////////////////
-//	
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-Integer		li_newupper, li_max, li_i, li_rc
-Boolean		lb_updatespending=False
-Boolean		lb_performedtest=False
-any			la_rc
-string		ls_updatetable
-string		ls_args[]
-Boolean		lb_defined
-Powerobject	lpo_tocheck
-UserObject	luo_control
-tab			ltab_control
-Window		lw_control
-DataWindow 	ldw_nonpfc
-DataStore	lds_nonpfc
-
-// If requested use the assist funtionality.
-If ib_assist Then 
-	of_Assist(is_instancename+'.of_UpdatesPending('+of_GetClassNames(apo_control)+')')
-End If
-
-// Loop thru all the objects
-li_max = UpperBound (apo_control)
-For li_i = 1 to li_max
-	lpo_tocheck = apo_control[li_i]
-	If IsNull(lpo_tocheck) or Not IsValid(lpo_tocheck) Then Continue
-	
-	// Initialize
-	lb_updatespending =False
-	lb_performedtest =False
- 
-	Choose Case TypeOf ( lpo_tocheck )
-
-		// Windows!, Tabs!, and UserObjects! can either be SelfUpdatingObjects (SUO) or
-		// they can be controls which may be holding SelfUpdatingObjects.
-		// If they are found to be SUO then they will treated as such, if not their
-		// respective control array will be traversed in search of other SUOs.
-
-		Case Window!
-			If Not of_IsSelfUpdatingObject (lpo_tocheck) Then					
-				// Test for Window Controls (which may contain SelfUpdatingObjects)
-				lw_control = lpo_tocheck
-				li_rc = This.of_updatespending ( lw_control.control ) 
-				If li_rc < 0 Then Return -1
-				Continue
-			End If
-			
-		Case Tab!
-			If Not of_IsSelfUpdatingObject (lpo_tocheck) Then						
-				// Test for tab controls (which contain TabPages which may contain SelfUpdatingObjects)
-				ltab_control = lpo_tocheck
-				li_rc = This.of_updatespending ( ltab_control.control ) 
-				If li_rc < 0 Then Return li_rc
-				Continue
-			End If
-
-		Case UserObject!
-			If Not of_IsSelfUpdatingObject (lpo_tocheck) Then					
-				// Test for UserObjects (which may contain SelfUpdatingObjects)
-				luo_control = lpo_tocheck
-				li_rc = This.of_updatespending ( luo_control.control ) 
-				If li_rc < 0 Then Return li_rc
-				Continue
-			End If
-
-		Case Else
-			//No Action
-			
-	End Choose 
-			
-	// -- An object which 'may' be a SUO has been encountered. --
-
-	// Determine if the SUO type is one the service has been asked to process.
-	If Len (is_typetoprocess) > 0 Then
-		If Pos (is_typetoprocess, of_GetType(lpo_tocheck)) = 0 Then
-			// Not a SUO type the service has been asked to process.
-			Continue
-		End If
-	End If		
-
-	// Check/Perform for SelfUpdatingObject Functionality.
-	lb_defined = inv_metaclass.of_isFunctionDefined &
-		(lpo_tocheck.ClassDefinition, "of_UpdatesPending", ls_args)
-	If lb_defined Then
-		la_rc = lpo_tocheck.Dynamic of_UpdatesPending ()
-		If ClassName(la_rc) = 'integer' or ClassName(la_rc)='long' Then
-			// Functionality was found.
-			If la_rc < 0 Then Return -1
-			If la_rc >= 1 Then
-				lb_updatespending = True
-				If TypeOf (lpo_tocheck) = DataWindow! Then
-					// PFC DataWindow.
-					// Note: For linked DataWindows only the root is stored.  All of the
-					//	DataWindows are processed but the process is always started with 
-					//	the root	datawindow.
-					// If pfc_MasterUpdatesPending() is found then of_IsRoot() should be there.
-					la_rc = lpo_tocheck.Function Dynamic of_IsRoot()
-					If ClassName(la_rc) = 'boolean' Then
-						lb_updatespending = la_rc
-					Else
-						Return -1
-					End If
-				End If
-			End If
-			lb_performedtest = True
-		End If		
-	End If
-	
-	If lb_performedtest = False Then
-		// Handle NonPFC DataWindows/DataStores.
-		If TypeOf (lpo_tocheck) = DataWindow! Then
-			ldw_nonpfc = lpo_tocheck
-			ls_updatetable = ldw_nonpfc.Describe("DataWindow.Table.UpdateTable")
-			If ls_updatetable = '?' or ls_updatetable = '' Then
-			   lb_updatespending = False
-			Else
-			   lb_updatespending = (ldw_nonpfc.ModifiedCount() + ldw_nonpfc.DeletedCount() >= 1)
-			End If							
-		ElseIf TypeOf (lpo_tocheck) = DataStore! Then
-			lds_nonpfc = lpo_tocheck
-			ls_updatetable = lds_nonpfc.Describe("DataWindow.Table.UpdateTable")
-			If ls_updatetable = '?' or ls_updatetable = '' Then
-			   lb_updatespending = False
-			Else
-			   lb_updatespending = (lds_nonpfc.ModifiedCount() + lds_nonpfc.DeletedCount() >= 1)
-			End If							
-		End If		
-	End If
-
-	// If Updates are Pending, add the object to the list.
-	If lb_updatespending Then
-		// Get the new upperbound for the pending changes.
-		li_newupper = UpperBound (ipo_pendingupdates)  + 1
-		// Store the control with updates pending.
-		ipo_pendingupdates[li_newupper] = lpo_tocheck  // *Add Entry* to instance.
-	End If
-
-Next
-
-Return UpperBound (ipo_pendingupdates)
-end function
-
 public function integer of_validation (powerobject apo_control[]);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  
@@ -2132,84 +1940,6 @@ End If
 Return 1
 end function
 
-public function integer of_updatespending (powerobject apo_control[], ref powerobject apo_controlpending[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  
-//	of_UpdatesPending
-//
-//	Access:  public
-//
-//	Arguments:
-//	apo_control[]  array of controls to check for any updates pending
-//	apo_controlpending[] (by reference) array of controls which have updates pending
-//
-//	Returns:  integer
-//	 # of objects with updates pending
-//	-1 = error
-//
-//	Description:
-//	Check in each object for updatespending for the specified array and store
-//	references in ipo_pendingupdates.  Return by reference those objects with 
-//	updates pending in apo_controlpending.
-//
-//	Note:
-//	The objects with updates pending are stored in ipo_pendingupdates[].
-//
-//////////////////////////////////////////////////////////////////////////////
-//	
-
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-Integer		li_rc
-PowerObject	lpo_empty[]
-
-// Initiliaze reference variable.
-apo_controlpending = lpo_empty
-
-// Clear the instace variable which holds pending objects.
-ipo_pendingupdates = lpo_empty	// *Clear* instance.
-
-// Determine the objects with Updates pending.
-li_rc = this.of_UpdatesPending(apo_control)
-If li_rc >= 1 Then
-	// Populate the pending objects reference.
-	apo_controlpending = ipo_pendingupdates
-End If
-
-// Clear the instace variable which holds pending objects.
-ipo_pendingupdates = lpo_empty	// *Clear* instance.
-
-Return li_rc
-
-end function
-
 public function integer of_begintran (n_tr atr_control[]);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  
@@ -2750,6 +2480,276 @@ choose case apo_control.TypeOf()
 end choose
 
 return '!'
+end function
+
+protected function long of_updatespending (powerobject apo_control[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  
+//	of_UpdatesPending
+//
+//	Access:  protected
+//
+//	Arguments:
+//	apo_control array of controls to check for any updates pending
+//
+//	Returns:  long
+//	 # of objects with updates pending
+//	-1 = error
+//
+//	Description:
+//	Check in each object for updatespending for the specified array and store
+//	references in ipo_pendingupdates
+//
+//	Note:
+//	This function is called recursively to handle tab controls and UserObjects
+//
+//////////////////////////////////////////////////////////////////////////////
+//	
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+Integer		li_newupper, li_max, li_i, li_rc
+Boolean		lb_updatespending=False
+Boolean		lb_performedtest=False
+any			la_rc
+string		ls_updatetable
+string		ls_args[]
+Boolean		lb_defined
+Powerobject	lpo_tocheck
+UserObject	luo_control
+tab			ltab_control
+Window		lw_control
+DataWindow 	ldw_nonpfc
+DataStore	lds_nonpfc
+
+// If requested use the assist funtionality.
+If ib_assist Then 
+	of_Assist(is_instancename+'.of_UpdatesPending('+of_GetClassNames(apo_control)+')')
+End If
+
+// Loop thru all the objects
+li_max = UpperBound (apo_control)
+For li_i = 1 to li_max
+	lpo_tocheck = apo_control[li_i]
+	If IsNull(lpo_tocheck) or Not IsValid(lpo_tocheck) Then Continue
+	
+	// Initialize
+	lb_updatespending =False
+	lb_performedtest =False
+ 
+	Choose Case TypeOf ( lpo_tocheck )
+
+		// Windows!, Tabs!, and UserObjects! can either be SelfUpdatingObjects (SUO) or
+		// they can be controls which may be holding SelfUpdatingObjects.
+		// If they are found to be SUO then they will treated as such, if not their
+		// respective control array will be traversed in search of other SUOs.
+
+		Case Window!
+			If Not of_IsSelfUpdatingObject (lpo_tocheck) Then					
+				// Test for Window Controls (which may contain SelfUpdatingObjects)
+				lw_control = lpo_tocheck
+				li_rc = This.of_updatespending ( lw_control.control ) 
+				If li_rc < 0 Then Return -1
+				Continue
+			End If
+			
+		Case Tab!
+			If Not of_IsSelfUpdatingObject (lpo_tocheck) Then						
+				// Test for tab controls (which contain TabPages which may contain SelfUpdatingObjects)
+				ltab_control = lpo_tocheck
+				li_rc = This.of_updatespending ( ltab_control.control ) 
+				If li_rc < 0 Then Return li_rc
+				Continue
+			End If
+
+		Case UserObject!
+			If Not of_IsSelfUpdatingObject (lpo_tocheck) Then					
+				// Test for UserObjects (which may contain SelfUpdatingObjects)
+				luo_control = lpo_tocheck
+				li_rc = This.of_updatespending ( luo_control.control ) 
+				If li_rc < 0 Then Return li_rc
+				Continue
+			End If
+
+		Case Else
+			//No Action
+			
+	End Choose 
+			
+	// -- An object which 'may' be a SUO has been encountered. --
+
+	// Determine if the SUO type is one the service has been asked to process.
+	If Len (is_typetoprocess) > 0 Then
+		If Pos (is_typetoprocess, of_GetType(lpo_tocheck)) = 0 Then
+			// Not a SUO type the service has been asked to process.
+			Continue
+		End If
+	End If		
+
+	// Check/Perform for SelfUpdatingObject Functionality.
+	lb_defined = inv_metaclass.of_isFunctionDefined &
+		(lpo_tocheck.ClassDefinition, "of_UpdatesPending", ls_args)
+	If lb_defined Then
+		la_rc = lpo_tocheck.Dynamic of_UpdatesPending ()
+		If ClassName(la_rc) = 'integer' or ClassName(la_rc)='long' Then
+			// Functionality was found.
+			If la_rc < 0 Then Return -1
+			If la_rc >= 1 Then
+				lb_updatespending = True
+				If TypeOf (lpo_tocheck) = DataWindow! Then
+					// PFC DataWindow.
+					// Note: For linked DataWindows only the root is stored.  All of the
+					//	DataWindows are processed but the process is always started with 
+					//	the root	datawindow.
+					// If pfc_MasterUpdatesPending() is found then of_IsRoot() should be there.
+					la_rc = lpo_tocheck.Function Dynamic of_IsRoot()
+					If ClassName(la_rc) = 'boolean' Then
+						lb_updatespending = la_rc
+					Else
+						Return -1
+					End If
+				End If
+			End If
+			lb_performedtest = True
+		End If		
+	End If
+	
+	If lb_performedtest = False Then
+		// Handle NonPFC DataWindows/DataStores.
+		If TypeOf (lpo_tocheck) = DataWindow! Then
+			ldw_nonpfc = lpo_tocheck
+			ls_updatetable = ldw_nonpfc.Describe("DataWindow.Table.UpdateTable")
+			If ls_updatetable = '?' or ls_updatetable = '' Then
+			   lb_updatespending = False
+			Else
+			   lb_updatespending = (ldw_nonpfc.ModifiedCount() + ldw_nonpfc.DeletedCount() >= 1)
+			End If							
+		ElseIf TypeOf (lpo_tocheck) = DataStore! Then
+			lds_nonpfc = lpo_tocheck
+			ls_updatetable = lds_nonpfc.Describe("DataWindow.Table.UpdateTable")
+			If ls_updatetable = '?' or ls_updatetable = '' Then
+			   lb_updatespending = False
+			Else
+			   lb_updatespending = (lds_nonpfc.ModifiedCount() + lds_nonpfc.DeletedCount() >= 1)
+			End If							
+		End If		
+	End If
+
+	// If Updates are Pending, add the object to the list.
+	If lb_updatespending Then
+		// Get the new upperbound for the pending changes.
+		li_newupper = UpperBound (ipo_pendingupdates)  + 1
+		// Store the control with updates pending.
+		ipo_pendingupdates[li_newupper] = lpo_tocheck  // *Add Entry* to instance.
+	End If
+
+Next
+
+Return UpperBound (ipo_pendingupdates)
+end function
+
+public function long of_updatespending (powerobject apo_control[], ref powerobject apo_controlpending[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  
+//	of_UpdatesPending
+//
+//	Access:  public
+//
+//	Arguments:
+//	apo_control[]  array of controls to check for any updates pending
+//	apo_controlpending[] (by reference) array of controls which have updates pending
+//
+//	Returns:  integer
+//	 # of objects with updates pending
+//	-1 = error
+//
+//	Description:
+//	Check in each object for updatespending for the specified array and store
+//	references in ipo_pendingupdates.  Return by reference those objects with 
+//	updates pending in apo_controlpending.
+//
+//	Note:
+//	The objects with updates pending are stored in ipo_pendingupdates[].
+//
+//////////////////////////////////////////////////////////////////////////////
+//	
+
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+long		ll_rc
+PowerObject	lpo_empty[]
+
+// Initiliaze reference variable.
+apo_controlpending = lpo_empty
+
+// Clear the instace variable which holds pending objects.
+ipo_pendingupdates = lpo_empty	// *Clear* instance.
+
+// Determine the objects with Updates pending.
+ll_rc = this.of_UpdatesPending(apo_control)
+If ll_rc >= 1 Then
+	// Populate the pending objects reference.
+	apo_controlpending = ipo_pendingupdates
+End If
+
+// Clear the instace variable which holds pending objects.
+ipo_pendingupdates = lpo_empty	// *Clear* instance.
+
+Return ll_rc
+
 end function
 
 on pfc_n_cst_luw.create

@@ -78,7 +78,6 @@ public function integer of_register (integer ai_level, string as_labelcolumn, st
 protected function integer of_registerdatasource (integer ai_level, string as_method, string as_dataobject, n_tr atr_obj, string as_sql, powerobject apo_data[], datawindow adw_control, datastore ads_control, string as_importfile)
 public function integer of_resettree ()
 public function integer of_reset (integer ai_level)
-public function integer of_getobjects (ref powerobject apo_objects[])
 public function integer of_converttorow (long al_parent, string aa_columnvalues[], ref n_ds ads_obj, ref long al_row)
 public function integer of_getlevel (long al_handle)
 public function integer of_confirmdelete (long al_amount)
@@ -103,7 +102,6 @@ public function integer of_getlevelattributes (integer ai_level, ref n_cst_tvsrv
 public function integer of_reset ()
 public function integer of_resetupdate ()
 public function integer of_setitemattributes (ref n_ds ads_source, long al_row, ref treeviewitem atvi_item)
-public function integer of_getlevelcount ()
 public function integer of_unregister (integer ai_level)
 public function integer of_gettransobject (integer ai_level, ref n_tr atr_obj)
 protected function integer of_clearundo ()
@@ -132,6 +130,8 @@ protected function integer of_update (ref n_ds ads_updatearray[], integer ai_dir
 public function integer of_discardchildren (long al_handle)
 public function boolean of_canundo ()
 public function long of_retrieve (integer ai_level, any aa_arg[20], ref n_ds ads_data)
+public function long of_getlevelcount ()
+public function long of_getobjects (ref powerobject apo_objects[])
 end prototypes
 
 event pfc_endlabeledit;//////////////////////////////////////////////////////////////////////////////
@@ -1001,7 +1001,7 @@ public function integer of_getargs (long al_parent, integer ai_level, ref any aa
 //
 //////////////////////////////////////////////////////////////////////////////
 
-Integer				li_Limit, li_Cnt, li_Cnt2, li_ArgItem, li_Index, li_ArgIndex
+Integer				li_Limit, li_Cnt, li_Cnt2, li_ArgItem, li_Index, li_ArgIndex, li_end = 1
 Integer				li_RetrieveArgLevel[]
 String				ls_ArgCol, ls_Arg, ls_key
 String				ls_RetrieveArgColumn[]
@@ -1033,7 +1033,7 @@ of_ParseArgs(inv_attrib[li_Index].is_RetrieveArgs, ai_Level, li_RetrieveArgLevel
 
 li_Limit = UpperBound(li_RetrieveArgLevel)
 
-For li_Cnt = (ai_Level - 1) To 1 Step - 1
+For li_Cnt = (ai_Level - 1) To li_end Step - 1
 	If itv_requestor.GetItem(al_Parent, ltvi_Item) = -1 Then Return -1
 	
 	// Determine if there an argument is needed from this level
@@ -2540,69 +2540,6 @@ For li_Cnt = li_start to li_index
 End For
 
 Return 1
-end function
-
-public function integer of_getobjects (ref powerobject apo_objects[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:	of_GetObjects
-//
-//	Access:		public
-//
-//	Arguments:  
-//	apo_objects[]	array holding objects which are updateable.  Passed by reference
-//
-//	Returns:		Integer
-//					# of objects returned 
-//	
-//	Description:
-//	Return the objects on the service which are updateable (ie datastores).  Used as part
-//	of the SUO process
-//
-//////////////////////////////////////////////////////////////////////////////
-//	
-//	Revision History
-//
-//	Version
-//	6.0  Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-powerobject	lpo_empty[]
-Integer		li_NumDS, li_Cnt
-
-apo_objects = lpo_empty
-
-// Determine the appropriate array.
-li_NumDS = UpperBound(inv_attrib)
-For li_Cnt = 1 To li_NumDS
-	If IsValid(inv_attrib[li_Cnt].ids_obj) Then
-		apo_objects[li_cnt] = inv_attrib[li_Cnt].ids_obj
-	End If
-End For
-
-Return upperbound(apo_objects)
 end function
 
 public function integer of_converttorow (long al_parent, string aa_columnvalues[], ref n_ds ads_obj, ref long al_row);//////////////////////////////////////////////////////////////////////////////
@@ -4364,54 +4301,6 @@ End if
 atvi_Item.OverlayPictureIndex = li_overlay
 
 Return 1
-
-end function
-
-public function integer of_getlevelcount ();//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:	of_GetLevelCount
-//
-//	Access:		public
-//
-//	Arguments:None
-//
-//	Returns:		Integer
-//					 # of the levels the service services
-//
-//	Description:	Get the number of levels we have for the service. 
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-return UpperBound(inv_attrib)
 
 end function
 
@@ -6251,7 +6140,7 @@ protected function integer of_update (ref n_ds ads_updatearray[], integer ai_dir
 //////////////////////////////////////////////////////////////////////////////
 boolean	lb_accepttext = False
 boolean 	lb_resetflag = False
-integer	li_i, li_max
+integer	li_i, li_max, li_end = 1
 String	ls_sqlspyheading
 String	ls_sqlspymessage
 
@@ -6301,7 +6190,7 @@ Choose Case ai_direction
 		Return 1
 	Case BOTTOMUP
 		// update from last to first
-		For li_i = li_max to 1 Step -1
+		For li_i = li_max to li_end Step -1
 			If ads_updatearray[li_i].of_Update &
 				(lb_accepttext, lb_resetflag, ab_insert, ab_update, ab_delete) <> 1 Then 
 				Return FAILURE
@@ -6567,6 +6456,117 @@ ll_NewRows = ads_data.RowCount()
 
 Return ll_NewRows
 
+end function
+
+public function long of_getlevelcount ();//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:	of_GetLevelCount
+//
+//	Access:		public
+//
+//	Arguments:None
+//
+//	Returns:		long
+//					 # of the levels the service services
+//
+//	Description:	Get the number of levels we have for the service. 
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+return UpperBound(inv_attrib)
+
+end function
+
+public function long of_getobjects (ref powerobject apo_objects[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:	of_GetObjects
+//
+//	Access:		public
+//
+//	Arguments:  
+//	apo_objects[]	array holding objects which are updateable.  Passed by reference
+//
+//	Returns:		long
+//					# of objects returned 
+//	
+//	Description:
+//	Return the objects on the service which are updateable (ie datastores).  Used as part
+//	of the SUO process
+//
+//////////////////////////////////////////////////////////////////////////////
+//	
+//	Revision History
+//
+//	Version
+//	6.0  Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+powerobject	lpo_empty[]
+Integer		li_NumDS, li_Cnt
+
+apo_objects = lpo_empty
+
+// Determine the appropriate array.
+li_NumDS = UpperBound(inv_attrib)
+For li_Cnt = 1 To li_NumDS
+	If IsValid(inv_attrib[li_Cnt].ids_obj) Then
+		apo_objects[li_cnt] = inv_attrib[li_Cnt].ids_obj
+	End If
+End For
+
+Return upperbound(apo_objects)
 end function
 
 on pfc_n_cst_tvsrv_levelsource.create

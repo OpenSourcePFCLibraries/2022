@@ -30,8 +30,6 @@ public function long of_days (long al_seconds)
 public function long of_hours (long al_seconds)
 public function long of_yearsafter (date ad_start, date ad_end)
 public function long of_millisecsafter (time atm_start, time atm_end)
-public function integer of_wait (datetime adtm_target)
-public function integer of_wait (unsignedlong al_seconds)
 public function boolean of_isvalid (datetime adtm_source)
 public function date of_firstdayofmonth (date ad_source)
 public function boolean of_isleapyear (date ad_source)
@@ -49,9 +47,11 @@ public function date of_relativeyear (date ad_source, long al_years)
 public function long of_weeksafter (date ad_start, date ad_end)
 public function long of_juliandaynumber (date ad_source)
 public function long of_julian (date ad_source)
-public function integer of_dayofweek (date ad_source)
 public function date of_lastdayofmonth (date ad_source)
 public function long of_weeknumber (date ad_source)
+public function long of_wait (datetime adtm_target)
+public function long of_dayofweek (date ad_source)
+public function integer of_wait (unsignedlong al_seconds)
 end prototypes
 
 public function date of_gregorian (long al_julian);//////////////////////////////////////////////////////////////////////////////
@@ -469,149 +469,6 @@ ll_temp = hour(atm_end) * 3600000
 ll_end = ll_end + ll_temp
 
 return ll_end - ll_start
-end function
-
-public function integer of_wait (datetime adtm_target);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_Wait
-//
-//	Access:  		public
-//
-//	Arguments:
-//	adtm_Target 	Target DateTime.
-//
-//	Returns:  		integer
-//						1 if function waited the expected time.
-//						If any argument's value is NULL, function returns NULL.
-//						If any argument's value is Invalid, function returns -1.
-//
-//	Description:  	Given a datetime, will wait until datetime is reached.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	5.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-date 	ldt_value
-
-//Check parameters
-If IsNull(adtm_Target) Then
-	long ll_null
-	SetNull(ll_null)
-	Return ll_null
-End If
-
-//There is only need to test the Date portion of the DateTime.
-ldt_value = Date(adtm_Target)
-
-//Check for invalid date
-If Not of_IsValid(ldt_value) Then
-	Return -1
-End If
-
-//Wait until Target datetime
-DO UNTIL DateTime(Today(),Now()) >= adtm_Target
-	Yield() //Yields control to other graphic objects, including objects that are not PB.
-LOOP
-
-Return 1
-
-end function
-
-public function integer of_wait (unsignedlong al_seconds);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_Wait
-//
-//	Access:  		public
-//
-//	Arguments:
-//	al_seconds 		Wait this many Seconds.
-//
-//	Returns:  		integer
-//						1 if function waited the expected time.
-//						If any argument's value is NULL, function returns NULL.
-//						If any argument's value is Invalid, function returns -1.
-//
-//	Description:  	Given a datetime, will wait until datetime is reached.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	5.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-datetime ldtm_target
-integer	li_ret
-
-//Check parameters
-If IsNull(al_seconds) Then
-	Return al_seconds
-End If
-
-//Check invalid parameters
-If al_seconds <= 0 Then
-	Return -1
-End If
-
-//Get the Target DateTime
-ldtm_target = of_RelativeDatetime(DateTime(Today(),Now()), al_seconds)
-
-//Perform the actual wait.
-li_ret = of_Wait(ldtm_target)
-
-Return li_ret
-
 end function
 
 public function boolean of_isvalid (datetime adtm_source);//////////////////////////////////////////////////////////////////////////////
@@ -1848,78 +1705,6 @@ Return DaysAfter(Date(0000,01,01),ad_source)
 
 end function
 
-public function integer of_dayofweek (date ad_source);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_DayOfWeek
-//
-//	Access:  		public
-//
-//	Arguments:
-//	ad_source		Date which contains the day to be determined.
-//
-//	Returns:  		integer
-//						1 - If the Day is Sunday.
-//						2 - If the Day is Monday
-//						3 - If the Day is Tuesday.
-//						4 - If the Day is Wednesday.
-//						5 - If the Day is Thursday.
-//						6 - If the Day is Friday.
-//						7 - If the Day is Saturday.
-//						If any argument's value is NULL, function returns NULL.
-//
-//	Description:  	Based on the the passed date, determines the day of the week.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	5.0   Initial version
-//	5.0.02   Fixed - function would fail under some international date sets
-//		Function duplicates PowerScript DayNumber function.
-//	5.0.03	Add parameter and invalid date checking
-// 6.0	 	Marked obsolete Replaced by DayNumber(...)
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-//Check parameters
-If IsNull(ad_source) Then
-	long ll_null
-	SetNull(ll_null)
-	Return ll_null
-End If
-
-//Check for invalid date
-If Not of_IsValid(ad_source) Then
-	Return -1
-End If
-
-return DayNumber (ad_source)
-
-end function
-
 public function date of_lastdayofmonth (date ad_source);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_LastDayOfMonth
@@ -2061,6 +1846,222 @@ If (of_DayOfWeek(ld_first_ofyear) + li_leftover_days) >= 8 then
 End If
 
 Return li_weeknumber
+
+end function
+
+public function long of_wait (datetime adtm_target);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_Wait
+//
+//	Access:  		public
+//
+//	Arguments:
+//	adtm_Target 	Target DateTime.
+//
+//	Returns:  		long
+//						1 if function waited the expected time.
+//						If any argument's value is NULL, function returns NULL.
+//						If any argument's value is Invalid, function returns -1.
+//
+//	Description:  	Given a datetime, will wait until datetime is reached.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	5.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+date 	ldt_value
+
+//Check parameters
+If IsNull(adtm_Target) Then
+	long ll_null
+	SetNull(ll_null)
+	Return ll_null
+End If
+
+//There is only need to test the Date portion of the DateTime.
+ldt_value = Date(adtm_Target)
+
+//Check for invalid date
+If Not of_IsValid(ldt_value) Then
+	Return -1
+End If
+
+//Wait until Target datetime
+DO UNTIL DateTime(Today(),Now()) >= adtm_Target
+	Yield() //Yields control to other graphic objects, including objects that are not PB.
+LOOP
+
+Return 1
+
+end function
+
+public function long of_dayofweek (date ad_source);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_DayOfWeek
+//
+//	Access:  		public
+//
+//	Arguments:
+//	ad_source		Date which contains the day to be determined.
+//
+//	Returns:  		long
+//						1 - If the Day is Sunday.
+//						2 - If the Day is Monday
+//						3 - If the Day is Tuesday.
+//						4 - If the Day is Wednesday.
+//						5 - If the Day is Thursday.
+//						6 - If the Day is Friday.
+//						7 - If the Day is Saturday.
+//						If any argument's value is NULL, function returns NULL.
+//
+//	Description:  	Based on the the passed date, determines the day of the week.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	5.0   Initial version
+//	5.0.02   Fixed - function would fail under some international date sets
+//		Function duplicates PowerScript DayNumber function.
+//	5.0.03	Add parameter and invalid date checking
+// 6.0	 	Marked obsolete Replaced by DayNumber(...)
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+//Check parameters
+If IsNull(ad_source) Then
+	long ll_null
+	SetNull(ll_null)
+	Return ll_null
+End If
+
+//Check for invalid date
+If Not of_IsValid(ad_source) Then
+	Return -1
+End If
+
+return DayNumber (ad_source)
+
+end function
+
+public function integer of_wait (unsignedlong al_seconds);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_Wait
+//
+//	Access:  		public
+//
+//	Arguments:
+//	al_seconds 		Wait this many Seconds.
+//
+//	Returns:  		ulong
+//						1 if function waited the expected time.
+//						If any argument's value is NULL, function returns NULL.
+//						If any argument's value is Invalid, function returns -1.
+//
+//	Description:  	Given a datetime, will wait until datetime is reached.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	5.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+datetime ldtm_target
+integer	li_ret
+
+//Check parameters
+If IsNull(al_seconds) Then
+	SetNull ( li_ret )
+	Return li_ret
+End If
+
+//Check invalid parameters
+If al_seconds <= 0 Then
+	Return -1
+End If
+
+//Get the Target DateTime
+ldtm_target = of_RelativeDatetime(DateTime(Today(),Now()), al_seconds)
+
+//Perform the actual wait.
+li_ret = of_Wait(ldtm_target)
+
+Return li_ret
 
 end function
 

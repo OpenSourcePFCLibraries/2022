@@ -175,7 +175,7 @@ public function integer of_parse (string as_sql, ref n_cst_sqlattrib astr_sql[])
 //
 //////////////////////////////////////////////////////////////////////////////
 
-integer	li_Pos, li_KWNum, li_NumStats, li_Cnt, li_PosU
+integer	li_Pos, li_KWNum, li_NumStats, li_Cnt, li_PosU, li_end = 1
 string	ls_UpperSQL, ls_Keyword[7], ls_Clause[7], ls_SQL[], ls_right
 constant string LI_UNIONREPLACE="*%$!@"
 constant string LI_ALLREPLACE="   "
@@ -299,7 +299,7 @@ For li_Cnt = 1 to li_NumStats
 	End if
 
 	// There is a maximum of 7 keywords
-	For li_KWNum = 7 To 1 Step -1
+	For li_KWNum = 7 To li_end Step -1
 		If ls_Keyword[li_KWNum] <> "" Then
 			// Find the position of the Keyword
 			li_Pos = Pos(ls_UpperSQL, ls_Keyword[li_KWNum]) - 1

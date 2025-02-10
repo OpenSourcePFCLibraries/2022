@@ -1043,12 +1043,15 @@ protected function long of_color (string as_rgb);///////////////////////////////
  
 string 	ls_color
 integer 	li_rgb[3]
-long 		ll_cnt
+long		ll_index
+long 		ll_count
 n_cst_string lnv_string
 
-For ll_cnt = 1 To 3
+ll_count = UpperBound ( li_rgb  )
+
+For ll_index = 1 To ll_count
 	ls_color = lnv_string.of_gettoken(as_rgb,' ')
-	li_rgb[ll_cnt] = Integer(ls_color)
+	li_rgb[ll_index] = Integer(ls_color)
 Next
 
 Return RGB(li_rgb[1], li_rgb[2], li_rgb[3])

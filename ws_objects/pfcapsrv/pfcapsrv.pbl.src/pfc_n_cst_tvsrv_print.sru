@@ -467,7 +467,7 @@ protected function integer of_printtree (long al_handle, boolean ab_canceldialog
 //
 //////////////////////////////////////////////////////////////////////////////
 
-Integer	li_Cnt, li_RC
+Integer	li_index, li_RC, li_count
 String	ls_Picts, ls_LevelPicts
 n_ds		lds_Print
 string	ls_ret
@@ -489,13 +489,15 @@ Else
 	ls_Picts = ls_Picts + as_SelPictName
 End If
 
-For li_Cnt = 1 To 10
-	ls_LevelPicts = ls_LevelPicts + as_LevelPicts[li_Cnt] + "~t"
+li_count = UpperBound(as_LevelPicts)
+For li_index = 1 To li_count
+	ls_LevelPicts = ls_LevelPicts + as_LevelPicts[li_index] + "~t"
 Next
 	
+li_count = UpperBound(as_levelselpicts)
 ls_LevelPicts = ls_LevelPicts + as_LevelSelPicts[1]
-For li_Cnt = 2 To 10
-	ls_LevelPicts = ls_LevelPicts + "~t" + as_LevelSelPicts[li_Cnt]
+For li_index = 2 To li_count
+	ls_LevelPicts = ls_LevelPicts + "~t" + as_LevelSelPicts[li_index]
 Next
 
 // Create the DataStore to be used to print the TreeView

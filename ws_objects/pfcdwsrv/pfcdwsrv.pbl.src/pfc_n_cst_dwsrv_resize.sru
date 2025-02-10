@@ -57,13 +57,13 @@ public function integer of_unregister (string as_control)
 public function integer of_unregister (dwobject adwo_control)
 protected function integer of_getobjectinformation (string as_control, ref string as_type, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height)
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
-public function integer of_getregisterable (ref string as_objects[])
 public function boolean of_isregistered (string as_control)
 public function boolean of_isregistered (dwobject adwo_control)
 public function integer of_getregistered (dwobject adwo_control, ref boolean ab_scale, ref integer ai_movex, ref integer ai_movey, ref integer ai_scalewidth, ref integer ai_scaleheight)
 public function integer of_getregistered (string as_control, ref boolean ab_scale, ref integer ai_movex, ref integer ai_movey, ref integer ai_scalewidth, ref integer ai_scaleheight)
 public function integer of_getregistered (ref string as_control[], ref boolean ab_scale[], ref integer ai_movex[], ref integer ai_movey[], ref integer ai_scalewidth[], ref integer ai_scaleheight[])
 public function integer of_getpropertyinfo (ref n_cst_propertyattrib anv_attrib)
+public function long of_getregisterable (ref string as_objects[])
 end prototypes
 
 event pfc_resize;//////////////////////////////////////////////////////////////////////////////
@@ -1347,73 +1347,6 @@ anv_infoattrib.is_description = &
 Return 1
 end function
 
-public function integer of_getregisterable (ref string as_objects[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetRegisterable
-//
-//	Access:    		Public
-//
-//	Arguments:
-//   as_objects[] (by ref)	 Will hold all the objects that can be registered.
-//
-//	Returns:   		Integer
-// Number of entries in array.
-//	-1 if an error occurs.
-//
-//	Description:  
-//	To get the list of all the objects that can be registered.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-integer	li_numobjs
-string	ls_objects[]
-string	ls_empty[]
-
-// Clear the reference variable.
-as_objects = ls_empty
-
-// Get all the Visible objects on the datawindow.
-// Objects that are not visible do not Coordinates and therefore cannot be registered.
-li_numobjs = of_GetObjects ( ls_objects, "*", "*", TRUE ) 
-If li_numobjs < 0 Then Return -1
-
-// Return the objects.
-as_objects = ls_objects
-Return UpperBound(as_objects)
-
-
-
-end function
-
 public function boolean of_isregistered (string as_control);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_IsRegistered
@@ -1833,12 +1766,79 @@ anv_attrib.ib_switchbuttons = True
 Return 1
 end function
 
+public function long of_getregisterable (ref string as_objects[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetRegisterable
+//
+//	Access:    		Public
+//
+//	Arguments:
+//   as_objects[] (by ref)	 Will hold all the objects that can be registered.
+//
+//	Returns:   		long
+// Number of entries in array.
+//	-1 if an error occurs.
+//
+//	Description:  
+//	To get the list of all the objects that can be registered.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+integer	li_numobjs
+string	ls_objects[]
+string	ls_empty[]
+
+// Clear the reference variable.
+as_objects = ls_empty
+
+// Get all the Visible objects on the datawindow.
+// Objects that are not visible do not Coordinates and therefore cannot be registered.
+li_numobjs = of_GetObjects ( ls_objects, "*", "*", TRUE ) 
+If li_numobjs < 0 Then Return -1
+
+// Return the objects.
+as_objects = ls_objects
+Return UpperBound(as_objects)
+
+
+
+end function
+
 on pfc_n_cst_dwsrv_resize.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_dwsrv_resize.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 
 event constructor;//////////////////////////////////////////////////////////////////////////////

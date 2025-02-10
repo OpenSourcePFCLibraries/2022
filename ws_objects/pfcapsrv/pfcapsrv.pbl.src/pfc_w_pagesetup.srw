@@ -190,7 +190,7 @@ event open;call super::open;////////////////////////////////////////////////////
 
 integer	li_papersourceupper
 integer	li_papersizeupper
-integer	li_cnt
+integer	li_cnt, li_end
 integer	li_position
 
 ib_disableclosequery = true
@@ -300,7 +300,8 @@ if li_papersizeupper <= 0 then
 	istr_pagesetup.str_papersize[41].s_type = "German Std Fanfold 8 1/2 x 12 in"
 	istr_pagesetup.str_papersize[42].s_type = "German Legal Fanfold 8 1/2 x 13 in"
 
-	for li_cnt = 1 to 42
+	li_end = UpperBound(istr_pagesetup.str_papersize)
+	for li_cnt = 1 to li_end
 		istr_pagesetup.str_papersize[li_cnt].i_val = li_cnt - 1
 	next
 end if
@@ -331,7 +332,8 @@ if li_papersourceupper <= 0 then
 	istr_pagesetup.str_papersource[12].s_type = "Large capacity"
 	istr_pagesetup.str_papersource[13].s_type = "Cassette"
 
-	for li_cnt = 1 to 13
+	li_end = UpperBound(istr_pagesetup.str_papersource)
+	for li_cnt = 1 to li_end
 		istr_pagesetup.str_papersource[li_cnt].i_val = li_cnt - 1
 	next
 end if

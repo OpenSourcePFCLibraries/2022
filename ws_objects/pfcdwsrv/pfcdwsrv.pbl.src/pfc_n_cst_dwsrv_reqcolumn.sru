@@ -21,12 +21,12 @@ forward prototypes
 public function integer of_settonullifempty (long al_row, string as_colname, string as_text)
 protected function integer of_updateskipstring (string as_skipcolumn[])
 public function integer of_registerskipcolumn (string as_column)
-public function integer of_getregisterable (ref string as_allcolumns[])
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
-public function integer of_GetRegistered (ref string as_regcolumns[])
 public function boolean of_IsRegistered (string as_column)
 public function integer of_Unregister (string as_column)
 public function integer of_getpropertyinfo (ref n_cst_propertyattrib anv_attrib)
+public function long of_getregistered (ref string as_regcolumns[])
+public function long of_getregisterable (ref string as_allcolumns[])
 end prototypes
 
 public function integer of_settonullifempty (long al_row, string as_colname, string as_text);//////////////////////////////////////////////////////////////////////////////
@@ -283,67 +283,6 @@ of_UpdateSkipString (is_skipcolumn)
 Return 1
 end function
 
-public function integer of_getregisterable (ref string as_allcolumns[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetRegisterable
-//
-//	Access:    		Public
-//
-//	Arguments:
-//   as_allcolumns[]		Passed by reference, that will hold all the columns 
-//			that the service could receive for registering purposes.
-//
-//	Returns:   		Integer
-//   					1 if it succeeds and 
-//						-1 if an error occurs.
-//
-//	Description:  
-//	To get the list of all the columns that the service could receive for 
-//	registering purposes.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-string	ls_allcolumns[]
-
-// Get all the column names on the datawindow.
-of_GetObjects(ls_allcolumns, "column", "*", True) 
-
-as_allcolumns = ls_allcolumns
-Return UpperBound(as_allcolumns)
-
-
-
-end function
-
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_GetInfo
@@ -400,73 +339,6 @@ anv_infoattrib.is_description = &
 	'This service applies only to DataWindow columns that use the nilisnull property. '
 
 Return 1
-end function
-
-public function integer of_GetRegistered (ref string as_regcolumns[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetRegistered
-//
-//	Access: 			Public
-//
-//	Arguments:
-//	as_regcolumns[] by reference.   Registered columns.
-//
-//	Returns:  		Integer
-//						The number of registered columns.
-//
-//	Description:  	
-//	Gets all the registered SkipColumns.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-integer	li_upper
-integer	li_cnt
-integer	li_regcnt = 0
-string	ls_empty[]
-
-// Initialize
-as_regcolumns = ls_empty
-
-// Loop around the entire array.
-li_upper = UpperBound(is_skipcolumn)
-For li_cnt = 1 to li_upper
-	If Len(is_skipcolumn[li_cnt]) > 0 Then
-		// Found a registered column.
-		li_regcnt ++
-		as_regcolumns[li_regcnt] = is_skipcolumn[li_cnt]
-	End If
-Next
-
-Return UpperBound(as_regcolumns[])
 end function
 
 public function boolean of_IsRegistered (string as_column);//////////////////////////////////////////////////////////////////////////////
@@ -674,11 +546,139 @@ anv_attrib.ib_switchbuttons = True
 Return 1
 end function
 
+public function long of_getregistered (ref string as_regcolumns[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetRegistered
+//
+//	Access: 			Public
+//
+//	Arguments:
+//	as_regcolumns[] by reference.   Registered columns.
+//
+//	Returns:  		long
+//						The number of registered columns.
+//
+//	Description:  	
+//	Gets all the registered SkipColumns.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+integer	li_upper
+integer	li_cnt
+integer	li_regcnt = 0
+string	ls_empty[]
+
+// Initialize
+as_regcolumns = ls_empty
+
+// Loop around the entire array.
+li_upper = UpperBound(is_skipcolumn)
+For li_cnt = 1 to li_upper
+	If Len(is_skipcolumn[li_cnt]) > 0 Then
+		// Found a registered column.
+		li_regcnt ++
+		as_regcolumns[li_regcnt] = is_skipcolumn[li_cnt]
+	End If
+Next
+
+Return UpperBound(as_regcolumns[])
+end function
+
+public function long of_getregisterable (ref string as_allcolumns[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetRegisterable
+//
+//	Access:    		Public
+//
+//	Arguments:
+//   as_allcolumns[]		Passed by reference, that will hold all the columns 
+//			that the service could receive for registering purposes.
+//
+//	Returns:   		long
+//   					1 if it succeeds and 
+//						-1 if an error occurs.
+//
+//	Description:  
+//	To get the list of all the columns that the service could receive for 
+//	registering purposes.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+string	ls_allcolumns[]
+
+// Get all the column names on the datawindow.
+of_GetObjects(ls_allcolumns, "column", "*", True) 
+
+as_allcolumns = ls_allcolumns
+Return UpperBound(as_allcolumns)
+
+
+
+end function
+
 on pfc_n_cst_dwsrv_reqcolumn.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_dwsrv_reqcolumn.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 

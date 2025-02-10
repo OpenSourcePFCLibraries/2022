@@ -29,14 +29,14 @@ protected function integer of_storeupdatesettings (ref n_cst_dssrv_multitableatt
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
 public function integer of_register (string as_table, string as_keycolumns[])
 public function integer of_register (string as_table, string as_keycolumns[], string as_updateable_cols[])
-public function integer of_getregisterable (ref string as_tablecolumn[])
-public function integer of_GetRegisterableTable (ref string as_table[])
 public function boolean of_isregistered (string as_table)
 public function integer of_register (string as_table, string as_keycolumns[], string as_updateablecolumns[], boolean ab_keyinplace, integer ai_whereoption)
 public function integer of_unregister (string as_table)
 public function integer of_UnRegister ()
 public function integer of_getregistered (string as_table, ref string as_keycolumns[], ref string as_updateablecolumns[], ref boolean ab_keyinplace, ref integer ai_whereoption)
-public function integer of_getregisterablecolumn (string as_table, ref string as_column[])
+public function long of_getregisterablecolumn (string as_table, ref string as_column[])
+public function long of_getregisterabletable (ref string as_table[])
+public function long of_getregisterable (ref string as_tablecolumn[])
 end prototypes
 
 public function integer of_update (boolean ab_accepttext, boolean ab_resetflags);//////////////////////////////////////////////////////////////////////////////
@@ -613,152 +613,6 @@ Return of_Register(as_table, as_keycolumns, as_updateable_cols, &
 				lb_keyinplace, li_whereoption) 
 end function
 
-public function integer of_getregisterable (ref string as_tablecolumn[]);//////////////////////////////////////////////////////////////////////////////
-//	Public Function:		of_GetRegisterable
-//	Arguments:			as_tablecolumn[] (By Ref.)  All table/columns belonging to the requestor 
-//							which	could be registered.
-//	Returns:  			Integer - The table/column count.
-//							-1 if an error is encountered.
-//	Description:			Determines all table/columns belonging to the requestor which could be registered.
-//////////////////////////////////////////////////////////////////////////////
-//	Rev. History			Version
-//							6.0   Initial version
-//////////////////////////////////////////////////////////////////////////////
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//////////////////////////////////////////////////////////////////////////////
-integer	li_colcount
-integer	li_cnt
-integer  li_upper
-string	ls_colname
-string	ls_colattributes
-string	ls_dbname
-string	ls_table
-string 	ls_empty[]
-n_cst_string lnv_string
-
-// Clear the reference variable.
-as_tablecolumn = ls_empty
-
-// Validate required references.
-If IsNull(ids_requestor) or Not IsValid(ids_requestor) Then Return -1
-
-// Get the number of columns in the datastore object
-li_colcount = integer(ids_requestor.object.datawindow.Column.Count)
-
-// Loop around all columns looking for dddw or ddlb columns.
-For li_cnt=1 to li_colcount
-	// Get the column name.
-	ls_colname = ids_requestor.Describe("#"+string(li_cnt)+".Name")
-	
-	// Get the Table name.
-	ls_dbname = ids_requestor.Describe(ls_colname+".dbName")
-	ls_table = lnv_string.of_GetToken(ls_dbname, '.')
-	
-	// Create the TableColumn value.
-	li_upper = UpperBound(as_tablecolumn) + 1
-	as_tablecolumn[li_upper] = ls_table+'.'+ls_colname
-Next
-
-Return UpperBound(as_tablecolumn)
-end function
-
-public function integer of_GetRegisterableTable (ref string as_table[]);//////////////////////////////////////////////////////////////////////////////
-//	Public Function:		of_GetRegisterableTable
-//	Arguments:			as_table[] (By Ref.)  All table belonging to the requestor which could be registered.
-//	Returns:  			Integer -  The table count.
-//							-1 if an error is encountered.
-//	Description:			Determines all table belonging to the requestor which could be registered.
-//////////////////////////////////////////////////////////////////////////////
-//	Rev. History			Version
-//							6.0   Initial version
-//////////////////////////////////////////////////////////////////////////////
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//////////////////////////////////////////////////////////////////////////////
-integer	li_tablecount
-integer	li_tablecnt
-integer	li_colcount
-integer	li_cnt
-integer  li_upper
-string	ls_colname
-string	ls_colattributes
-string	ls_dbname
-string	ls_table
-string 	ls_empty[]
-boolean 	lb_found
-n_cst_string lnv_string
-
-// Clear the reference variable.
-as_table = ls_empty
-
-// Validate required references.
-If IsNull(ids_requestor) or Not IsValid(ids_requestor) Then Return -1
-
-// Get the number of columns in the datastore object
-li_colcount = integer(ids_requestor.object.datawindow.Column.Count)
-
-// Loop around all columns looking for dddw or ddlb columns.
-For li_cnt=1 to li_colcount
-	// Get the column name.
-	ls_colname = ids_requestor.Describe("#"+string(li_cnt)+".Name")
-	
-	// Get the Table name.
-	ls_dbname = ids_requestor.Describe(ls_colname+".dbName")
-	ls_table = lnv_string.of_GetToken(ls_dbname, '.')
-	
-	// Determine if this is an new table.
-	li_tablecount = UpperBound(as_table)
-	lb_found = False
-	For li_tablecnt = 1 to li_tablecount
-		If as_table[li_tablecnt] = ls_table Then
-			lb_found = True
-			Exit
-		End If
-	Next
-	If Not lb_found Then
-		// Found a new table entry.
-		as_table[li_tablecount +1] = ls_table
-	End If
-Next
-
-Return UpperBound(as_table)
-end function
-
 public function boolean of_isregistered (string as_table);//////////////////////////////////////////////////////////////////////////////
 //	Public Function:		of_IsRegistered
 //	Arguments:			as_table: A string containing the table to check for
@@ -1089,11 +943,11 @@ Next
 Return -1
 end function
 
-public function integer of_getregisterablecolumn (string as_table, ref string as_column[]);//////////////////////////////////////////////////////////////////////////////
+public function long of_getregisterablecolumn (string as_table, ref string as_column[]);//////////////////////////////////////////////////////////////////////////////
 //	Public Function:		of_GetRegisterableColumn
 //	Arguments:			as_table: The table for which the columns are wanted.
 //							as_column[] (By Ref.):  All columns belonging to the table passed in which could be registered.
-//	Returns:				Integer - The column count.
+//	Returns:				long - The column count.
 //							-1 if an error is encountered.
 //	Description:			Determines all columns belonging to the passed in table which could be registered.
 //////////////////////////////////////////////////////////////////////////////
@@ -1157,11 +1011,157 @@ Next
 Return UpperBound(as_column)
 end function
 
+public function long of_getregisterabletable (ref string as_table[]);//////////////////////////////////////////////////////////////////////////////
+//	Public Function:		of_GetRegisterableTable
+//	Arguments:			as_table[] (By Ref.)  All table belonging to the requestor which could be registered.
+//	Returns:  			long -  The table count.
+//							-1 if an error is encountered.
+//	Description:			Determines all table belonging to the requestor which could be registered.
+//////////////////////////////////////////////////////////////////////////////
+//	Rev. History			Version
+//							6.0   Initial version
+//////////////////////////////////////////////////////////////////////////////
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//////////////////////////////////////////////////////////////////////////////
+integer	li_tablecount
+integer	li_tablecnt
+integer	li_colcount
+integer	li_cnt
+integer  li_upper
+string	ls_colname
+string	ls_colattributes
+string	ls_dbname
+string	ls_table
+string 	ls_empty[]
+boolean 	lb_found
+n_cst_string lnv_string
+
+// Clear the reference variable.
+as_table = ls_empty
+
+// Validate required references.
+If IsNull(ids_requestor) or Not IsValid(ids_requestor) Then Return -1
+
+// Get the number of columns in the datastore object
+li_colcount = integer(ids_requestor.object.datawindow.Column.Count)
+
+// Loop around all columns looking for dddw or ddlb columns.
+For li_cnt=1 to li_colcount
+	// Get the column name.
+	ls_colname = ids_requestor.Describe("#"+string(li_cnt)+".Name")
+	
+	// Get the Table name.
+	ls_dbname = ids_requestor.Describe(ls_colname+".dbName")
+	ls_table = lnv_string.of_GetToken(ls_dbname, '.')
+	
+	// Determine if this is an new table.
+	li_tablecount = UpperBound(as_table)
+	lb_found = False
+	For li_tablecnt = 1 to li_tablecount
+		If as_table[li_tablecnt] = ls_table Then
+			lb_found = True
+			Exit
+		End If
+	Next
+	If Not lb_found Then
+		// Found a new table entry.
+		as_table[li_tablecount +1] = ls_table
+	End If
+Next
+
+Return UpperBound(as_table)
+end function
+
+public function long of_getregisterable (ref string as_tablecolumn[]);//////////////////////////////////////////////////////////////////////////////
+//	Public Function:		of_GetRegisterable
+//	Arguments:			as_tablecolumn[] (By Ref.)  All table/columns belonging to the requestor 
+//							which	could be registered.
+//	Returns:  			long - The table/column count.
+//							-1 if an error is encountered.
+//	Description:			Determines all table/columns belonging to the requestor which could be registered.
+//////////////////////////////////////////////////////////////////////////////
+//	Rev. History			Version
+//							6.0   Initial version
+//////////////////////////////////////////////////////////////////////////////
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//////////////////////////////////////////////////////////////////////////////
+integer	li_colcount
+integer	li_cnt
+integer  li_upper
+string	ls_colname
+string	ls_colattributes
+string	ls_dbname
+string	ls_table
+string 	ls_empty[]
+n_cst_string lnv_string
+
+// Clear the reference variable.
+as_tablecolumn = ls_empty
+
+// Validate required references.
+If IsNull(ids_requestor) or Not IsValid(ids_requestor) Then Return -1
+
+// Get the number of columns in the datastore object
+li_colcount = integer(ids_requestor.object.datawindow.Column.Count)
+
+// Loop around all columns looking for dddw or ddlb columns.
+For li_cnt=1 to li_colcount
+	// Get the column name.
+	ls_colname = ids_requestor.Describe("#"+string(li_cnt)+".Name")
+	
+	// Get the Table name.
+	ls_dbname = ids_requestor.Describe(ls_colname+".dbName")
+	ls_table = lnv_string.of_GetToken(ls_dbname, '.')
+	
+	// Create the TableColumn value.
+	li_upper = UpperBound(as_tablecolumn) + 1
+	as_tablecolumn[li_upper] = ls_table+'.'+ls_colname
+Next
+
+Return UpperBound(as_tablecolumn)
+end function
+
 on pfc_n_cst_dssrv_multitable.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_dssrv_multitable.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 

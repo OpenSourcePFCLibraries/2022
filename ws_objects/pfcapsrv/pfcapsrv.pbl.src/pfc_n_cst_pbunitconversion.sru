@@ -25,10 +25,8 @@ end variables
 forward prototypes
 public function decimal of_inchestotwipsx (decimal vdec_inches)
 public function decimal of_inchestotwipsy (decimal vdec_inches)
-private function long of_twipsperpixely ()
 public function decimal of_twipstoinchesx (decimal vdec_twips)
 public function decimal of_twipstoinchesy (decimal vdec_twips)
-private function long of_twipsperpixelx ()
 public function decimal of_pbunitstoinchesx (long vl_pbunits)
 public function decimal of_pbunitstoinchesy (long vl_pbunits)
 public function decimal of_inchestopbunitsx (decimal vdec_inches)
@@ -53,6 +51,8 @@ public function decimal of_pixelstocentimetersx (decimal vdec_pixels)
 public function decimal of_pixelstocentimetersy (decimal vdec_pixels)
 public function decimal of_twipstocentimetersx (decimal vdec_twips)
 public function decimal of_twipstocentimetersy (decimal vdec_twips)
+private function ulong of_twipsperpixelx ()
+private function ulong of_twipsperpixely ()
 end prototypes
 
 public function decimal of_inchestotwipsx (decimal vdec_inches);/////////////////////////////////////////////////////////////////////////
@@ -145,53 +145,6 @@ public function decimal of_inchestotwipsy (decimal vdec_inches);////////////////
 Return(vdec_Inches * Dec(1440))
 end function
 
-private function long of_twipsperpixely ();/////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_twipsPerPixelY
-//
-//	Access:  		private
-//
-//	Arguments:		None
-//
-//	Returns:  		Long				Number of twips
-//
-//	Description: 	Returns the number of twips per pixel along the Y axis
-//						of the monitor
-//
-/////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version			12.5				Initial version
-//
-/////////////////////////////////////////////////////////////////////////
-//
-// Open Source PowerBuilder Foundation Class Libraries
-//
-// Copyright (c) 2004-2017, All rights reserved.
-// 
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted in accordance with the MIT License
-
-// 
-// https://opensource.org/licenses/MIT
-// 
-// This software consists of voluntary contributions made by many
-// individuals and was originally based on software copyright (c) 
-// 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
-// information on the Open Source PowerBuilder Foundation Class
-// Libraries see https://github.com/OpenSourcePFCLibraries
-//
-/////////////////////////////////////////////////////////////////////////
-
-f_setPlatform(invo_platform, TRUE)
-
-unsignedLong				lul_twipsPerPixelsY
-lul_twipsPerPixelsY		= 1440 / invo_platform.of_GetDPIY()
-
-Return(lul_twipsPerPixelsY)
-end function
-
 public function decimal of_twipstoinchesx (decimal vdec_twips);/////////////////////////////////////////////////////////////////////////
 //
 //	Function:  		of_twipsToInchesX
@@ -280,53 +233,6 @@ public function decimal of_twipstoinchesy (decimal vdec_twips);/////////////////
 /////////////////////////////////////////////////////////////////////////
 
 Return(Round(vdec_Twips / Dec(1440), 3))
-end function
-
-private function long of_twipsperpixelx ();/////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_twipsPerPixelX
-//
-//	Access:  		private
-//
-//	Arguments:		None
-//
-//	Returns:  		Long				Number of twips
-//
-//	Description: 	Returns the number of twips per pixel along the X axis
-//						of the monitor
-//
-/////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version			12.5				Initial version
-//
-/////////////////////////////////////////////////////////////////////////
-//
-// Open Source PowerBuilder Foundation Class Libraries
-//
-// Copyright (c) 2004-2017, All rights reserved.
-// 
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted in accordance with the MIT License
-
-// 
-// https://opensource.org/licenses/MIT
-// 
-// This software consists of voluntary contributions made by many
-// individuals and was originally based on software copyright (c) 
-// 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
-// information on the Open Source PowerBuilder Foundation Class
-// Libraries see https://github.com/OpenSourcePFCLibraries
-//
-/////////////////////////////////////////////////////////////////////////
-
-f_setPlatform(invo_platform, TRUE)
-
-unsignedLong				lul_twipsPerPixelsX
-lul_twipsPerPixelsX		= 1440 / invo_platform.of_GetDPIX()
-
-Return(lul_twipsPerPixelsX)
 end function
 
 public function decimal of_pbunitstoinchesx (long vl_pbunits);/////////////////////////////////////////////////////////////////////////
@@ -1546,6 +1452,100 @@ Decimal						ldec_inches
 ldec_inches					= vdec_Twips / Dec(1440)
 
 Return(Round(invo_measurementConversion.of_distance_inchesToCentimeters(ldec_inches), 3))
+end function
+
+private function ulong of_twipsperpixelx ();/////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_twipsPerPixelX
+//
+//	Access:  		private
+//
+//	Arguments:		None
+//
+//	Returns:  		Ulong				Number of twips
+//
+//	Description: 	Returns the number of twips per pixel along the X axis
+//						of the monitor
+//
+/////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version			12.5				Initial version
+//
+/////////////////////////////////////////////////////////////////////////
+//
+// Open Source PowerBuilder Foundation Class Libraries
+//
+// Copyright (c) 2004-2017, All rights reserved.
+// 
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted in accordance with the MIT License
+
+// 
+// https://opensource.org/licenses/MIT
+// 
+// This software consists of voluntary contributions made by many
+// individuals and was originally based on software copyright (c) 
+// 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+// information on the Open Source PowerBuilder Foundation Class
+// Libraries see https://github.com/OpenSourcePFCLibraries
+//
+/////////////////////////////////////////////////////////////////////////
+
+f_setPlatform(invo_platform, TRUE)
+
+unsignedLong				lul_twipsPerPixelsX
+lul_twipsPerPixelsX		= 1440 / invo_platform.of_GetDPIX()
+
+Return(lul_twipsPerPixelsX)
+end function
+
+private function ulong of_twipsperpixely ();/////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_twipsPerPixelY
+//
+//	Access:  		private
+//
+//	Arguments:		None
+//
+//	Returns:  		Ulong				Number of twips
+//
+//	Description: 	Returns the number of twips per pixel along the Y axis
+//						of the monitor
+//
+/////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version			12.5				Initial version
+//
+/////////////////////////////////////////////////////////////////////////
+//
+// Open Source PowerBuilder Foundation Class Libraries
+//
+// Copyright (c) 2004-2017, All rights reserved.
+// 
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted in accordance with the MIT License
+
+// 
+// https://opensource.org/licenses/MIT
+// 
+// This software consists of voluntary contributions made by many
+// individuals and was originally based on software copyright (c) 
+// 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+// information on the Open Source PowerBuilder Foundation Class
+// Libraries see https://github.com/OpenSourcePFCLibraries
+//
+/////////////////////////////////////////////////////////////////////////
+
+f_setPlatform(invo_platform, TRUE)
+
+unsignedLong				lul_twipsPerPixelsY
+lul_twipsPerPixelsY		= 1440 / invo_platform.of_GetDPIY()
+
+Return(lul_twipsPerPixelsY)
 end function
 
 on pfc_n_cst_pbunitconversion.create

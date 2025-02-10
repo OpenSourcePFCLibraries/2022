@@ -46,12 +46,10 @@ public function integer of_setuserkey (string as_userkey)
 public function string of_getuserkey ()
 protected function integer of_filter (string as_filter)
 public function integer of_reset ()
-public function integer of_reset (string as_id)
 public function integer of_getregistered (string as_id)
 public function boolean of_isregistered (string as_id)
 protected function integer of_load ()
 protected function integer of_save ()
-protected function integer of_write (string as_section, integer ai_itemcount)
 protected function integer of_sort (string as_sort)
 public function integer of_additem (n_cst_mruattrib anv_mruattrib)
 public function integer of_setitemcount (integer ai_count)
@@ -63,6 +61,8 @@ public function integer of_getitem (long al_row, ref n_cst_mruattrib anv_mruattr
 public function long of_finditem (string as_menuitemtext, long al_start)
 protected function integer of_updatevisuals (window aw_window, string as_menuitemtext, integer ai_menuitemindex)
 public function integer of_unregister (string as_id, integer ai_itemcount)
+protected function integer of_write (string as_section, integer ai_itemcount)
+public function long of_reset (string as_id)
 end prototypes
 
 event pfc_open;//////////////////////////////////////////////////////////////////////////////
@@ -944,77 +944,6 @@ public function integer of_reset ();////////////////////////////////////////////
 Return ids_mrukeys.Reset()
 end function
 
-public function integer of_reset (string as_id);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  	of_Reset
-//
-//	Access:  	public
-//
-//	Arguments:	
-//	as_id			id to remove from the MRU datastore
-//
-//	Returns:  	Integer
-//	SUCCESS = # of items removed
-//	ERROR = -1
-//
-//	Description:  Remove data matching the id from a MRU datastore.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-long		ll_row, ll_rowcount, ll_count=0
-string	ls_findstring
-
-//check arguments
-If IsNull(as_id) or (as_id = "") Then
-	Return -1
-End If
-
-// Trim and Convert the ID to lower case.
-as_id = Trim(Lower(as_id))
-
-ll_rowcount = ids_mrukeys.Rowcount() + 1
-ls_findstring = "s_id='" + as_id + "'"
-
-// see if the id is in the datastore
-ll_row = ids_mrukeys.Find(ls_findstring, 0, ll_rowcount)
-Do While ll_row > 0
-	ids_mrukeys.DeleteRow(ll_row)
-	ll_count++
-	ll_rowcount = ids_mrukeys.Rowcount() + 1
-	ll_row = ids_mrukeys.Find(ls_findstring, 0, ll_rowcount)
-Loop
-
-Return ll_count
-end function
-
 public function integer of_getregistered (string as_id);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:	of_GetRegistered
@@ -1363,96 +1292,6 @@ li_rc = of_WriteKeys(is_mruregisteredsection, is_mrucountkey, ls_key)
 // itemcount=
 ls_defaultcount = string(ii_mruitemcount)
 li_rc = of_WriteKeys(is_mrusection, is_mrucountkey, ls_defaultcount)
-
-return li_rc
-end function
-
-protected function integer of_write (string as_section, integer ai_itemcount);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:	of_Write
-//
-//	Access:		protected
-//
-//	Arguments:	
-//	as_section		section to write key information
-//	ai_itemcount	number of items to write out
-//
-//	Returns:		integer
-//	SUCCESS = 1
-//	ERROR = -1
-//
-//	Description:
-//	store the key data from the mrukeys datastore to ini file or registry
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-integer	li_index, li_rc
-long		ll_rowcount
-string	ls_mrukeyname, ls_key
-
-If IsNull(as_section) or as_section = "" Then
-	Return -1
-End If
-
-If IsNull(ai_itemcount) or ai_itemcount < 1 Then
-	Return -1
-End If
-
-ll_rowcount = ids_mrukeys.RowCount()
-if ll_rowcount <= 0 then
-	Return ll_rowcount
-end if
-
-// calculate # of rows to save to ini file.  1 is the lowest rownumber to go to
-if ll_rowcount > ai_itemcount then
-	ll_rowcount = ai_itemcount
-end if
-
-for li_index = 1 to ll_rowcount
-
-	// set up compound keys
-	ls_MRUKeyName = is_mruitemkey + string(li_index)
-
-	// can override encode logic in event script
-	li_rc = this.event pfc_encode(li_index, ls_key)
-	If li_rc < 0 Then exit
-
-	li_rc = of_writekeys(as_section, ls_MRUKeyName, ls_key)
-	if li_rc < 0 then exit
-	
-end for
-
-// write the number of items for the MRU
-ls_key = string(ai_itemcount)
-li_rc = of_writekeys(as_section, is_mrucountkey, ls_key)
 
 return li_rc
 end function
@@ -1864,7 +1703,7 @@ protected function integer of_read (string as_section, string as_id);///////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-Integer			li_index, li_rc, li_itemcount
+Integer			li_index, li_rc, li_itemcount, li_end = 1
 String			ls_mrukeyname, ls_value, ls_section
 n_cst_mruattrib	lnv_mruattrib
 
@@ -1888,7 +1727,7 @@ else
 end if
 
 // loop through mru item count and get information from storage location
-for li_index = li_itemcount to 1 Step -1
+for li_index = li_itemcount to li_end Step -1
 	ls_value = ""
 	ls_MRUKeyName = is_mruitemkey + string(li_index)
 	of_ReadKeys(ls_section, ls_MRUKeyName, ls_value, "")
@@ -2310,12 +2149,173 @@ this.of_reset(as_id)
 Return 1
 end function
 
+protected function integer of_write (string as_section, integer ai_itemcount);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:	of_Write
+//
+//	Access:		protected
+//
+//	Arguments:	
+//	as_section		section to write key information
+//	ai_itemcount	number of items to write out
+//
+//	Returns:		long
+//	SUCCESS = 1
+//	ERROR = -1
+//
+//	Description:
+//	store the key data from the mrukeys datastore to ini file or registry
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+integer	li_index, li_rc
+long		ll_rowcount
+string	ls_mrukeyname, ls_key
+
+If IsNull(as_section) or as_section = "" Then
+	Return -1
+End If
+
+If IsNull(ai_itemcount) or ai_itemcount < 1 Then
+	Return -1
+End If
+
+ll_rowcount = ids_mrukeys.RowCount()
+if ll_rowcount <= 0 then
+	Return -1
+end if
+
+// calculate # of rows to save to ini file.  1 is the lowest rownumber to go to
+if ll_rowcount > ai_itemcount then
+	ll_rowcount = ai_itemcount
+end if
+
+for li_index = 1 to ll_rowcount
+
+	// set up compound keys
+	ls_MRUKeyName = is_mruitemkey + string(li_index)
+
+	// can override encode logic in event script
+	li_rc = this.event pfc_encode(li_index, ls_key)
+	If li_rc < 0 Then exit
+
+	li_rc = of_writekeys(as_section, ls_MRUKeyName, ls_key)
+	if li_rc < 0 then exit
+	
+end for
+
+// write the number of items for the MRU
+ls_key = string(ai_itemcount)
+li_rc = of_writekeys(as_section, is_mrucountkey, ls_key)
+
+return li_rc
+end function
+
+public function long of_reset (string as_id);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  	of_Reset
+//
+//	Access:  	public
+//
+//	Arguments:	
+//	as_id			id to remove from the MRU datastore
+//
+//	Returns:  	Long
+//	SUCCESS = # of items removed
+//	ERROR = -1
+//
+//	Description:  Remove data matching the id from a MRU datastore.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+long		ll_row, ll_rowcount, ll_count=0
+string	ls_findstring
+
+//check arguments
+If IsNull(as_id) or (as_id = "") Then
+	Return -1
+End If
+
+// Trim and Convert the ID to lower case.
+as_id = Trim(Lower(as_id))
+
+ll_rowcount = ids_mrukeys.Rowcount() + 1
+ls_findstring = "s_id='" + as_id + "'"
+
+// see if the id is in the datastore
+ll_row = ids_mrukeys.Find(ls_findstring, 0, ll_rowcount)
+Do While ll_row > 0
+	ids_mrukeys.DeleteRow(ll_row)
+	ll_count++
+	ll_rowcount = ids_mrukeys.Rowcount() + 1
+	ll_row = ids_mrukeys.Find(ls_findstring, 0, ll_rowcount)
+Loop
+
+Return ll_count
+end function
+
 on pfc_n_cst_mru.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_mru.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 
 event constructor;//////////////////////////////////////////////////////////////////////////////

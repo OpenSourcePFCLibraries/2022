@@ -75,7 +75,6 @@ end variables
 forward prototypes
 public function integer of_createupdatesequence (ref u_dw adw_sequence[])
 public function integer of_findroot (ref u_dw adw_root)
-public function integer of_getdetails (ref u_dw adw_details[])
 public function integer of_getupdatespending ()
 public function integer of_getusecollinks ()
 public function boolean of_islinked ()
@@ -115,8 +114,6 @@ public function integer of_setstyle (integer ai_style)
 public function integer of_getstyle ()
 public function integer of_setredraw (boolean ab_switch)
 public function boolean of_iskey (string as_column)
-public function integer of_deletedetailrows ()
-public function integer of_deleterows (boolean ab_delete, string as_masterkeys[], string as_mastervalues[])
 public function integer of_itemfocuschanged (long al_row, string as_column)
 public function integer of_keychanged (long al_row, string as_column, string as_prevvalue, any aa_newvalue)
 protected function boolean of_getupdatebottomup ()
@@ -132,7 +129,6 @@ public function integer of_setmaster (u_dw adw_master)
 public function integer of_resetmaster ()
 public function integer of_unregister ()
 public function integer of_setothersaveobjects (powerobject apo_objects[])
-public function integer of_getothersaveobjects (ref powerobject apo_objects[])
 public function integer of_updatecustom (integer ai_custom)
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
 public function integer of_GetDeleteStyle ()
@@ -160,6 +156,10 @@ public function integer of_register (string as_masterarg, string as_detailarg)
 public function integer of_accepttext ()
 protected function string of_getvalue (long al_row, string as_column)
 public function integer of_undomodified (boolean ab_all)
+public function long of_deleterows (boolean ab_delete, string as_masterkeys[], string as_mastervalues[])
+public function long of_deletedetailrows ()
+public function long of_getdetails (ref u_dw adw_details[])
+public function long of_getothersaveobjects (ref powerobject apo_objects[])
 end prototypes
 
 event type integer pfc_rowfocuschanged(long al_row);//////////////////////////////////////////////////////////////////////////////
@@ -1306,58 +1306,6 @@ End If
 li_rc = idw_master.inv_Linkage.of_FindRoot ( adw_root )
 
 Return li_rc
-end function
-
-public function integer of_getdetails (ref u_dw adw_details[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetDetails
-//
-//	Access:    		Public
-//
-//	Arguments:
-//	adw_details:  	An array of u_dw (passed by reference) to hold the detail references.
-//
-//	Returns:   		Integer
-//   					The number of details
-//
-//	Description:  Obtains a reference to all the details attached to 
-//					  the requesting datawindow.
-//
-//	   Note: Can be called from any datawindow in the linked chain.
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	5.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-adw_details = idw_details 
-
-Return UpperBound(idw_details) 
 end function
 
 public function integer of_getupdatespending ();//////////////////////////////////////////////////////////////////////////////
@@ -2974,7 +2922,7 @@ public function integer of_updatebottomup ();///////////////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 Integer	li_i
-Integer	li_max
+Integer	li_max, li_end = 1
 String	ls_sqlspyheading
 String	ls_sqlspymessage
 u_dw		ldw_updatedw[]
@@ -2998,7 +2946,7 @@ End If
 
 // Loop thru the array backwards to create a reverse update sequence ( Bottom-Up ).
 li_max = UpperBound ( ldw_updatedw ) 
-For li_i = li_max to 1 Step -1
+For li_i = li_max to li_end Step -1
 	// Update the datawindow.
 	If ldw_updatedw[li_i].Event pfc_update ( FALSE, False ) <> 1 Then Return FAILURE
 Next 
@@ -3757,7 +3705,7 @@ public function integer of_updatetopdownandbottomup ();/////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 Integer	li_i
-Integer	li_max
+Integer	li_max, li_end = 1
 boolean	lb_accepttext = False
 boolean 	lb_resetflag = False
 boolean	lb_insert	
@@ -3821,7 +3769,7 @@ If IsValid(gnv_app.inv_debug) Then
 	End If
 End If
 
-For li_i = li_max to 1 Step -1
+For li_i = li_max to li_end Step -1
 	// Update the datawindow.
 	If ldw_updatedw[li_i].of_Update &
 		(lb_accepttext, lb_resetflag, lb_insert, lb_update, lb_delete) <> 1 Then 
@@ -4204,259 +4152,6 @@ next
 return False
 end function
 
-public function integer of_deletedetailrows ();//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_DeleteDetailRows
-//
-//	Access:    		public
-//
-//	Arguments:		None
-//
-//	Returns:   		Integer
-//		The number of rows deleted/discarded.
-//		-1 if an error occurs.
-//
-//	Description: 
-//	Notification that a row has been deleted.
-//
-//	Note:
-//	The pfc_predeleterow should have been called prior to the actual deletion.
-// This function is not typically called by the developer.  
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-long		ll_deletedcount
-integer	li_numdetails
-integer	li_detail
-integer	li_rc 
-string	ls_reset[]
-
-// Determine how many details are subordinate to the requestor.
-li_numdetails = UpperBound ( idw_details ) 
-
-// Loop through the valid details and Refresh each detail.
-for li_detail = 1 to li_numdetails 
-	If IsNull(idw_details[li_detail]) Or &
-		Not IsValid (idw_details[li_detail]) Then Continue
-	If IsNull(idw_details[li_detail].inv_Linkage) Or &
-		Not IsValid (idw_details[li_detail].inv_Linkage) Then Return FAILURE
-
-	CHOOSE CASE ii_deletestyle
-		CASE DEFAULT
-			// No Action.
-			li_rc = 0
-
-		CASE DELETE_ROWS
-			// This will perform Deletes on all Detail rows for the deleted Master row.
-			li_rc = idw_details[li_detail].inv_Linkage.of_DeleteRows &
-						(True, is_keycols, is_keycolsvalue) 
-			
-		CASE DISCARD_ROWS
-			// This will perform Discards on all Detail rows for the deleted Master row.			
-			li_rc = idw_details[li_detail].inv_Linkage.of_DeleteRows &
-						(False, is_keycols, is_keycolsvalue) 			
-		
-		CASE ELSE
-			Return FAILURE
-
-	END CHOOSE
-	If li_rc < 0 Then Exit
-	ll_deletedcount += li_rc
-next
-
-// Reset the key value information.
-is_keycolsvalue = ls_reset
-
-if li_rc <0 then 
-	Return FAILURE
-end if
-Return ll_deletedcount
-end function
-
-public function integer of_deleterows (boolean ab_delete, string as_masterkeys[], string as_mastervalues[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_DeleteRows
-//
-//	Access:    		public
-//
-//	Arguments:
-//	  ab_delete				Switch which determines if Deletes or Discard operations
-//								will be performed.
-//   as_masterkeys[]		Column Names from the master row that was deleted.
-//	  as_mastervalues[]	Column Values from the master row that was deleted.
-//
-//	Returns:   		Integer
-// 					The number of rows deleted/discarded.
-//						-1 if an error occurs.
-//
-//	Description: 
-// Delete the rows that match the master row information.
-//	These passed in arrays contain all the relevant information about the
-//	master row that was deleted. 	The master dw knows which columns
-//	are key values for all its detail datawindows, but it does not know
-//	which go with which detail.  So it just passes all the information
-//	and lets the detail datawindow figure out which values it needs.
-//
-//	Note:
-// This function is not typically called by the developer.  
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-Integer	li_i
-Integer	li_x
-Integer	li_upperbound
-integer	li_masterupperbound
-integer	li_rc
-long		ll_deletecount
-String	ls_find
-Long		ll_row
-Long		ll_toprow
-boolean	lb_keyfound
-string	ls_filter
-string	ls_expression
-
-// Validate the arguments.
-li_masterupperbound = UpperBound (as_masterkeys)
-if li_masterupperbound <> UpperBound (as_mastervalues) or &
-	li_masterupperbound = 0 then
-	return FAILURE
-end if
-
-// Not a valid operation for a root datawindow. 
-If of_IsRoot ( ) Then Return FAILURE
-
-// Create the Find expression to match the rows that need to be deleted.
-li_upperbound = UpperBound (inv_linkargs.is_mastercolarg)
-For li_i = 1 to li_upperbound
-	// Get the column data value from the master row that was deleted.  This is found
-	// on the arrays that were passed in.
-	lb_keyfound = False
-	for li_x = 1 to li_masterupperbound
-		If inv_linkargs.is_mastercolarg[li_i] = as_masterkeys[li_x] then
-			lb_keyfound = True
-			ls_expression = as_mastervalues[li_x]
-			Exit
-		end if
-	next	
-	if not lb_keyfound Then
-		// Required data not found.
-		Return FAILURE
-	End If
-	
-	If IsNull(ls_expression) Then ls_expression = ""
-	If Not Len(Trim(ls_expression))=0 Then
-		// Construct the Find expression.
-		If (ls_find <> "") Then ls_find += " And "
-		If Pos(Lower(ls_expression), 'null') > 0 Then
-			ls_find += 'IsNull('+ inv_linkargs.is_detailcolarg[li_i]+')'
-		Else
-			ls_find += inv_linkargs.is_detailcolarg[li_i] + " = " + ls_expression	
-		End If
-	End If
-Next 
-
-// Clear out any filter currently on the dw.
-If of_GetStyle() = FILTER Then
-	ls_filter = idw_requestor.Object.DataWindow.Table.Filter
-	If ls_filter <> '' And ls_filter <> '?' Then
-		is_filterexp = ""
-		idw_requestor.SetFilter("")
-		idw_requestor.Filter()
-	End If
-End If
-
-// -- Loop around the rows that need to be deleted.
-ib_cascadingdelete = True
-DO
-	ll_row = idw_Requestor.Find (ls_find, ll_row, idw_Requestor.RowCount())
-	if ll_row > 0 then
-		// Notify that the row is going to be deleted.
-		li_rc = this.Trigger Event pfc_predeleterow(ll_row)
-
-		// Delete or Discard the row.
-		ib_allowfocuschange = True
-		If ab_delete Then
-			li_rc = idw_requestor.DeleteRow(ll_row)
-		Else
-			li_rc = idw_requestor.RowsDiscard(ll_row, ll_row, Primary!)
-		End If
-		ib_allowfocuschange = False
-		If li_rc >0 Then ll_deletecount++
-		
-		// Continue the Delete opearation.
-		li_rc = of_DeleteDetailRows()
-		If li_rc >0  Then ll_deletecount += li_rc
-		
-	end if
-LOOP WHILE ll_row > 0
-ib_cascadingdelete = False
-
-//If IsValid(gnv_app.inv_debug) then
-//	gnv_app.inv_debug.of_Message (idw_requestor.ClassName()+'.Linkage.of_DeleteRows'+&
-//		' ls_find('+ls_find+')'+' RowCount='+string(idw_requestor.RowCount()) + &
-//		' ll_deletecount='+string(ll_deletecount))
-//End If
-
-Return ll_deletecount
-end function
-
 public function integer of_itemfocuschanged (long al_row, string as_column);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  	of_ItemFocusChanged
@@ -4687,7 +4382,7 @@ public function integer of_updatebottomupandtopdown ();/////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 Integer	li_i
-Integer	li_max
+Integer	li_max, li_end = 1
 boolean	lb_accepttext = False
 boolean 	lb_resetflag = False
 boolean	lb_insert	
@@ -4723,7 +4418,7 @@ If IsValid(gnv_app.inv_debug) Then
 	End If
 End If
 
-For li_i = li_max to 1 Step -1
+For li_i = li_max to li_end Step -1
 	// Update the datawindow.
 	If ldw_updatedw[li_i].of_Update &
 		(lb_accepttext, lb_resetflag, lb_insert, lb_update, lb_delete) <> 1 Then 
@@ -5472,57 +5167,6 @@ public function integer of_setothersaveobjects (powerobject apo_objects[]);/////
 // Set the update style.
 ipo_othersaveobjects = apo_objects
 Return 1
-end function
-
-public function integer of_getothersaveobjects (ref powerobject apo_objects[]);//////////////////////////////////////////////////////////////////////////////
-//
-//	Function:  		of_GetOtherSaveObjects
-//
-//	Access:    		Public
-//
-//	Arguments:
-//		apo_objects[] By reference. The other objects added to the save process.
-//
-//	Returns:   		Integer
-//		# of objects in array.
-//
-//	Description: 
-//		Get any other object to be updated when UpdateOnRowChange functionality
-//		is turned on. 
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Revision History
-//
-//	Version
-//	6.0   Initial version
-//
-//////////////////////////////////////////////////////////////////////////////
-//
-/*
- * Open Source PowerBuilder Foundation Class Libraries
- *
- * Copyright (c) 2004-2017, All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted in accordance with the MIT License
-
- *
- * https://opensource.org/licenses/MIT
- *
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals and was originally based on software copyright (c) 
- * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
- * information on the Open Source PowerBuilder Foundation Class
- * Libraries see https://github.com/OpenSourcePFCLibraries
-*/
-//
-//////////////////////////////////////////////////////////////////////////////
-
-apo_objects = ipo_othersaveobjects
-Return UpperBound(apo_objects)
 end function
 
 public function integer of_updatecustom (integer ai_custom);//////////////////////////////////////////////////////////////////////////////
@@ -7425,6 +7069,362 @@ If ab_all Then
 End If
 
 Return li_rc
+end function
+
+public function long of_deleterows (boolean ab_delete, string as_masterkeys[], string as_mastervalues[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_DeleteRows
+//
+//	Access:    		public
+//
+//	Arguments:
+//	  ab_delete				Switch which determines if Deletes or Discard operations
+//								will be performed.
+//   as_masterkeys[]		Column Names from the master row that was deleted.
+//	  as_mastervalues[]	Column Values from the master row that was deleted.
+//
+//	Returns:   		long
+// 					The number of rows deleted/discarded.
+//						-1 if an error occurs.
+//
+//	Description: 
+// Delete the rows that match the master row information.
+//	These passed in arrays contain all the relevant information about the
+//	master row that was deleted. 	The master dw knows which columns
+//	are key values for all its detail datawindows, but it does not know
+//	which go with which detail.  So it just passes all the information
+//	and lets the detail datawindow figure out which values it needs.
+//
+//	Note:
+// This function is not typically called by the developer.  
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+Integer	li_i
+Integer	li_x
+Integer	li_upperbound
+integer	li_masterupperbound
+integer	li_rc
+long		ll_deletecount
+String	ls_find
+Long		ll_row
+Long		ll_toprow
+boolean	lb_keyfound
+string	ls_filter
+string	ls_expression
+
+// Validate the arguments.
+li_masterupperbound = UpperBound (as_masterkeys)
+if li_masterupperbound <> UpperBound (as_mastervalues) or &
+	li_masterupperbound = 0 then
+	return FAILURE
+end if
+
+// Not a valid operation for a root datawindow. 
+If of_IsRoot ( ) Then Return FAILURE
+
+// Create the Find expression to match the rows that need to be deleted.
+li_upperbound = UpperBound (inv_linkargs.is_mastercolarg)
+For li_i = 1 to li_upperbound
+	// Get the column data value from the master row that was deleted.  This is found
+	// on the arrays that were passed in.
+	lb_keyfound = False
+	for li_x = 1 to li_masterupperbound
+		If inv_linkargs.is_mastercolarg[li_i] = as_masterkeys[li_x] then
+			lb_keyfound = True
+			ls_expression = as_mastervalues[li_x]
+			Exit
+		end if
+	next	
+	if not lb_keyfound Then
+		// Required data not found.
+		Return FAILURE
+	End If
+	
+	If IsNull(ls_expression) Then ls_expression = ""
+	If Not Len(Trim(ls_expression))=0 Then
+		// Construct the Find expression.
+		If (ls_find <> "") Then ls_find += " And "
+		If Pos(Lower(ls_expression), 'null') > 0 Then
+			ls_find += 'IsNull('+ inv_linkargs.is_detailcolarg[li_i]+')'
+		Else
+			ls_find += inv_linkargs.is_detailcolarg[li_i] + " = " + ls_expression	
+		End If
+	End If
+Next 
+
+// Clear out any filter currently on the dw.
+If of_GetStyle() = FILTER Then
+	ls_filter = idw_requestor.Object.DataWindow.Table.Filter
+	If ls_filter <> '' And ls_filter <> '?' Then
+		is_filterexp = ""
+		idw_requestor.SetFilter("")
+		idw_requestor.Filter()
+	End If
+End If
+
+// -- Loop around the rows that need to be deleted.
+ib_cascadingdelete = True
+DO
+	ll_row = idw_Requestor.Find (ls_find, ll_row, idw_Requestor.RowCount())
+	if ll_row > 0 then
+		// Notify that the row is going to be deleted.
+		li_rc = this.Trigger Event pfc_predeleterow(ll_row)
+
+		// Delete or Discard the row.
+		ib_allowfocuschange = True
+		If ab_delete Then
+			li_rc = idw_requestor.DeleteRow(ll_row)
+		Else
+			li_rc = idw_requestor.RowsDiscard(ll_row, ll_row, Primary!)
+		End If
+		ib_allowfocuschange = False
+		If li_rc >0 Then ll_deletecount++
+		
+		// Continue the Delete opearation.
+		li_rc = of_DeleteDetailRows()
+		If li_rc >0  Then ll_deletecount += li_rc
+		
+	end if
+LOOP WHILE ll_row > 0
+ib_cascadingdelete = False
+
+//If IsValid(gnv_app.inv_debug) then
+//	gnv_app.inv_debug.of_Message (idw_requestor.ClassName()+'.Linkage.of_DeleteRows'+&
+//		' ls_find('+ls_find+')'+' RowCount='+string(idw_requestor.RowCount()) + &
+//		' ll_deletecount='+string(ll_deletecount))
+//End If
+
+Return ll_deletecount
+end function
+
+public function long of_deletedetailrows ();//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_DeleteDetailRows
+//
+//	Access:    		public
+//
+//	Arguments:		None
+//
+//	Returns:   		long
+//		The number of rows deleted/discarded.
+//		-1 if an error occurs.
+//
+//	Description: 
+//	Notification that a row has been deleted.
+//
+//	Note:
+//	The pfc_predeleterow should have been called prior to the actual deletion.
+// This function is not typically called by the developer.  
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+long		ll_deletedcount
+integer	li_numdetails
+integer	li_detail
+integer	li_rc 
+string	ls_reset[]
+
+// Determine how many details are subordinate to the requestor.
+li_numdetails = UpperBound ( idw_details ) 
+
+// Loop through the valid details and Refresh each detail.
+for li_detail = 1 to li_numdetails 
+	If IsNull(idw_details[li_detail]) Or &
+		Not IsValid (idw_details[li_detail]) Then Continue
+	If IsNull(idw_details[li_detail].inv_Linkage) Or &
+		Not IsValid (idw_details[li_detail].inv_Linkage) Then Return FAILURE
+
+	CHOOSE CASE ii_deletestyle
+		CASE DEFAULT
+			// No Action.
+			li_rc = 0
+
+		CASE DELETE_ROWS
+			// This will perform Deletes on all Detail rows for the deleted Master row.
+			li_rc = idw_details[li_detail].inv_Linkage.of_DeleteRows &
+						(True, is_keycols, is_keycolsvalue) 
+			
+		CASE DISCARD_ROWS
+			// This will perform Discards on all Detail rows for the deleted Master row.			
+			li_rc = idw_details[li_detail].inv_Linkage.of_DeleteRows &
+						(False, is_keycols, is_keycolsvalue) 			
+		
+		CASE ELSE
+			Return FAILURE
+
+	END CHOOSE
+	If li_rc < 0 Then Exit
+	ll_deletedcount += li_rc
+next
+
+// Reset the key value information.
+is_keycolsvalue = ls_reset
+
+if li_rc <0 then 
+	Return FAILURE
+end if
+Return ll_deletedcount
+end function
+
+public function long of_getdetails (ref u_dw adw_details[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetDetails
+//
+//	Access:    		Public
+//
+//	Arguments:
+//	adw_details:  	An array of u_dw (passed by reference) to hold the detail references.
+//
+//	Returns:   		long
+//   					The number of details
+//
+//	Description:  Obtains a reference to all the details attached to 
+//					  the requesting datawindow.
+//
+//	   Note: Can be called from any datawindow in the linked chain.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	5.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+adw_details = idw_details 
+
+Return UpperBound(idw_details) 
+end function
+
+public function long of_getothersaveobjects (ref powerobject apo_objects[]);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetOtherSaveObjects
+//
+//	Access:    		Public
+//
+//	Arguments:
+//		apo_objects[] By reference. The other objects added to the save process.
+//
+//	Returns:   		long
+//		# of objects in array.
+//
+//	Description: 
+//		Get any other object to be updated when UpdateOnRowChange functionality
+//		is turned on. 
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	6.0   Initial version
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c) 
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+apo_objects = ipo_othersaveobjects
+Return UpperBound(apo_objects)
 end function
 
 on pfc_n_cst_dwsrv_linkage.destroy
