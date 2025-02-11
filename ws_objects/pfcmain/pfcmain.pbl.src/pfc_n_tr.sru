@@ -47,6 +47,7 @@ public function long of_begin ()
 public function integer of_copyto (n_tr atr_target)
 protected function integer of_restore (integer ai_filetype, string as_keyoriniorxml, string as_inisectionxmlroot, string as_subkeyelement, ref string as_value, string as_default)
 public function integer of_init (integer ai_filetype, string as_inixmlfile, string as_inisectionxmlroot)
+public function integer of_init_xml (string as_xmlfile, string as_inisectionxmlroot)
 end prototypes
 
 public function boolean of_IsConnected ();//////////////////////////////////////////////////////////////////////////////
@@ -1318,6 +1319,23 @@ public function integer of_init (integer ai_filetype, string as_inixmlfile, stri
 //////////////////////////////////////////////////////////////////////////////
 
 integer	li_rc
+
+choose case ai_filetype
+	case cst_filetype_ini
+		li_rc = of_init( as_inixmlfile, as_inisectionxmlroot )
+	
+	case cst_filetype_xml
+		li_rc = of_init_xml( as_inixmlfile, as_inisectionxmlroot )
+
+	case else
+		Return -1
+		
+end choose
+
+return li_rc
+end function
+
+public function integer of_init_xml (string as_xmlfile, string as_inisectionxmlroot);integer li_rc
 string		ls_dbms
 string		ls_database
 string		ls_logid
@@ -1330,46 +1348,38 @@ string		ls_dbparm
 string		ls_autocommit
 n_cst_conversion lnv_conversion
 
-choose case ai_filetype
-	case cst_filetype_ini
-		li_rc = of_init( as_inixmlfile, as_inisectionxmlroot )
-	
-	case cst_filetype_xml
-		if IsNull (as_inixmlfile) or IsNull (as_inisectionxmlroot) or Len (Trim (as_inixmlfile))=0 or Len (Trim (as_inisectionxmlroot))=0 or (not FileExists (as_inixmlfile)) then return -1
+if IsNull (as_xmlfile) or &
+	IsNull (as_inisectionxmlroot) or &
+	Len (Trim (as_xmlfile))=0 or &
+	Len (Trim (as_inisectionxmlroot))=0 or &
+	(not FileExists (as_xmlfile)) then return -1
 
-		// If available, get each individual value.
-		li_rc = of_restore( ai_filetype, as_inixmlfile, as_inisectionxmlroot, 'DBMS', ls_dbms, "" )
-		li_rc = of_restore( ai_filetype, as_inixmlfile, as_inisectionxmlroot, 'Database', ls_database, "" )
-		li_rc = of_restore( ai_filetype, as_inixmlfile, as_inisectionxmlroot, 'LogID', ls_logid, "" )
-		li_rc = of_restore( ai_filetype, as_inixmlfile, as_inisectionxmlroot, 'LogPassword', ls_logpass, "" )
-		li_rc = of_restore( ai_filetype, as_inixmlfile, as_inisectionxmlroot, 'ServerName', ls_servername, "" )
-		li_rc = of_restore( ai_filetype, as_inixmlfile, as_inisectionxmlroot, 'UserID', ls_userid, "" )
-		li_rc = of_restore( ai_filetype, as_inixmlfile, as_inisectionxmlroot, 'DatabasePassword', ls_dbpass, "" )
-		li_rc = of_restore( ai_filetype, as_inixmlfile, as_inisectionxmlroot, 'Lock', ls_lock, "" )
-		li_rc = of_restore( ai_filetype, as_inixmlfile, as_inisectionxmlroot, 'DBParm', ls_dbparm, "" )
-		li_rc = of_restore( ai_filetype, as_inixmlfile, as_inisectionxmlroot, 'AutoCommit', ls_autocommit, "" )
+// If available, get each individual value.
+li_rc = of_restore( cst_filetype_xml, as_xmlfile, as_inisectionxmlroot, 'DBMS', ls_dbms, "" )
+li_rc = of_restore( cst_filetype_xml, as_xmlfile, as_inisectionxmlroot, 'Database', ls_database, "" )
+li_rc = of_restore( cst_filetype_xml, as_xmlfile, as_inisectionxmlroot, 'LogID', ls_logid, "" )
+li_rc = of_restore( cst_filetype_xml, as_xmlfile, as_inisectionxmlroot, 'LogPassword', ls_logpass, "" )
+li_rc = of_restore( cst_filetype_xml, as_xmlfile, as_inisectionxmlroot, 'ServerName', ls_servername, "" )
+li_rc = of_restore( cst_filetype_xml, as_xmlfile, as_inisectionxmlroot, 'UserID', ls_userid, "" )
+li_rc = of_restore( cst_filetype_xml, as_xmlfile, as_inisectionxmlroot, 'DatabasePassword', ls_dbpass, "" )
+li_rc = of_restore( cst_filetype_xml, as_xmlfile, as_inisectionxmlroot, 'Lock', ls_lock, "" )
+li_rc = of_restore( cst_filetype_xml, as_xmlfile, as_inisectionxmlroot, 'DBParm', ls_dbparm, "" )
+li_rc = of_restore( cst_filetype_xml, as_xmlfile, as_inisectionxmlroot, 'AutoCommit', ls_autocommit, "" )
 
-		// Initialize this object
-		this.DBMS = ls_dbms
-		this.Database = ls_database
-		this.LogID = ls_logid
-		this.LogPass = ls_logpass
-		this.ServerName = ls_servername
-		this.UserID = ls_userid
-		this.DBPass = ls_dbpass
-		this.Lock 	= ls_lock
-		this.DbParm = ls_dbparm
-		this.Autocommit = lnv_conversion.of_Boolean (ls_autocommit)
-		if IsNull (this.Autocommit) then this.Autocommit = false
+// Initialize this object
+this.DBMS = ls_dbms
+this.Database = ls_database
+this.LogID = ls_logid
+this.LogPass = ls_logpass
+this.ServerName = ls_servername
+this.UserID = ls_userid
+this.DBPass = ls_dbpass
+this.Lock 	= ls_lock
+this.DbParm = ls_dbparm
+this.Autocommit = lnv_conversion.of_Boolean (ls_autocommit)
+if IsNull (this.Autocommit) then this.Autocommit = false
 		
-		li_rc = 1
-		
-	case else
-		Return -1
-		
-end choose
-
-return li_rc
+Return 1
 end function
 
 event destructor;//////////////////////////////////////////////////////////////////////////////

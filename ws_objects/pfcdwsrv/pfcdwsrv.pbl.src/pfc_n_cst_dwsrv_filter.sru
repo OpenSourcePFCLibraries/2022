@@ -40,6 +40,8 @@ public function integer of_getexclude (ref string as_excludecols[])
 public function integer of_getinfo (ref n_cst_infoattrib anv_infoattrib)
 public function integer of_getpropertyinfo (ref n_cst_propertyattrib anv_attrib)
 public function long of_getregisterable (ref string as_allcolumns[])
+private function integer of_setfilter_extended ()
+private function integer of_setfilter_default (string as_format)
 end prototypes
 
 event pfc_filterdlg;call super::pfc_filterdlg;//////////////////////////////////////////////////////////////////////////////
@@ -374,10 +376,6 @@ public function integer of_setfilter (string as_format);////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-integer					li_rc
-n_cst_returnattrib	lnv_return 
-n_cst_filterattrib	lnv_filterattrib
-
 // Check the datawindow reference.
 If IsNull(idw_requestor) Or Not IsValid(idw_requestor) Then Return -1
 
@@ -391,38 +389,10 @@ END IF
 CHOOSE CASE ii_style
 
 	CASE DEFAULT 					
-		//  Powerscript default filter style (Default)
-		li_rc = idw_requestor.SetFilter (as_format) 
-		// Check if the dialog was close via the Cancel button (=-1).
-		If li_rc = -1 Then li_rc = 0
-		is_filterin = ''
-		is_filterout = ''
-		Return li_rc
+		Return of_setfilter_default ( as_format )
 
 	CASE EXTENDED, SIMPLE
-		// Set up the filter information to be passed to the dialog.
-		IF of_BuildFilterAttrib(lnv_filterattrib) <> 1 THEN Return -1
-		lnv_filterattrib.idw_dw = idw_Requestor
-		
-		IF ii_style = EXTENDED THEN
-			OpenWithParm(w_filterextended, lnv_filterattrib) 
-		ELSE
-			// PFC Simple Filter
-			OpenWithParm(w_filtersimple, lnv_filterattrib) 
-		END IF
-		
-		// Get the return PowerObject.
-		lnv_return = Message.PowerObjectParm
-		
-		// Check if the dialog was close via the Cancel button.
-		IF lnv_return.ii_rc <> 1 Then Return lnv_return.ii_rc
-		
-		li_rc = idw_Requestor.SetFilter (lnv_return.is_rs)
-		If li_rc > 0 Then
-			is_filterin = lnv_return.is_rs
-			is_filterout = of_GetFilter()
-		End If
-		Return li_rc
+		Return of_setfilter_extended()
 		
 	CASE ELSE
 		Return -1
@@ -991,6 +961,49 @@ NEXT
 
 as_allcolumns = ls_filtercolumns_all
 Return UpperBound(as_allcolumns)
+end function
+
+private function integer of_setfilter_extended ();integer li_rc
+n_cst_returnattrib	lnv_return
+n_cst_filterattrib	lnv_filterattrib
+
+// Set up the filter information to be passed to the dialog.
+IF of_BuildFilterAttrib(lnv_filterattrib) <> 1 THEN Return -1
+lnv_filterattrib.idw_dw = idw_Requestor
+
+IF ii_style = EXTENDED THEN
+	OpenWithParm(w_filterextended, lnv_filterattrib) 
+ELSE
+	// PFC Simple Filter
+	OpenWithParm(w_filtersimple, lnv_filterattrib) 
+END IF
+
+// Get the return PowerObject.
+lnv_return = Message.PowerObjectParm
+
+// Check if the dialog was close via the Cancel button.
+IF lnv_return.ii_rc <> 1 Then Return lnv_return.ii_rc
+
+li_rc = idw_Requestor.SetFilter (lnv_return.is_rs)
+If li_rc > 0 Then
+	is_filterin = lnv_return.is_rs
+	is_filterout = of_GetFilter()
+End If
+
+Return li_rc
+
+end function
+
+private function integer of_setfilter_default (string as_format);integer li_rc
+
+//  Powerscript default filter style (Default)
+li_rc = idw_requestor.SetFilter (as_format) 
+// Check if the dialog was close via the Cancel button (=-1).
+If li_rc = -1 Then li_rc = 0
+is_filterin = ''
+is_filterout = ''
+Return li_rc
+
 end function
 
 on pfc_n_cst_dwsrv_filter.create

@@ -73,6 +73,11 @@ public function integer of_getobjects (ref string as_objlist[], string as_objtyp
 public function integer of_getobjects (ref string as_objlist[], string as_objtype, string as_band, boolean ab_visibleonly)
 public function long of_dwarguments (datawindowchild adwc_obj, ref string as_argnames[], ref string as_argdatatypes[])
 public function long of_dwarguments (ref string as_argnames[], ref string as_argdatatypes[])
+private function integer of_setitem_decimal (long al_row, string as_column, string as_value)
+private function integer of_setitem_datetime (long al_row, string as_column, string as_value)
+private function integer of_setitem_number (long al_row, string as_column, string as_value)
+private function integer of_setitem_real (long al_row, string as_column, string as_value)
+private function integer of_setitem_long (long al_row, string as_column, string as_value)
 end prototypes
 
 public function integer of_getcolumnnamesource ();// ##Obsolete##
@@ -2849,110 +2854,19 @@ CHOOSE CASE Lower ( Left ( ids_requestor.Describe ( as_column + ".ColType" ) , 5
 			li_rc = ids_requestor.SetItem ( al_row, as_column, Date (as_value) ) 
 
 		CASE "datet"		//  DATETIME DATATYPE
-			ld_val = lnv_conversion.of_Date (as_value)
-			If Pos ( as_value, " " ) > 0 Then
-				/*  There was a time entered  */
-				ltm_val = lnv_conversion.of_Time (as_value)
-			Else
-				ltm_val = Time ( "00:00:00" )
-			End If
-			li_rc = ids_requestor.SetItem (al_row, as_column, DateTime (ld_val, ltm_val))	
+			li_rc = of_setitem_datetime( al_row, as_column, as_value ) 
 				
 		CASE "decim"		//  DECIMAL DATATYPE
-			/*  Replace formatting characters in passed string */
-
-			// which character is used as separator for thousand?  #11012
-			// (only read once to improve performance)
-			if is_charThousand = "" or IsNull (is_charThousand) then
-				if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
-					is_charThousand = ","
-				end if
-			end if
-			
-			ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
-			if Pos (ls_string_value, "%") > 0 then
-				ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
-				ldc_val = Dec (ls_string_value) / 100
-			else
-				ldc_val = Dec (ls_string_value)
-			end if
-
-			li_rc = ids_requestor.SetItem ( al_row, as_column, ldc_val) 
+			li_rc = of_setitem_decimal(al_row, as_column, as_value)
 	
 		CASE "numbe", "doubl"			//  NUMBER DATATYPE	
-			/*  Replace formatting characters in passed string */
-
-			// which character is used as separator for thousand?  #11012
-			// (only read once to improve performance)
-			if is_charThousand = "" or IsNull (is_charThousand) then
-				if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
-					is_charThousand = ","
-				end if
-			end if
-			
-			ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
-			if Pos (ls_string_value, "%") > 0 then
-				ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
-				ldb_val = Double (ls_string_value) / 100
-			else
-				ldb_val = Double (ls_string_value)
-			end if
-						
-			li_rc = ids_requestor.SetItem ( al_row, as_column, ldb_val) 
+			li_rc = of_setitem_number(al_row, as_column, as_value)
 		
 		CASE "real"				//  REAL DATATYPE	
-			/*  Replace formatting characters in passed string */
-
-			// which character is used as separator for thousand?  #11012
-			// (only read once to improve performance)
-			if is_charThousand = "" or IsNull (is_charThousand) then
-				if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
-					is_charThousand = ","
-				end if
-			end if
-			
-			ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
-			if Pos (ls_string_value, "%") > 0 then
-				ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
-				lr_val = Real (ls_string_value) / 100
-			else
-				lr_val = Real (ls_string_value)
-			end if
-						
-			li_rc = ids_requestor.SetItem ( al_row, as_column, lr_val) 
+			li_rc = of_setitem_real(al_row, as_column, as_value)			
 		
 		CASE "long", "ulong"		//  LONG/INTEGER DATATYPE	
-			/*  Replace formatting characters in passed string */
-
-			// which character is used as separator for thousand?  #11012
-			// (only read once to improve performance)
-			if is_charThousand = "" or IsNull (is_charThousand) then
-				if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
-					is_charThousand = ","
-				end if
-			end if
-			
-			ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
-			ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
-			if Pos (ls_string_value, "%") > 0 then
-				ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
-				ll_val = Long (ls_string_value) / 100
-			else
-				ll_val = Long (ls_string_value)
-			end if
-						
-			li_rc = ids_requestor.SetItem ( al_row, as_column, ll_val) 
+			li_rc = of_setitem_long(al_row, as_column, as_value)			
 		
 		CASE "time", "times"		//  TIME DATATYPE
 			li_rc = ids_requestor.SetItem ( al_row, as_column, Time ( as_value ) ) 
@@ -3278,6 +3192,138 @@ For ll_a = 1 to ll_args
 Next
 
 Return UpperBound ( as_argnames )
+
+end function
+
+private function integer of_setitem_decimal (long al_row, string as_column, string as_value);decimal	ldc_val
+n_cst_string	lnv_string
+String		ls_string_value
+
+/*  Replace formatting characters in passed string */
+
+// which character is used as separator for thousand?  #11012
+// (only read once to improve performance)
+if is_charThousand = "" or IsNull (is_charThousand) then
+	if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
+		is_charThousand = ","
+	end if
+end if
+
+ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
+if Pos (ls_string_value, "%") > 0 then
+	ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
+	ldc_val = Dec (ls_string_value) / 100
+else
+	ldc_val = Dec (ls_string_value)
+end if
+
+Return ids_requestor.SetItem ( al_row, as_column, ldc_val) 
+
+
+end function
+
+private function integer of_setitem_datetime (long al_row, string as_column, string as_value);n_cst_conversion	lnv_conversion
+date ld_val
+time ltm_val
+
+ld_val = lnv_conversion.of_Date (as_value)
+If Pos ( as_value, " " ) > 0 Then
+	/*  There was a time entered  */
+	ltm_val = lnv_conversion.of_Time (as_value)
+Else
+	ltm_val = Time ( "00:00:00" )
+End If
+Return ids_requestor.SetItem (al_row, as_column, DateTime (ld_val, ltm_val))	
+
+end function
+
+private function integer of_setitem_number (long al_row, string as_column, string as_value);Double	ldb_val
+String 	ls_string_value
+n_cst_string	lnv_string
+
+/*  Replace formatting characters in passed string */
+
+// which character is used as separator for thousand?  #11012
+// (only read once to improve performance)
+if is_charThousand = "" or IsNull (is_charThousand) then
+	if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
+		is_charThousand = ","
+	end if
+end if
+
+ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
+if Pos (ls_string_value, "%") > 0 then
+	ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
+	ldb_val = Double (ls_string_value) / 100
+else
+	ldb_val = Double (ls_string_value)
+end if
+			
+Return ids_requestor.SetItem ( al_row, as_column, ldb_val) 
+
+end function
+
+private function integer of_setitem_real (long al_row, string as_column, string as_value);real 		lr_val
+String 	ls_string_value
+n_cst_string	lnv_string
+
+/*  Replace formatting characters in passed string */
+
+// which character is used as separator for thousand?  #11012
+// (only read once to improve performance)
+if is_charThousand = "" or IsNull (is_charThousand) then
+	if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
+		is_charThousand = ","
+	end if
+end if
+
+ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
+if Pos (ls_string_value, "%") > 0 then
+	ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
+	lr_val = Real (ls_string_value) / 100
+else
+	lr_val = Real (ls_string_value)
+end if
+			
+Return ids_requestor.SetItem ( al_row, as_column, lr_val) 
+
+end function
+
+private function integer of_setitem_long (long al_row, string as_column, string as_value);long		ll_val
+String 	ls_string_value
+n_cst_string	lnv_string
+
+/*  Replace formatting characters in passed string */
+
+// which character is used as separator for thousand?  #11012
+// (only read once to improve performance)
+if is_charThousand = "" or IsNull (is_charThousand) then
+	if RegistryGet("HKEY_CURRENT_USER\Control Panel\International","sThousand",RegString!,is_charThousand) <> 1 then
+		is_charThousand = ","
+	end if
+end if
+
+ls_string_value = lnv_string.of_GlobalReplace (as_value, "$", "", FALSE ) 
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, is_charThousand, "", FALSE )   // #11012
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "(", "-", FALSE)
+ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, ")", "", FALSE)
+if Pos (ls_string_value, "%") > 0 then
+	ls_string_value = lnv_string.of_GlobalReplace (ls_string_value, "%", "", FALSE)
+	ll_val = Long (ls_string_value) / 100
+else
+	ll_val = Long (ls_string_value)
+end if
+			
+Return ids_requestor.SetItem ( al_row, as_column, ll_val) 
 
 end function
 

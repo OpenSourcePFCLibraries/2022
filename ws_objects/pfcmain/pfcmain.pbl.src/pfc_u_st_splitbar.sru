@@ -110,6 +110,16 @@ private subroutine of_moved (integer ai_pointerx, integer ai_pointery)
 private subroutine of_previousposition (integer ai_prevpositionx, integer ai_prevpositiony)
 public function long of_getbarmovecolor ()
 public function long of_getbarcolor ()
+private function integer of_register_line_left (line aln_resize, integer ai_position)
+private function integer of_register_oval_left (oval aov_resize, integer ai_position)
+private function integer of_register_round_rect_left (roundrectangle arr_resize, integer ai_position)
+private function integer of_register_rect_left (rectangle ar_resize, integer ai_position)
+private function integer of_register_drag_object_left (dragobject adrg_resize, integer ai_position)
+private function integer of_register_line_right (line aln_resize, integer ai_position)
+private function integer of_register_oval_right (oval aov_resize, integer ai_position)
+private function integer of_register_round_rect_right (roundrectangle arr_resize, integer ai_position)
+private function integer of_register_rect_right (rectangle ar_resize, integer ai_position)
+private function integer of_register_drag_object_right (dragobject adrg_resize, integer ai_position)
 end prototypes
 
 event mousemove;//////////////////////////////////////////////////////////////////////////////
@@ -2002,147 +2012,41 @@ Oval							lov_resize
 
 // Register the new object.
 If ai_position = LEFT OR ai_Position = LEFT_ANCHORED Or ai_position = ABOVE OR ai_Position = ABOVE_ANCHORED Then
-	
 	CHOOSE CASE TypeOf(awo_Object)
-			
 		CASE Line!
-
-			ii_leftTopBound							= UpperBound(iwo_leftTop[]) + 1
-			
 			lln_resize									= awo_Object
-			
-			iwo_leftTop[ii_leftTopBound]			= lln_resize
-			ir_leftTopX[ii_leftTopBound]			= lln_resize.BeginX
-			ir_leftTopY[ii_leftTopBound]			= lln_resize.BeginY
-			ir_leftTopWidth[ii_leftTopBound]		= lln_resize.EndX
-			ir_leftTopHeight[ii_leftTopBound]	= lln_resize.EndY	
-			ii_leftTopPosition[ii_leftTopBound]	= ai_position
-			
+			of_register_line_left ( lln_resize, ai_position )
 		CASE Oval!
-			
-			ii_leftTopBound							= UpperBound(iwo_leftTop[]) + 1
-			
 			lov_resize									= awo_Object
-			
-			iwo_leftTop[ii_leftTopBound]			= lov_resize
-			ir_leftTopX[ii_leftTopBound]			= lov_resize.X
-			ir_leftTopY[ii_leftTopBound]			= lov_resize.Y
-			ir_leftTopWidth[ii_leftTopBound]		= lov_resize.Width
-			ir_leftTopHeight[ii_leftTopBound]	= lov_resize.Height	
-			ii_leftTopPosition[ii_leftTopBound]	= ai_position
-
+			of_register_oval_left ( lov_resize, ai_position )
 		CASE RoundRectangle!
-			
-			ii_leftTopBound							= UpperBound(iwo_leftTop[]) + 1
-			
 			lrr_resize									= awo_Object
-			
-			iwo_leftTop[ii_leftTopBound]			= lrr_resize
-			ir_leftTopX[ii_leftTopBound]			= lrr_resize.X
-			ir_leftTopY[ii_leftTopBound]			= lrr_resize.Y
-			ir_leftTopWidth[ii_leftTopBound]		= lrr_resize.Width
-			ir_leftTopHeight[ii_leftTopBound]	= lrr_resize.Height	
-			ii_leftTopPosition[ii_leftTopBound]	= ai_position
-			
+			of_register_round_rect_left ( lrr_resize, ai_position )			
 		CASE Rectangle!
-
-			ii_leftTopBound							= UpperBound(iwo_leftTop[]) + 1
-			
 			lr_resize									= awo_Object
-			
-			iwo_leftTop[ii_leftTopBound]			= lr_resize
-			ir_leftTopX[ii_leftTopBound]			= lr_resize.X
-			ir_leftTopY[ii_leftTopBound]			= lr_resize.Y
-			ir_leftTopWidth[ii_leftTopBound]		= lr_resize.Width
-			ir_leftTopHeight[ii_leftTopBound]	= lr_resize.Height	
-			ii_leftTopPosition[ii_leftTopBound]	= ai_position
-
+			of_register_rect_left ( lr_resize, ai_position )			
 		CASE ELSE										//	Assume it's a DragObject
-			
-			ii_leftTopBound							= UpperBound(iwo_leftTop[]) + 1
-			
 			ldrg_resize									= awo_Object
-			
-			iwo_leftTop[ii_lefttopbound]			= ldrg_resize
-			ir_leftTopX[ii_lefttopbound]			= ldrg_resize.X
-			ir_leftTopY[ii_lefttopbound]			= ldrg_resize.Y
-			ir_leftTopWidth[ii_lefttopbound]		= ldrg_resize.Width
-			ir_leftTopHeight[ii_lefttopbound]	= ldrg_resize.Height	
-			ii_leftTopPosition[ii_LeftTopBound]	= ai_position
-			
+			of_register_drag_object_left ( ldrg_resize, ai_position )			
 	END CHOOSE
-	
 Else
-	
 	CHOOSE CASE TypeOf(awo_Object)
-			
 		CASE Line!
-			
-			ii_rightBottomBound						= UpperBound(iwo_rightBottom[]) + 1
-			
 			lln_resize									= awo_Object
-			
-			iwo_rightBottom[ii_rightBottomBound]			= lln_resize
-			ir_rightBottomX[ii_rightBottomBound]			= lln_resize.BeginX
-			ir_rightBottomY[ii_rightBottomBound]			= lln_resize.BeginY
-			ir_rightBottomWidth[ii_rightBottomBound]		= lln_resize.EndX
-			ir_rightBottomHeight[ii_rightBottomBound]		= lln_resize.EndY	
-			ii_rightBottomPosition[ii_rightBottomBound]	= ai_position
-
+			of_register_line_right ( lln_resize, ai_position )
 		CASE Oval!
-			
-			ii_rightBottomBound						= UpperBound(iwo_rightBottom[]) + 1
-			
 			lov_resize									= awo_Object
-			
-			iwo_rightBottom[ii_rightBottomBound]			= lov_resize
-			ir_rightBottomX[ii_rightBottomBound]			= lov_resize.X
-			ir_rightBottomY[ii_rightBottomBound]			= lov_resize.Y
-			ir_rightBottomWidth[ii_rightBottomBound]		= lov_resize.Width
-			ir_rightBottomHeight[ii_rightBottomBound]		= lov_resize.Height	
-			ii_rightBottomPosition[ii_rightBottomBound]	= ai_position
-
+			of_register_oval_right( lov_resize, ai_position )
 		CASE RoundRectangle!
-			
-			ii_rightBottomBound						= UpperBound(iwo_rightBottom[]) + 1
-			
 			lrr_resize									= awo_Object
-			
-			iwo_rightBottom[ii_rightBottomBound]			= lrr_resize
-			ir_rightBottomX[ii_rightBottomBound]			= lrr_resize.X
-			ir_rightBottomY[ii_rightBottomBound]			= lrr_resize.Y
-			ir_rightBottomWidth[ii_rightBottomBound]		= lrr_resize.Width
-			ir_rightBottomHeight[ii_rightBottomBound]		= lrr_resize.Height	
-			ii_rightBottomPosition[ii_rightBottomBound]	= ai_position
-			
+			of_register_round_rect_right ( lrr_resize, ai_position )			
 		CASE Rectangle!
-
-			ii_rightBottomBound						= UpperBound(iwo_rightBottom[]) + 1
-			
 			lr_resize									= awo_Object
-			
-			iwo_rightBottom[ii_rightBottomBound]			= lr_resize
-			ir_rightBottomx[ii_rightBottomBound]			= lr_resize.X
-			ir_rightBottomy[ii_rightBottomBound]			= lr_resize.Y
-			ir_rightBottomwidth[ii_rightBottomBound]		= lr_resize.Width
-			ir_rightBottomheight[ii_rightBottomBound]		= lr_resize.Height	
-			ii_rightBottomPosition[ii_rightBottomBound]	= ai_position
-		
+			of_register_rect_right ( lr_resize, ai_position )						
 		CASE ELSE										//	Assume it's a DragObject
-	
-			ii_rightBottomBound 						= UpperBound(iwo_rightBottom[]) + 1
-			
 			ldrg_resize									= awo_Object
-	
-			iwo_rightBottom[ii_rightBottomBound]			= ldrg_resize
-			ir_rightBottomX[ii_rightBottomBound]			= ldrg_resize.X
-			ir_rightBottomY[ii_rightBottomBound]			= ldrg_resize.Y
-			ir_rightBottomWidth[ii_rightBottomBound]		= ldrg_resize.Width
-			ir_rightBottomHeight[ii_rightBottomBound]		= ldrg_resize.Height		
-			ii_rightBottomPosition[ii_rightBottomBound]	= ai_position
-		
+			of_register_drag_object_right ( ldrg_resize, ai_position )						
 	END CHOOSE
-
 End If
 
 Return 1
@@ -2997,6 +2901,124 @@ public function long of_getbarcolor ();/////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
 Return il_barcolor
+end function
+
+private function integer of_register_line_left (line aln_resize, integer ai_position);ii_leftTopBound							= UpperBound(iwo_leftTop[]) + 1
+iwo_leftTop[ii_leftTopBound]			= aln_resize
+ir_leftTopX[ii_leftTopBound]			= aln_resize.BeginX
+ir_leftTopY[ii_leftTopBound]			= aln_resize.BeginY
+ir_leftTopWidth[ii_leftTopBound]		= aln_resize.EndX
+ir_leftTopHeight[ii_leftTopBound]	= aln_resize.EndY	
+ii_leftTopPosition[ii_leftTopBound]	= ai_position
+
+Return 1
+end function
+
+private function integer of_register_oval_left (oval aov_resize, integer ai_position);ii_leftTopBound							= UpperBound(iwo_leftTop[]) + 1
+iwo_leftTop[ii_leftTopBound]			= aov_resize
+ir_leftTopX[ii_leftTopBound]			= aov_resize.X
+ir_leftTopY[ii_leftTopBound]			= aov_resize.Y
+ir_leftTopWidth[ii_leftTopBound]		= aov_resize.Width
+ir_leftTopHeight[ii_leftTopBound]	= aov_resize.Height	
+ii_leftTopPosition[ii_leftTopBound]	= ai_position
+
+Return 1
+
+end function
+
+private function integer of_register_round_rect_left (roundrectangle arr_resize, integer ai_position);ii_leftTopBound							= UpperBound(iwo_leftTop[]) + 1
+iwo_leftTop[ii_leftTopBound]			= arr_resize
+ir_leftTopX[ii_leftTopBound]			= arr_resize.X
+ir_leftTopY[ii_leftTopBound]			= arr_resize.Y
+ir_leftTopWidth[ii_leftTopBound]		= arr_resize.Width
+ir_leftTopHeight[ii_leftTopBound]	= arr_resize.Height	
+ii_leftTopPosition[ii_leftTopBound]	= ai_position
+
+Return 1
+
+end function
+
+private function integer of_register_rect_left (rectangle ar_resize, integer ai_position);ii_leftTopBound							= UpperBound(iwo_leftTop[]) + 1
+iwo_leftTop[ii_leftTopBound]			= ar_resize
+ir_leftTopX[ii_leftTopBound]			= ar_resize.X
+ir_leftTopY[ii_leftTopBound]			= ar_resize.Y
+ir_leftTopWidth[ii_leftTopBound]		= ar_resize.Width
+ir_leftTopHeight[ii_leftTopBound]	= ar_resize.Height	
+ii_leftTopPosition[ii_leftTopBound]	= ai_position
+
+Return 1
+
+end function
+
+private function integer of_register_drag_object_left (dragobject adrg_resize, integer ai_position);ii_leftTopBound							= UpperBound(iwo_leftTop[]) + 1
+iwo_leftTop[ii_lefttopbound]			= adrg_resize
+ir_leftTopX[ii_lefttopbound]			= adrg_resize.X
+ir_leftTopY[ii_lefttopbound]			= adrg_resize.Y
+ir_leftTopWidth[ii_lefttopbound]		= adrg_resize.Width
+ir_leftTopHeight[ii_lefttopbound]	= adrg_resize.Height	
+ii_leftTopPosition[ii_LeftTopBound]	= ai_position
+
+Return 1
+
+end function
+
+private function integer of_register_line_right (line aln_resize, integer ai_position);ii_rightBottomBound						= UpperBound(iwo_rightBottom[]) + 1
+iwo_rightBottom[ii_rightBottomBound]			= aln_resize
+ir_rightBottomX[ii_rightBottomBound]			= aln_resize.BeginX
+ir_rightBottomY[ii_rightBottomBound]			= aln_resize.BeginY
+ir_rightBottomWidth[ii_rightBottomBound]		= aln_resize.EndX
+ir_rightBottomHeight[ii_rightBottomBound]		= aln_resize.EndY	
+ii_rightBottomPosition[ii_rightBottomBound]	= ai_position
+
+Return 1
+end function
+
+private function integer of_register_oval_right (oval aov_resize, integer ai_position);ii_rightBottomBound						= UpperBound(iwo_rightBottom[]) + 1
+iwo_rightBottom[ii_rightBottomBound]			= aov_resize
+ir_rightBottomX[ii_rightBottomBound]			= aov_resize.X
+ir_rightBottomY[ii_rightBottomBound]			= aov_resize.Y
+ir_rightBottomWidth[ii_rightBottomBound]		= aov_resize.Width
+ir_rightBottomHeight[ii_rightBottomBound]		= aov_resize.Height	
+ii_rightBottomPosition[ii_rightBottomBound]	= ai_position
+
+Return 1
+
+end function
+
+private function integer of_register_round_rect_right (roundrectangle arr_resize, integer ai_position);ii_rightBottomBound						= UpperBound(iwo_rightBottom[]) + 1
+iwo_rightBottom[ii_rightBottomBound]			= arr_resize
+ir_rightBottomX[ii_rightBottomBound]			= arr_resize.X
+ir_rightBottomY[ii_rightBottomBound]			= arr_resize.Y
+ir_rightBottomWidth[ii_rightBottomBound]		= arr_resize.Width
+ir_rightBottomHeight[ii_rightBottomBound]		= arr_resize.Height	
+ii_rightBottomPosition[ii_rightBottomBound]	= ai_position
+
+Return 1
+
+end function
+
+private function integer of_register_rect_right (rectangle ar_resize, integer ai_position);ii_rightBottomBound						= UpperBound(iwo_rightBottom[]) + 1
+iwo_rightBottom[ii_rightBottomBound]			= ar_resize
+ir_rightBottomx[ii_rightBottomBound]			= ar_resize.X
+ir_rightBottomy[ii_rightBottomBound]			= ar_resize.Y
+ir_rightBottomwidth[ii_rightBottomBound]		= ar_resize.Width
+ir_rightBottomheight[ii_rightBottomBound]		= ar_resize.Height	
+ii_rightBottomPosition[ii_rightBottomBound]	= ai_position
+
+Return 1
+
+end function
+
+private function integer of_register_drag_object_right (dragobject adrg_resize, integer ai_position);ii_rightBottomBound 						= UpperBound(iwo_rightBottom[]) + 1
+iwo_rightBottom[ii_rightBottomBound]			= adrg_resize
+ir_rightBottomX[ii_rightBottomBound]			= adrg_resize.X
+ir_rightBottomY[ii_rightBottomBound]			= adrg_resize.Y
+ir_rightBottomWidth[ii_rightBottomBound]		= adrg_resize.Width
+ir_rightBottomHeight[ii_rightBottomBound]		= adrg_resize.Height		
+ii_rightBottomPosition[ii_rightBottomBound]	= ai_position
+
+Return 1
+
 end function
 
 event constructor;//////////////////////////////////////////////////////////////////////////////
