@@ -81,6 +81,9 @@ public function long of_register (integer ai_style)
 public function long of_register ()
 public function long of_register (string as_dwcolumn)
 public function long of_register (string as_dwcolumn, integer ai_style)
+private function integer of_buttonclicked_math_operation (string as_key)
+private function integer of_buttonclicked_ce ()
+private function integer of_buttonclicked_c ()
 end prototypes
 
 event pfc_dropdown;call super::pfc_dropdown;//////////////////////////////////////////////////////////////////////////////
@@ -664,10 +667,6 @@ protected function integer of_buttonclicked (string as_key);////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-double ldbl_value
-double ldbl_currvalue
-Integer	li_rc
-
 // Validate the keystroke.
 as_key = Lower(as_key)
 CHOOSE CASE as_key
@@ -677,42 +676,14 @@ CHOOSE CASE as_key
 		Return -1
 END CHOOSE
 
-// Get the current running total.
-ldbl_value = idbl_value
-
-// Get the current value.
-ldbl_currvalue = Double(is_currvalue)
-
 CHOOSE CASE as_key
 	CASE 'c'
-		// Clear the Current variables.
-		is_curroperator = EMPTY
-		is_currvalue = EMPTY
+		of_buttonclicked_c()
 
-		// Clear the Repeat variables.
-		is_repeatoperator	= EMPTY
-		idbl_repeatvalue = 0		
-		
-		// Clear the Running value.
-		of_SetValue(0, True)
-		
-	CASE 'ce'		
-		// Clear the Current Value but not the Current Operator.
-		is_currvalue = EMPTY
+CASE 'ce'		
+		of_buttonclicked_ce()	
 
-		// Clear the Repeat Value but not the Repeat Operator.
-		idbl_repeatvalue = 0	
-
-		// Determine if this should also Clear the Running value.
-		If is_curroperator=EMPTY Then
-			// Clear the Running value.
-			of_SetValue(0, True)
-		Else
-			// Do not Clear the Running value, only updates the current value.
-			of_SetValueOnRequestor ('0')			
-		End If
-		
-	CASE '.'
+CASE '.'
 		If Pos(is_currvalue, '.')>0 Then
 			// Disregard all '.' after one has been entered.
 			Return 0
@@ -726,50 +697,7 @@ CHOOSE CASE as_key
 		of_SetValueOnRequestor (is_currvalue)
 		
 	CASE '/', '*', '+', '-', '='
-		// Determine if this operator simply replaces the previous operator.
-		If of_IsOperator(as_key) And of_IsOperator(is_prevkeystroke) Then
-			is_prevkeystroke = as_key
-			is_curroperator = as_key
-			Return 1
-		End If
-		
-		// Conclude the previous operation.
-		If Len(is_currvalue) > 0 And Len(is_curroperator) > 0 Then
-			// Perform a new Math operation.
-			If of_PerformMath (ldbl_value, is_curroperator, ldbl_currvalue) < 0 Then
-				Return -1
-			End If
-			
-		ElseIf Len(is_currvalue) > 0 And Len(is_curroperator) = 0 Then
-			// There is no Math operation, use the current value as the new value.
-			ldbl_value = ldbl_currvalue
-			
-		ElseIf as_key = '=' And Len(is_repeatoperator)>0 Then
-			// Perform a Repeat Math operation.
-			If of_PerformMath (ldbl_value, is_repeatoperator, idbl_repeatvalue) < 0 Then
-				Return -1
-			End If	
-		Else
-			//Continue
-		End If
-
-		// Keep track of the last repeat action.
-		If of_IsOperator(as_key) Then
-			// The last operator is the new Repeat operator.
-			is_repeatoperator = as_key
-			// Update the repeat value to the current running value.
-			idbl_repeatvalue = ldbl_value
-		End If
-
-		// Reset the Current variables.
-		is_curroperator = EMPTY					
-		is_currvalue = EMPTY
-		If of_IsOperator(as_key) Then
-			is_curroperator = as_key		
-		End If				
-		
-		// Set the new value.
-		of_SetValue (ldbl_value, True)
+		of_buttonclicked_math_operation(as_key)
 	CASE ELSE
 		//No Action
 END CHOOSE
@@ -2388,6 +2316,95 @@ End If
 // The column was not registered.
 Return 0
 
+end function
+
+private function integer of_buttonclicked_math_operation (string as_key);Double	ldbl_value
+Double	ldbl_currvalue
+
+// Get the current running total.
+ldbl_value = idbl_value
+
+// Get the current value.
+ldbl_currvalue = Double(is_currvalue)
+
+// Determine if this operator simply replaces the previous operator.
+If of_IsOperator(as_key) And of_IsOperator(is_prevkeystroke) Then
+	is_prevkeystroke = as_key
+	is_curroperator = as_key
+	Return 1
+End If
+
+// Conclude the previous operation.
+If Len(is_currvalue) > 0 And Len(is_curroperator) > 0 Then
+	// Perform a new Math operation.
+	If of_PerformMath (ldbl_value, is_curroperator, ldbl_currvalue) < 0 Then
+		Return -1
+	End If
+	
+ElseIf Len(is_currvalue) > 0 And Len(is_curroperator) = 0 Then
+	// There is no Math operation, use the current value as the new value.
+	ldbl_value = ldbl_currvalue
+	
+ElseIf as_key = '=' And Len(is_repeatoperator)>0 Then
+	// Perform a Repeat Math operation.
+	If of_PerformMath (ldbl_value, is_repeatoperator, idbl_repeatvalue) < 0 Then
+		Return -1
+	End If	
+Else
+	//Continue
+End If
+
+// Keep track of the last repeat action.
+If of_IsOperator(as_key) Then
+	// The last operator is the new Repeat operator.
+	is_repeatoperator = as_key
+	// Update the repeat value to the current running value.
+	idbl_repeatvalue = ldbl_value
+End If
+
+// Reset the Current variables.
+is_curroperator = EMPTY					
+is_currvalue = EMPTY
+If of_IsOperator(as_key) Then
+	is_curroperator = as_key		
+End If				
+
+// Set the new value.
+of_SetValue (ldbl_value, True)
+
+Return 1
+end function
+
+private function integer of_buttonclicked_ce ();// Clear the Current Value but not the Current Operator.
+is_currvalue = EMPTY
+
+// Clear the Repeat Value but not the Repeat Operator.
+idbl_repeatvalue = 0	
+
+// Determine if this should also Clear the Running value.
+If is_curroperator=EMPTY Then
+	// Clear the Running value.
+	of_SetValue(0, True)
+Else
+	// Do not Clear the Running value, only updates the current value.
+	of_SetValueOnRequestor ('0')			
+End If
+
+Return 1
+end function
+
+private function integer of_buttonclicked_c ();// Clear the Current variables.
+is_curroperator = EMPTY
+is_currvalue = EMPTY
+
+// Clear the Repeat variables.
+is_repeatoperator	= EMPTY
+idbl_repeatvalue = 0		
+
+// Clear the Running value.
+of_SetValue(0, True)
+
+Return 1
 end function
 
 event constructor;call super::constructor;//////////////////////////////////////////////////////////////////////////////

@@ -76,6 +76,10 @@ protected function integer of_addobject (string as_app, string as_winname, strin
 protected function integer of_setcontrolstatus (graphicobject ago_item, string as_window, string as_object)
 protected function integer of_setcontrolstatus (graphicobject ago_item, string as_window, string as_object, string as_itemname)
 public function string of_gettype (windowobject a_object, ref string as_desc)
+private function integer of_setcontrolstatus_datawindow (graphicobject ago_item, string as_window, string as_object, string as_itemname)
+private function integer of_scancontrolarray_datawindow (string as_win_name, windowobject ao_object, string as_object_name)
+private function integer of_scancontrolarray_userobject (string as_win_name, windowobject ao_object, string as_object_name)
+private function integer of_scancontrolarray_tab (string as_win_name, windowobject ao_object, string as_object_name)
 end prototypes
 
 protected function integer of_setmenustatus (ref menu am_item, string as_window, boolean ab_override);//////////////////////////////////////////////////////////////////////////////
@@ -995,41 +999,11 @@ li_obj_cnt = upperbound(ao_objects)
 for li_idx = 1 to li_obj_cnt
 	choose case typeof(ao_objects[li_idx]) 
 		case datawindow!
-			ls_name = as_object_name+lower(classname(ao_objects[li_idx]))
-			ls_object_type = of_GetType(ao_objects[li_idx],ls_desc)
-			if not of_FindEntry(as_win_name,ls_name) then of_addobject(is_app,as_win_name,ls_name,'DataWindow',ls_desc )  
-
-			ldw_scan = ao_objects[li_idx]
-			of_ScanDatawindow(as_win_name,ldw_scan,as_object_name)
+			of_scancontrolarray_datawindow( as_win_name, ao_objects[li_idx], as_object_name)
 		case userobject!
-			ls_name = as_object_name+lower(classname(ao_objects[li_idx]))
-			ls_object_type = of_GetType(ao_objects[li_idx],ls_desc)
-			if not of_FindEntry(as_win_name,ls_name) then of_addobject(is_app,as_win_name,ls_name,'UserObject',ls_desc )  
-
-			lu_uo = ao_objects[li_idx]
-			if as_object_name <> '' then 
-				ls_name = as_object_name + '.'+ lower(classname(lu_uo))+ '.'
-			else
-				ls_name = lower(classname(lu_uo))+ '.'
-			end if
-			of_ScanControlArray(as_win_name,lu_uo.control,ls_name)
+			of_scancontrolarray_userobject( as_win_name, ao_objects[li_idx], as_object_name)
 		case tab!
-			ls_name = as_object_name+lower(classname(ao_objects[li_idx]))
-			ls_object_type = of_GetType(ao_objects[li_idx],ls_desc)
-			if not of_FindEntry(as_win_name,ls_name) then of_addobject(is_app,as_win_name,ls_name,'Tab',ls_desc )  
-			
-			ls_tab_name = ls_name
-			l_tab = ao_objects[li_idx]
-			li_tab_cnt = upperbound(l_tab.control)
-			for li_tab_idx = 1 to li_tab_cnt
-				lu_uo = l_tab.control[li_tab_idx]
-				ls_name = ls_tab_name + '.'+ lower(classname(lu_uo))
-				ls_object_type = of_GetType(lu_uo,ls_desc)
-
-				if not of_FindEntry(as_win_name,ls_name) then of_addobject(is_app,as_win_name,ls_name,'TabPage',ls_desc )  
-				ls_name = ls_name + '.'
-				of_ScanControlArray(as_win_name,lu_uo.control,ls_name)
-			next
+			of_scancontrolarray_tab( as_win_name, ao_objects[li_idx], as_object_name)
 		case mdiclient!
 			// do nothing as the mdiclient is not something that we would want to set security on anyway
 		case else 
@@ -1909,30 +1883,7 @@ Choose Case typeof(ago_item)
 		l_cb = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_cb.enabled, l_cb.visible)
 	Case datawindow!
-		l_dw = ago_item
-		li_numset = of_SetState(as_window, ls_itemname, l_dw.enabled, l_dw.visible)
-		ls_datawindow = trim(ls_itemname)
-		ls_orig_filter = ids_items.Describe("DataWindow.Table.Filter")
-		// this filter will keep any columns that have a datawindow reference in it
-		is_currfilter = "window=~""+as_window+"~" AND pos(control, ~""+ls_datawindow+"~")"
-		IF ids_items.SetFilter("window=~""+as_window+"~" AND pos(control, ~""+ls_datawindow+"~") > 0") <> 1 then return -1
-		IF ids_items.Filter() <> 1 then return -1
-		il_numberofrows = ids_items.RowCount()
-		If il_numberofrows < 0 Then
-			Return -1
-		ElseIf 	il_numberofrows > 0 Then
-			// resort in case the filter reordered things
-			ids_items.sort() 
-			li_numset += of_setdatawindowcolumns(l_dw)
-		Else
-			//No Action
-		End If
-		is_currfilter = ls_orig_filter
-		IF ids_items.SetFilter(ls_orig_filter) <> 1 Then Return -1
-		IF ids_items.Filter() <> 1 Then Return -1
-		il_numberofrows = ids_items.RowCount()
-		// resort in case the filter reordered things
-		ids_items.sort() 
+		li_numset = of_setcontrolstatus_datawindow( ago_item, as_window, as_object, as_itemname )
 	Case datepicker!
 		l_dp = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_dp.enabled, l_dp.visible)
@@ -2339,6 +2290,103 @@ choose case typeof(a_object)
 		return 'Unknown'
 end choose
 
+end function
+
+private function integer of_setcontrolstatus_datawindow (graphicobject ago_item, string as_window, string as_object, string as_itemname);integer			li_numset
+datawindow		l_dw
+string				ls_itemname
+string				ls_datawindow, ls_orig_filter
+
+If as_itemname = '' Then
+	If as_object = '' Then
+		ls_itemname = lower(classname(ago_item))
+	Else
+		ls_itemname = as_object + '.' + lower(classname(ago_item))
+	End If
+else
+	ls_itemname = as_itemname
+End If
+
+l_dw = ago_item
+li_numset = of_SetState(as_window, ls_itemname, l_dw.enabled, l_dw.visible)
+ls_datawindow = trim(ls_itemname)
+ls_orig_filter = ids_items.Describe("DataWindow.Table.Filter")
+// this filter will keep any columns that have a datawindow reference in it
+is_currfilter = "window=~""+as_window+"~" AND pos(control, ~""+ls_datawindow+"~")"
+IF ids_items.SetFilter("window=~""+as_window+"~" AND pos(control, ~""+ls_datawindow+"~") > 0") <> 1 then return -1
+IF ids_items.Filter() <> 1 then return -1
+il_numberofrows = ids_items.RowCount()
+If il_numberofrows < 0 Then
+	Return -1
+ElseIf 	il_numberofrows > 0 Then
+	// resort in case the filter reordered things
+	ids_items.sort() 
+	li_numset += of_setdatawindowcolumns(l_dw)
+Else
+	//No Action
+End If
+is_currfilter = ls_orig_filter
+IF ids_items.SetFilter(ls_orig_filter) <> 1 Then Return -1
+IF ids_items.Filter() <> 1 Then Return -1
+il_numberofrows = ids_items.RowCount()
+// resort in case the filter reordered things
+ids_items.sort() 
+
+Return li_numset
+end function
+
+private function integer of_scancontrolarray_datawindow (string as_win_name, windowobject ao_object, string as_object_name);String		ls_name, ls_object_type, ls_desc
+DataWindow	ldw_scan
+
+ls_name = as_object_name+lower(classname(ao_object))
+ls_object_type = of_GetType(ao_object,ls_desc)
+if not of_FindEntry(as_win_name,ls_name) then of_addobject(is_app,as_win_name,ls_name,'DataWindow',ls_desc )  
+ldw_scan = ao_object
+of_ScanDatawindow(as_win_name,ldw_scan,as_object_name)
+
+Return 1
+end function
+
+private function integer of_scancontrolarray_userobject (string as_win_name, windowobject ao_object, string as_object_name);String	ls_name, ls_object_type, ls_desc
+UserObject	lu_uo
+
+ls_name = as_object_name+lower(classname(ao_object))
+ls_object_type = of_GetType(ao_object,ls_desc)
+if not of_FindEntry(as_win_name,ls_name) then of_addobject(is_app,as_win_name,ls_name,'UserObject',ls_desc )  
+lu_uo = ao_object
+if as_object_name <> '' then 
+	ls_name = as_object_name + '.'+ lower(classname(lu_uo))+ '.'
+else
+	ls_name = lower(classname(lu_uo))+ '.'
+end if
+of_ScanControlArray(as_win_name,lu_uo.control,ls_name)
+
+Return 1
+end function
+
+private function integer of_scancontrolarray_tab (string as_win_name, windowobject ao_object, string as_object_name);int   li_tab_idx, li_tab_cnt
+String	ls_name, ls_object_type, ls_desc, ls_tab_name
+tab	l_tab
+userobject	lu_uo
+
+ls_name = as_object_name+lower(classname(ao_object))
+ls_object_type = of_GetType(ao_object,ls_desc)
+if not of_FindEntry(as_win_name,ls_name) then of_addobject(is_app,as_win_name,ls_name,'Tab',ls_desc )  
+
+ls_tab_name = ls_name
+l_tab = ao_object
+li_tab_cnt = upperbound(l_tab.control)
+for li_tab_idx = 1 to li_tab_cnt
+	lu_uo = l_tab.control[li_tab_idx]
+	ls_name = ls_tab_name + '.'+ lower(classname(lu_uo))
+	ls_object_type = of_GetType(lu_uo,ls_desc)
+
+	if not of_FindEntry(as_win_name,ls_name) then of_addobject(is_app,as_win_name,ls_name,'TabPage',ls_desc )  
+	ls_name = ls_name + '.'
+	of_ScanControlArray(as_win_name,lu_uo.control,ls_name)
+next
+
+Return 1
 end function
 
 on pfc_n_cst_security.create

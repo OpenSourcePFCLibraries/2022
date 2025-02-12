@@ -70,6 +70,11 @@ protected function integer of_register (windowobject awo_control, boolean ab_sca
 protected function string of_typeof (windowobject awo_control)
 public function integer of_getminmaxpoints (windowobject awo_control[], ref integer ai_min_x, ref integer ai_min_y, ref integer ai_max_x, ref integer ai_max_y)
 protected function integer of_resize (integer ai_newwidth, integer ai_newheight)
+private function integer of_getminmaxpoints_dragobject (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height)
+public function integer of_getminmaxpoints_line (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height)
+private function integer of_getminmaxpoints_oval (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height)
+private function integer of_getminmaxpoints_rect (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height)
+private function integer of_getminmaxpoints_round_rect (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height)
 end prototypes
 
 event pfc_resize;//////////////////////////////////////////////////////////////////////////////
@@ -839,9 +844,7 @@ public function integer of_getminmaxpoints (windowobject awo_control[], ref inte
 */
 //
 //////////////////////////////////////////////////////////////////////////////
-dragobject		ldrg_cntrl
 oval				loval_cntrl
-line				ln_cntrl
 rectangle		lrec_cntrl
 roundrectangle	lrrec_cntrl
 
@@ -868,53 +871,15 @@ For li_cnt = 1 to li_upperbound
 	If IsValid(awo_control[li_cnt]) Then
 		Choose Case of_TypeOf(awo_control[li_cnt])
 			Case DRAGOBJECT
-				//Set a reference to the control.
-				ldrg_cntrl = awo_control[li_cnt]
-				//Get the position, width, and height of the control.
-				li_x = ldrg_cntrl.X
-				li_y = ldrg_cntrl.Y
-				li_width = ldrg_cntrl.Width
-				li_height = ldrg_cntrl.Height
+				of_getminmaxpoints_dragobject ( awo_control[li_cnt], li_x, li_y, li_width, li_height )
 			Case LINE
-				ln_cntrl = awo_control[li_cnt]
-				li_x = ln_cntrl.BeginX
-				li_y = ln_cntrl.BeginY
-				li_width = ln_cntrl.EndX
-				li_height = ln_cntrl.EndY
-				//Correct for lines that may have the End points 
-				//before to the Begin points.
-				If li_width >= li_x Then
-					li_width = li_width - li_x
-				Else
-					li_temp = li_x
-					li_x = li_width
-					li_width = li_temp - li_x
-				End If	
-				If li_height >= li_y Then
-					li_height = li_height - li_y
-				Else
-					li_temp = li_y
-					li_y = li_height
-					li_height = li_temp - li_y
-				End If
+				of_getminmaxpoints_line ( awo_control[li_cnt], li_x, li_y, li_width, li_height )
 			Case OVAL
-				loval_cntrl = awo_control[li_cnt]
-				li_x = loval_cntrl.X
-				li_y = loval_cntrl.Y
-				li_width = loval_cntrl.Width
-				li_height = loval_cntrl.Height		
+				of_getminmaxpoints_oval ( awo_control[li_cnt], li_x, li_y, li_width, li_height )
 			Case RECTANGLE
-				lrec_cntrl = awo_control[li_cnt]
-				li_x = lrec_cntrl.X
-				li_y = lrec_cntrl.Y
-				li_width = lrec_cntrl.Width
-				li_height = lrec_cntrl.Height		
+				of_getminmaxpoints_rect ( awo_control[li_cnt], li_x, li_y, li_width, li_height )
 			Case ROUNDRECTANGLE
-				lrrec_cntrl = awo_control[li_cnt]
-				li_x = lrrec_cntrl.X
-				li_y = lrrec_cntrl.Y
-				li_width = lrrec_cntrl.Width
-				li_height = lrrec_cntrl.Height
+				of_getminmaxpoints_round_rect ( awo_control[li_cnt], li_x, li_y, li_width, li_height )				
 			Case MDICLIENT
 				Continue
 			Case Else
@@ -1227,6 +1192,80 @@ For li_cnt = 1 to li_upperbound
 
 	End If /* If IsValid(inv_registered[li_cnt].wo_control) Then */
 Next /* For li_cnt = 1 to li_upperbound */
+
+Return 1
+end function
+
+private function integer of_getminmaxpoints_dragobject (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height);DragObject ldrg_cntrl
+
+//Set a reference to the control.
+ldrg_cntrl = awo_control
+//Get the position, width, and height of the control.
+ai_x = ldrg_cntrl.X
+ai_y = ldrg_cntrl.Y
+ai_width = ldrg_cntrl.Width
+ai_height = ldrg_cntrl.Height
+
+Return 1
+end function
+
+public function integer of_getminmaxpoints_line (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height);line	ln_cntrl
+int		li_temp
+
+ln_cntrl = awo_control
+ai_x = ln_cntrl.BeginX
+ai_y = ln_cntrl.BeginY
+ai_width = ln_cntrl.EndX
+ai_height = ln_cntrl.EndY
+//Correct for lines that may have the End points 
+//before to the Begin points.
+If ai_width >= ai_x Then
+	ai_width = ai_width - ai_x
+Else
+	li_temp = ai_x
+	ai_x = ai_width
+	ai_width = li_temp - ai_x
+End If	
+If ai_height >= ai_y Then
+	ai_height = ai_height - ai_y
+Else
+	li_temp = ai_y
+	ai_y = ai_height
+	ai_height = li_temp - ai_y
+End If
+
+Return 1
+end function
+
+private function integer of_getminmaxpoints_oval (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height);oval	loval_cntrl
+
+loval_cntrl = awo_control
+ai_x = loval_cntrl.X
+ai_y = loval_cntrl.Y
+ai_width = loval_cntrl.Width
+ai_height = loval_cntrl.Height		
+
+Return 1
+end function
+
+private function integer of_getminmaxpoints_rect (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height);rectangle  lrec_cntrl
+
+lrec_cntrl = awo_control
+ai_x = lrec_cntrl.X
+ai_y = lrec_cntrl.Y
+ai_width = lrec_cntrl.Width
+ai_height = lrec_cntrl.Height		
+
+Return 1
+end function
+
+private function integer of_getminmaxpoints_round_rect (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height);roundrectangle	 lrrec_cntrl
+
+lrrec_cntrl = awo_control
+ai_x = lrrec_cntrl.X
+ai_y = lrrec_cntrl.Y
+ai_width = lrrec_cntrl.Width
+ai_height = lrrec_cntrl.Height
 
 Return 1
 end function
