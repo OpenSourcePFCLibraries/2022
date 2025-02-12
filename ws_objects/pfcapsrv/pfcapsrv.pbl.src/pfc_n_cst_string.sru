@@ -77,6 +77,8 @@ public function integer of_getglobalreplacemethod ()
 public function integer of_setglobalreplacemethod (integer ai_method)
 public function string of_removepunctuation (string as_source)
 public function string of_urlencode (string as_value)
+private function boolean of_iswellformedemailaddress_hotmail (string as_local_part)
+private function boolean of_iswellformedemailaddress_rfc_5321 (string as_local_part)
 end prototypes
 
 public function long of_parsetoarray (string as_source, string as_delimiter, ref string as_array[]);//////////////////////////////////////////////////////////////////////////////
@@ -3173,40 +3175,17 @@ if  ll_tmp = 0 or ll_tmp > ll_length then return false
 choose case ai_emailaddresscheckrule
 		
 	case cst_hotmail_rule
-		// Do not allow following special characters
-		if match( ls_local_part, '[!#%/`{|}]' ) = true then return false
-		if pos( ls_local_part, "$" ) > 0 then return false
-		if pos( ls_local_part, "^" ) > 0 then return false
-		if pos( ls_local_part, "*" ) > 0 then return false
-		
-		// Allows alphanumerics
-		if match( ls_local_part, "[a-zA-Z0-9]+" ) = false then return false
-		
-		// Allows dots but not at the beginning or at the end of local part
-		// and not consecutive
-		ll_pos = pos( ls_local_part, "." )
-		if ll_pos = 1 or ll_pos = len( ls_local_part ) then return false
-		if mid( ls_local_part, ll_pos + 1, 1) = "." then return false
+		return of_iswellformedemailaddress_hotmail( ls_local_part )
 		
 	case cst_rfc_5321
-		// Allows alphanumerics
-		if match( ls_local_part, "[a-zA-Z0-9]+" ) = false then return false
-		
-		// Allows dot but not at the beginning or at the end of local part
-		// and not consecutive
-		ll_pos = pos( ls_local_part, "." )
-		if ll_pos = 1 or ll_pos = len( ls_local_part ) then return false
-		if mid( ls_local_part, ll_pos + 1, 1) = "." then return false
-		
-		// allows special characters but only between quotation marks
-		if this.of_issurroundedby( ls_local_part , '"', "!#$%&'*+-/=?^_`{|}(),:;<>@[\]"+char(34)+char(32) ) = false then return false
+		return of_iswellformedemailaddress_rfc_5321( ls_local_part )
 		
 	case else
 		return false
 		
 end choose
 
-return true
+return false
 end function
 
 public function boolean of_issurroundedby (string as_source, string as_begin_surrounding, string as_end_surrounding, string as_tobe_surrounded);//////////////////////////////////////////////////////////////////////////////
@@ -3949,6 +3928,43 @@ NEXT
 
 return ls_return
 
+end function
+
+private function boolean of_iswellformedemailaddress_hotmail (string as_local_part);Long ll_pos
+
+// Do not allow following special characters
+if match( as_local_part, '[!#%/`{|}]' ) = true then return false
+if pos( as_local_part, "$" ) > 0 then return false
+if pos( as_local_part, "^" ) > 0 then return false
+if pos( as_local_part, "*" ) > 0 then return false
+
+// Allows alphanumerics
+if match( as_local_part, "[a-zA-Z0-9]+" ) = false then return false
+
+// Allows dots but not at the beginning or at the end of local part
+// and not consecutive
+ll_pos = pos( as_local_part, "." )
+if ll_pos = 1 or ll_pos = len( as_local_part ) then return false
+if mid( as_local_part, ll_pos + 1, 1) = "." then return false
+
+return true
+end function
+
+private function boolean of_iswellformedemailaddress_rfc_5321 (string as_local_part);Long ll_pos
+
+// Allows alphanumerics
+if match( as_local_part, "[a-zA-Z0-9]+" ) = false then return false
+
+// Allows dot but not at the beginning or at the end of local part
+// and not consecutive
+ll_pos = pos( as_local_part, "." )
+if ll_pos = 1 or ll_pos = len( as_local_part ) then return false
+if mid( as_local_part, ll_pos + 1, 1) = "." then return false
+
+// allows special characters but only between quotation marks
+if this.of_issurroundedby( as_local_part , '"', "!#$%&'*+-/=?^_`{|}(),:;<>@[\]"+char(34)+char(32) ) = false then return false
+
+return true
 end function
 
 on pfc_n_cst_string.create
