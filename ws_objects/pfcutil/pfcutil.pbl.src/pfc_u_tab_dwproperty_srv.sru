@@ -203,7 +203,7 @@ If li_rc <=0 Then Return -1
 Return 1
 end event
 
-event pfc_propertyinitialize;call super::pfc_propertyinitialize;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_propertyinitialize(n_cst_dwpropertyattrib anv_attrib);//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  pfc_PropertyInitialize
 //
@@ -247,6 +247,10 @@ event pfc_propertyinitialize;call super::pfc_propertyinitialize;////////////////
 */
 //
 //////////////////////////////////////////////////////////////////////////////
+
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = anv_attrib
 
 Return 1
 end event

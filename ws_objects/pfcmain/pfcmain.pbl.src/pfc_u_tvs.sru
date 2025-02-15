@@ -114,7 +114,7 @@ public function long of_populate (long al_parent)
 protected function long of_getobjects (ref powerobject apo_objects[])
 end prototypes
 
-event pfc_prermbmenu;//////////////////////////////////////////////////////////////////////////////
+event pfc_prermbmenu(ref m_tvs am_view);//////////////////////////////////////////////////////////////////////////////
 //	Event:			pfc_PreRMBMenu
 //	Arguments: 		am_view		Menu to be displayed.  
 //	Returns:  		None
@@ -143,6 +143,11 @@ event pfc_prermbmenu;///////////////////////////////////////////////////////////
  * Libraries see https://github.com/OpenSourcePFCLibraries
 */
 //////////////////////////////////////////////////////////////////////////////
+
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = am_view
+
 end event
 
 event pfc_searchcompare;//////////////////////////////////////////////////////////////////////////////
@@ -634,7 +639,7 @@ event pfc_preinsertitem;////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 end event
 
-event pfc_predeleteitem;//////////////////////////////////////////////////////////////////////////////
+event pfc_predeleteitem(long al_handle);//////////////////////////////////////////////////////////////////////////////
 //	Event:			pfc_PreDeleteItem
 //	Arguments: 		al_handle			Handle to Treeview item about to be deleted.  
 //	Returns:  		None
@@ -663,6 +668,10 @@ event pfc_predeleteitem;////////////////////////////////////////////////////////
  * Libraries see https://github.com/OpenSourcePFCLibraries
 */
 //////////////////////////////////////////////////////////////////////////////
+
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = al_handle
 end event
 
 event pfc_undo;//////////////////////////////////////////////////////////////////////////////
@@ -849,7 +858,7 @@ IF (al_parent < 0) or IsNull(al_parent) then Return -1
 Return this.of_populate(al_parent) 
 end event
 
-event pfc_retrieve;//////////////////////////////////////////////////////////////////////////////
+event type long pfc_retrieve(long al_parent, ref n_ds ads_data);//////////////////////////////////////////////////////////////////////////////
 //	Event:			pfc_Retrieve
 //	Arguments: 		al_parent	The handle to the Treeview item to place retrieved data under
 //						ads_data		The datastore holding the rows to add to the treeview as items passed by reference
@@ -892,10 +901,15 @@ event pfc_retrieve;/////////////////////////////////////////////////////////////
 //end if
 //of_retrieve(al_parent, la_args, ads_data)
 
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = al_parent
+la_temp = ads_data
+
 Return 0
 end event
 
-event pfc_prerefreshlevel;//////////////////////////////////////////////////////////////////////////////
+event pfc_prerefreshlevel(integer ai_level);//////////////////////////////////////////////////////////////////////////////
 //	Event:			pfc_PreRefreshLevel
 //	Arguments: 		ai_level		treeview level to refresh
 //	Returns:  		None
@@ -924,6 +938,11 @@ event pfc_prerefreshlevel;//////////////////////////////////////////////////////
  * Libraries see https://github.com/OpenSourcePFCLibraries
 */
 //////////////////////////////////////////////////////////////////////////////
+
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ai_level
+
 end event
 
 event pfc_addall;//////////////////////////////////////////////////////////////////////////////
@@ -1231,7 +1250,7 @@ End IF
 Return -1
 end event
 
-event pfc_prerefreshitem;//////////////////////////////////////////////////////////////////////////////
+event pfc_prerefreshitem(long al_handle, n_ds ads_obj, long al_row, ref treeviewitem atvi_item);//////////////////////////////////////////////////////////////////////////////
 //	Event:			pfc_PreRefreshItem
 //	Arguments: 		al_handle		handle of the item being refreshed
 //						ads_obj		Datastore holding treeview item information
@@ -1265,6 +1284,13 @@ event pfc_prerefreshitem;///////////////////////////////////////////////////////
  * Libraries see https://github.com/OpenSourcePFCLibraries
 */
 //////////////////////////////////////////////////////////////////////////////
+
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any la_temp
+la_temp = al_handle
+la_temp = ads_obj
+la_temp = al_row 
+la_temp = atvi_item
 end event
 
 public function integer of_getparentwindow (ref window aw_parent);//////////////////////////////////////////////////////////////////////////////

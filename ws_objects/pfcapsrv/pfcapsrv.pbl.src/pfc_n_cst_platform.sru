@@ -108,7 +108,13 @@ public function string of_getcomputername ();///////////////////////////////////
 return ""
 end function
 
-public function integer of_getfreeresources (integer ai_type);//////////////////////////////////////////////////////////////////////////////
+public function integer of_getfreeresources (integer ai_type);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ai_type
+
+//////////////////////////////////////////////////////////////////////////////
 //	In case this function is not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 return -1
@@ -161,7 +167,21 @@ f_setFileSrv(lnvo_fileSrv, FALSE)
 Return(ls_systemDirectory)
 end function
 
-public function integer of_gettextsize (ref window aw_obj, string as_text, string as_fontface, integer ai_fontsize, boolean ab_bold, boolean ab_italic, boolean ab_underline, ref integer ai_height, ref integer ai_width);//////////////////////////////////////////////////////////////////////////////
+public function integer of_gettextsize (ref window aw_obj, string as_text, string as_fontface, integer ai_fontsize, boolean ab_bold, boolean ab_italic, boolean ab_underline, ref integer ai_height, ref integer ai_width);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = aw_obj
+la_temp = as_text
+la_temp = as_fontface
+la_temp = ai_fontsize
+la_temp = ab_bold
+la_temp = ab_italic
+la_temp = ab_underline
+la_temp = ai_height
+la_temp = ai_width
+
+//////////////////////////////////////////////////////////////////////////////
 //	In case this function is not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
@@ -221,13 +241,25 @@ Return(ls_windowsDirectory)
 
 end function
 
-public function string of_getwindowtext (unsignedinteger ai_handle);//////////////////////////////////////////////////////////////////////////////
+public function string of_getwindowtext (unsignedinteger ai_handle);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ai_handle
+
+//////////////////////////////////////////////////////////////////////////////
 //	In case this function is not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 return ""
 end function
 
-public function boolean of_isapprunning (string as_app_name);//////////////////////////////////////////////////////////////////////////////
+public function boolean of_isapprunning (string as_app_name);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_app_name
+
+//////////////////////////////////////////////////////////////////////////////
 //	In case this function is not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 boolean lb_temp
@@ -279,7 +311,13 @@ end if
 return ll_rc
 end function
 
-public function integer of_playsound (string as_file);//////////////////////////////////////////////////////////////////////////////
+public function integer of_playsound (string as_file);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_file
+
+//////////////////////////////////////////////////////////////////////////////
 //	In case this function is not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 return -1
@@ -383,13 +421,28 @@ is_className = as_className
 return 1
 end function
 
-public function integer of_getknownfolderpath (integer ai_foldercode, ref string as_folderpath);//////////////////////////////////////////////////////////////////////////////
+public function integer of_getknownfolderpath (integer ai_foldercode, ref string as_folderpath);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ai_foldercode
+la_temp = as_folderpath
+
+//////////////////////////////////////////////////////////////////////////////
 //	In case this function is not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 return -1
 end function
 
-public function integer of_getknownfolderpath (integer ai_foldercode, boolean ab_currentpath, ref string as_folderpath);//////////////////////////////////////////////////////////////////////////////
+public function integer of_getknownfolderpath (integer ai_foldercode, boolean ab_currentpath, ref string as_folderpath);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ai_foldercode
+la_temp = ab_currentpath
+la_temp = as_folderpath
+
+//////////////////////////////////////////////////////////////////////////////
 //	In case this function is not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 return -1
@@ -655,7 +708,13 @@ public function longlong of_getphysicalmemory ();///////////////////////////////
 return -1
 end function
 
-public function ulong of_findwindow (string as_window_name);//////////////////////////////////////////////////////////////////////////////
+public function ulong of_findwindow (string as_window_name);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_window_name
+
+//////////////////////////////////////////////////////////////////////////////
 //	In case this function is not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 return 0

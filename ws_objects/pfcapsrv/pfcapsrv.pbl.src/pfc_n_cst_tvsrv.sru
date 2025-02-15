@@ -1017,6 +1017,7 @@ protected function long of_searchchild (string as_attribute, any aa_target, long
 //	aa_Target		A variable of type Any containg the search target.
 //	al_Begin			The handle of the TreeView item to begin searching, if
 //						0 entire tree will be searched.
+//						Not used in current implementation
 //	ai_Level			The level to search, if 0 entire tree will be searched.
 //	ab_RespectCase	True - search is case sensitive,
 //						False - search is not case sensitive.  Only used if the target
@@ -1111,10 +1112,10 @@ Return 0
 end function
 
 on pfc_n_cst_tvsrv.create
-TriggerEvent( this, "constructor" )
+call super::create
 end on
 
 on pfc_n_cst_tvsrv.destroy
-TriggerEvent( this, "destructor" )
+call super::destroy
 end on
 
