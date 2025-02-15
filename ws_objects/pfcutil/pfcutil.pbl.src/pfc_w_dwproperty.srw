@@ -17,7 +17,6 @@ global type pfc_w_dwproperty from w_response
 integer width = 1851
 integer height = 1768
 string title = "DataWindow Properties - "
-boolean controlmenu = false
 long backcolor = 80263328
 event type integer pfc_applyothers ( string as_servicename,  boolean ab_desiredstate )
 cb_ok cb_ok
@@ -32,6 +31,14 @@ Protected:
 n_cst_dwpropertyattrib inv_attrib
 
 end variables
+
+event type integer pfc_applyothers(string as_servicename, boolean ab_desiredstate);//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_servicename
+la_temp = ab_desiredstate
+
+Return 1
+end event
 
 on pfc_w_dwproperty.create
 int iCurrent

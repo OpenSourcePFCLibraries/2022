@@ -412,6 +412,12 @@ return 1
 
 end event
 
+event pfc_prermbmenu(ref m_oc am_oc);//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = am_oc
+
+end event
+
 event pfc_updatelinks;//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  pfc_updatelinks

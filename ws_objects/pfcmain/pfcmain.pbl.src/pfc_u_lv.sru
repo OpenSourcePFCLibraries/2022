@@ -244,6 +244,11 @@ im_view.m_viewitem.PopMenu (lw_parent.PointerX() + 5, lw_parent.PointerY() + 10)
 return 1
 end event
 
+event pfc_prermbmenu(ref m_view am_view);//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = am_view
+end event
+
 public function integer of_AddColumn (string as_columnname, string as_columnlabel, alignment aal_alignment, integer ai_columnwidth);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  of_AddColumn

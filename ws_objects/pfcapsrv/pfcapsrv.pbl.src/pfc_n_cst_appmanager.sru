@@ -324,6 +324,17 @@ anv_aboutattrib.is_version = is_version
 anv_aboutattrib.is_copyright = is_copyright
 end event
 
+event type connectprivilege pfc_connectionbegin(string as_userid, string as_password, string as_connectstring);//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_userid
+la_temp = as_password
+la_temp = as_connectstring
+
+return connectprivilege!
+
+
+end event
+
 event pfc_presplash;//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  pfc_presplash
@@ -512,7 +523,7 @@ anv_logonattrib.is_appname = iapp_object.DisplayName
 anv_logonattrib.is_logo = is_logo
 end event
 
-event pfc_logon;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_logon(string as_userid, string as_password);//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  pfc_logon
 //
@@ -560,6 +571,11 @@ event pfc_logon;////////////////////////////////////////////////////////////////
 */
 //
 //////////////////////////////////////////////////////////////////////////////
+
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_userid
+la_temp = as_password
 
 return -1
 end event

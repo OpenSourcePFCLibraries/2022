@@ -97,7 +97,7 @@ public function integer of_FileWrite (string as_filename, string as_text)
 public function integer of_FileWrite (string as_FileName, blob ablb_Data)
 public function integer of_FileCopy (string as_SourceFile, string as_TargetFile)
 public function integer of_FileRename (string as_sourcefile, string as_targetfile)
-public function long of_DirList (string as_filespec, long al_filetyp, ref n_cst_dirattrib anv_dirlist[])
+public function long of_dirlist (string as_filespec, long al_filetyp, ref n_cst_dirattrib anv_dirlist[])
 public function integer of_SetFileAttributes (string as_FileName, boolean ab_ReadOnly, boolean ab_Hidden, boolean ab_System, boolean ab_Archive)
 public function integer of_GetFileAttributes (string as_filename, ref boolean ab_readonly, ref boolean ab_hidden, ref boolean ab_system, ref boolean ab_Subdirectory, ref boolean ab_archive)
 public function integer of_SetFileReadonly (string as_filename, boolean ab_readonly)
@@ -110,14 +110,14 @@ public function double of_GetFileSize (string as_filename)
 protected function unsignedlong of_calculatefileattributes (string as_filename, boolean ab_readonly, boolean ab_hidden, boolean ab_system, boolean ab_archive)
 protected function boolean of_includefile (string as_filename, long al_attribmask, unsignedlong aul_fileattrib)
 public function integer of_GetLastwriteDatetime (string as_filename, ref date ad_date, ref time at_time)
-public function integer of_GetCreationDatetime (string as_filename, ref date ad_date, ref time at_time)
+public function integer of_getcreationdatetime (string as_filename, ref date ad_date, ref time at_time)
 public function integer of_GetLastwriteDate (string as_FileName, ref date ad_Date)
 public function integer of_GetLastwriteTime (string as_FileName, ref time at_Time)
 public function integer of_GetCreationTime (string as_FileName, ref time at_Time)
 public function integer of_GetCreationDate (string as_filename, ref date ad_date)
 public function integer of_getlastaccessdate (string as_filename, ref date ad_date)
-public function integer of_SetLastwriteDatetime (string as_filename, date ad_date, time at_time)
-public function integer of_setcreationdatetime (string as_FileName, date ad_FileDate, time at_FileTime)
+public function integer of_setlastwritedatetime (string as_filename, date ad_date, time at_time)
+public function integer of_setcreationdatetime (string as_filename, date ad_filedate, time at_filetime)
 public function integer of_setlastaccessdate (string as_filename, date ad_date)
 public function integer of_deltree (string as_directoryname)
 public function integer of_parsepath (string as_path, ref string as_drive, ref string as_dirpath, ref string as_filename, ref string as_ext)
@@ -144,7 +144,7 @@ public function string of_gettempfilename (string vs_prefix)
 public function integer of_setfiletype (string as_filetype)
 public function string of_getfiletype ()
 public function long of_dirlist (string as_filespec, ref string as_dirlist[])
-public function ulong of_getdrivetype (string as_drive)
+public function unsignedlong of_getdrivetype (string as_drive)
 end prototypes
 
 public function string of_getseparator ();//////////////////////////////////////////////////////////////////////////////
@@ -231,7 +231,13 @@ If Trim(as_Ext) <> "" Then	ls_Path = ls_Path + "." + Trim(as_Ext)
 Return ls_Path
 end function
 
-public function integer of_CreateDirectory (string as_directoryname);//////////////////////////////////////////////////////////////////////////////
+public function integer of_CreateDirectory (string as_directoryname);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_directoryname
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
@@ -243,19 +249,37 @@ public function string of_GetCurrentDirectory ();///////////////////////////////
 Return ""
 end function
 
-public function boolean of_DirectoryExists (string as_DirectoryName);//////////////////////////////////////////////////////////////////////////////
+public function boolean of_DirectoryExists (string as_DirectoryName);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_directoryname
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return False
 end function
 
-public function integer of_ChangeDirectory (string as_NewDirectory);//////////////////////////////////////////////////////////////////////////////
+public function integer of_ChangeDirectory (string as_NewDirectory);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_newdirectory
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
 end function
 
-public function integer of_RemoveDirectory (string as_directoryname);//////////////////////////////////////////////////////////////////////////////
+public function integer of_RemoveDirectory (string as_directoryname);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_directoryname
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
@@ -681,26 +705,61 @@ public function integer of_FileCopy (string as_SourceFile, string as_TargetFile)
 Return of_FileCopy(as_SourceFile, as_TargetFile, False)
 end function
 
-public function integer of_FileRename (string as_sourcefile, string as_targetfile);//////////////////////////////////////////////////////////////////////////////
+public function integer of_FileRename (string as_sourcefile, string as_targetfile);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_sourcefile
+la_temp = as_targetfile
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
 end function
 
-public function long of_DirList (string as_filespec, long al_filetyp, ref n_cst_dirattrib anv_dirlist[]);//////////////////////////////////////////////////////////////////////////////
+public function long of_dirlist (string as_filespec, long al_filetyp, ref n_cst_dirattrib anv_dirlist[]);
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_filespec
+la_temp = al_filetyp
+la_temp = anv_dirlist[]
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
 end function
 
-public function integer of_SetFileAttributes (string as_FileName, boolean ab_ReadOnly, boolean ab_Hidden, boolean ab_System, boolean ab_Archive);//////////////////////////////////////////////////////////////////////////////
+public function integer of_SetFileAttributes (string as_FileName, boolean ab_ReadOnly, boolean ab_Hidden, boolean ab_System, boolean ab_Archive);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_filename
+la_temp = ab_readonly
+la_temp = ab_hidden
+la_temp = ab_system
+la_temp = ab_archive
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
 
 end function
 
-public function integer of_GetFileAttributes (string as_filename, ref boolean ab_readonly, ref boolean ab_hidden, ref boolean ab_system, ref boolean ab_Subdirectory, ref boolean ab_archive);//////////////////////////////////////////////////////////////////////////////
+public function integer of_GetFileAttributes (string as_filename, ref boolean ab_readonly, ref boolean ab_hidden, ref boolean ab_system, ref boolean ab_Subdirectory, ref boolean ab_archive);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_filename
+la_temp = ab_readonly
+la_temp = ab_hidden
+la_temp = ab_system
+la_temp = ab_subdirectory
+la_temp = ab_archive
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
@@ -858,19 +917,37 @@ SetNull(lb_Null)
 Return of_SetFileAttributes(as_FileName, lb_Null, lb_Null, lb_Null, ab_Archive)
 end function
 
-public function string of_GetLongFilename (string as_AltFileName);//////////////////////////////////////////////////////////////////////////////
+public function string of_GetLongFilename (string as_AltFileName);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_altfilename
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return ""
 end function
 
-public function string of_GetAltFilename (string as_LongFileName);//////////////////////////////////////////////////////////////////////////////
+public function string of_GetAltFilename (string as_LongFileName);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_longfilename
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return ""
 end function
 
-public function double of_GetFileSize (string as_filename);//////////////////////////////////////////////////////////////////////////////
+public function double of_GetFileSize (string as_filename);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_filename
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
@@ -1051,13 +1128,28 @@ If lnv_Numeric.of_BitwiseAnd(aul_FileAttrib, al_AttribMask) > 0 Then Return True
 Return False
 end function
 
-public function integer of_GetLastwriteDatetime (string as_filename, ref date ad_date, ref time at_time);//////////////////////////////////////////////////////////////////////////////
+public function integer of_GetLastwriteDatetime (string as_filename, ref date ad_date, ref time at_time);
+
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_filename
+la_temp = ad_date
+la_temp = at_time
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
 end function
 
-public function integer of_GetCreationDatetime (string as_filename, ref date ad_date, ref time at_time);//////////////////////////////////////////////////////////////////////////////
+public function integer of_getcreationdatetime (string as_filename, ref date ad_date, ref time at_time);
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_filename
+la_temp = ad_date
+la_temp = at_time
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
@@ -1215,25 +1307,51 @@ time		lt_Time
 Return of_GetCreationDatetime(as_FileName, ad_Date, lt_Time)
 end function
 
-public function integer of_getlastaccessdate (string as_filename, ref date ad_date);//////////////////////////////////////////////////////////////////////////////
+public function integer of_getlastaccessdate (string as_filename, ref date ad_date);
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ad_date
+la_temp = as_filename
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
 end function
 
-public function integer of_SetLastwriteDatetime (string as_filename, date ad_date, time at_time);//////////////////////////////////////////////////////////////////////////////
+public function integer of_setlastwritedatetime (string as_filename, date ad_date, time at_time);
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_filename
+la_temp = ad_date
+la_temp = at_time
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
 end function
 
-public function integer of_setcreationdatetime (string as_FileName, date ad_FileDate, time at_FileTime);//////////////////////////////////////////////////////////////////////////////
+public function integer of_setcreationdatetime (string as_filename, date ad_filedate, time at_filetime);
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_filename
+la_temp = ad_filedate
+la_temp = at_filetime
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
 end function
 
-public function integer of_setlastaccessdate (string as_filename, date ad_date);//////////////////////////////////////////////////////////////////////////////
+public function integer of_setlastaccessdate (string as_filename, date ad_date);
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_filename
+la_temp = ad_date
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
@@ -1593,7 +1711,12 @@ public function integer of_sortdirlist (ref n_cst_dirattrib anv_dirlist[], integ
 Return of_SortDirList(anv_DirList, ai_SortType, True)
 end function
 
-public function integer of_getvolumes (ref string as_volumes[]);//////////////////////////////////////////////////////////////////////////////
+public function integer of_getvolumes (ref string as_volumes[]);
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_volumes[]
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
@@ -1758,7 +1881,14 @@ anv_entry.id_lastaccessdate = date(ls_lastaccessdate)
 return 1
 end function
 
-public function integer of_getdiskspace (string as_drive, ref long al_totalspace, ref long al_freespace);//////////////////////////////////////////////////////////////////////////////
+public function integer of_getdiskspace (string as_drive, ref long al_totalspace, ref long al_freespace);
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_drive
+la_temp = al_totalspace
+la_temp = al_freespace
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
@@ -1798,7 +1928,14 @@ public function string of_getallfilesspecifier ();//////////////////////////////
 Return is_AllFiles
 end function
 
-public function integer of_getdiskspaceex (string as_drive, ref decimal adec_totalspace, ref decimal adec_freespace);//////////////////////////////////////////////////////////////////////////////
+public function integer of_getdiskspaceex (string as_drive, ref decimal adec_totalspace, ref decimal adec_freespace);
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_drive
+la_temp = adec_totalspace
+la_temp = adec_freespace
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1
@@ -2517,7 +2654,12 @@ public function long of_dirlist (string as_filespec, ref string as_dirlist[]);//
 return -1
 end function
 
-public function ulong of_getdrivetype (string as_drive);//////////////////////////////////////////////////////////////////////////////
+public function unsignedlong of_getdrivetype (string as_drive);
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_drive
+
+//////////////////////////////////////////////////////////////////////////////
 //	Function not found in descendant
 //////////////////////////////////////////////////////////////////////////////
 Return -1

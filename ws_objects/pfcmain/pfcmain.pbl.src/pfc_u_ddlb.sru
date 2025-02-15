@@ -501,6 +501,11 @@ destroy lm_edit
 return 1
 end event
 
+event pfc_prermbmenu(ref m_edit am_edit);//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = am_edit
+end event
+
 public function integer of_getparentwindow (ref window aw_parent);//////////////////////////////////////////////////////////////////////////////
 //
 //	Function:  of_GetParentWindow

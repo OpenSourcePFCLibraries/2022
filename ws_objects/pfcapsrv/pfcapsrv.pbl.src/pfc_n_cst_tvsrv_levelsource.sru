@@ -5530,6 +5530,10 @@ public function integer of_updatecustom (integer ai_custom);////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ai_custom
+
 Return FAILURE
 end function
 

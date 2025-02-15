@@ -1599,6 +1599,10 @@ protected function integer of_assist (string as_msg);///////////////////////////
 //	Return gnv_app.inv_debug.of_Message(as_msg)
 //End If
 
+//Virtual function - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = as_msg
+
 Return NO_ACTION
 
 end function

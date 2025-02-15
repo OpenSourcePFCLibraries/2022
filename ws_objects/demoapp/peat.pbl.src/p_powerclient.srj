@@ -1,0 +1,24 @@
+﻿$PBExportHeader$p_powerclient.srj
+EXE:this_is_a_test.exe,,0,1,1,1,
+CMP:0,0,0,2,0,0,1
+COM:
+DES:
+CPY:
+PRD:
+PVS:1.0.0.1
+PVN:1,0,0,1
+FVS:1.0.0.1
+FVN:1,0,0,1
+MAN:0,asInvoker,0
+POWERCLIENT:﻿{"p_powerclient":{"Format":"1.0","AppType":1,"AppName":"this_is_a_test","OutputDir":"C:\\Users\\INFOSA~1\\AppData\\Local\\Temp\\pbappscache 22.0\\temp\\this_is_a_test","ResourceName":"","Arguments":"","DeployVersion":"1.01","MinimumValidVersion":"1.01","OnlineTime":"2024-9-23 23:21:58","OfflineTime":"2034-9-23 23:21:58","PromptOverwrite":false,"WindowsClassicStyle":false,"FullBuildEx":1,"EnableDebugSymbol":true,"EncryptPbdFiles":true,"Is32Bit":true,"CheckLauncherValid":false,"LocalServer":true,"ServerProfile":"","GeneratePackage":false,"PackageOutputExe":false,"PackageLauncher":false,"DefaultLauncher":true,"LauncherPath":"","LauncherMode":0,"RuntimePlatform":3,"LauncherName":"Default","PackageOutputPath":"C:\\Users\\INFOSA~1\\AppData\\Local\\Temp\\pbappscache 22.0\\export","UploadOrPackageLauncherFiles":true,"UploadStrategyWhenExist":1,"FullDownload":false,"SaveDynamicCommandLineArgs":false,"DeployWebPage":0,"CreateDesktopShortcut":true,"CreateStartMenuShortcut":true,"CreateAppUninstallShortcut":true,"AppShortcutName":"","AppShortcutImage":"","ShowStartAnimatedWindow":true,"CheckPbdValidaty":false,"StartMode":2,"IsVerOffCheck":false,"PBCParams":"","RuntimeVersion":"22.2.0.3391","PreloadEventCommands":"","RunCommandAsAdmin":false,"AlwaysRunCommand":false,"ProductName":"","CompanyName":"","Description":"","Copyright":"","ProductVersion":"1.0.0.1","FileVersion":"1.0.0.1","ProductVersionMajor":1,"ProductVersionMinor":0,"ProductVersionBuild":0,"ProductVersionRevision":1,"FileVersionMajor":1,"FileVersionMinor":0,"FileVersionBuild":0,"FileVersionRevision":1,"GenerateOption":2,"ExecutionLevel":2,"AllowAccessSystemUI":false,"RunWithHttps":false,"RunWithShellApp":true,"RunArguments":"","RunHost":"localhost","RunPort":"","WebViewType":0,"Libraries":[{"PbdName":"peat.pbd","PbdLocalPath":"peat.pbd"},{"PbdName":"pfeapsrv.pbd","PbdLocalPath":"D:\\Downloads\\pfc2022\\pfeapsrv\\pfeapsrv.pbd"},{"PbdName":"pfedwsrv.pbd","PbdLocalPath":"D:\\Downloads\\pfc2022\\pfedwsrv\\pfedwsrv.pbd"},{"PbdName":"pfemain.pbd","PbdLocalPath":"D:\\Downloads\\pfc2022\\pfemain\\pfemain.pbd"},{"PbdName":"pfeutil.pbd","PbdLocalPath":"D:\\Downloads\\pfc2022\\pfeutil\\pfeutil.pbd"},{"PbdName":"pfewnsrv.pbd","PbdLocalPath":"D:\\Downloads\\pfc2022\\pfewnsrv\\pfewnsrv.pbd"},{"PbdName":"pfcapsrv.pbd","PbdLocalPath":"D:\\Downloads\\pfc2022\\pfcapsrv\\pfcapsrv.pbd"},{"PbdName":"pfcdwsrv.pbd","PbdLocalPath":"D:\\Downloads\\pfc2022\\pfcdwsrv\\pfcdwsrv.pbd"},{"PbdName":"pfcmain.pbd","PbdLocalPath":"D:\\Downloads\\pfc2022\\pfcmain\\pfcmain.pbd"},{"PbdName":"pfcutil.pbd","PbdLocalPath":"D:\\Downloads\\pfc2022\\pfcutil\\pfcutil.pbd"},{"PbdName":"pfcwnsrv.pbd","PbdLocalPath":"D:\\Downloads\\pfc2022\\pfcwnsrv\\pfcwnsrv.pbd"}],"PredownloadPackages":{},"PredownloadFiles":[],"InstantDownloadFiles":[],"RuntimeModules":["coreruntimefiles","adonet4sqlserver","adonet4odbc","informixi10","informixin9","msoledbdriver4sqlserver","odbcdatabasedriver","oledbdatabasedriver","oracleo90","oracleo10","oracleora","sncsqlnativeclient","asesyc","asease","dotnetassemblycalls","accessibilitysupport","msexcel12support","nativepdfsupport","restclientsupport","pbdom","ribbonbarsupport","smtpclientsupport","tabbedviewsupport","txtextcontrolactivex"],"RegisterFiles":[],"Signing":{"SignOption":0,"CustomScript":"","SignTool":"","CertificateType":0,"PfxFile":"","Token":"","PfxPassword":"","Algorithm":"SHA256","TimeStamp":"http://timestamp.digicert.com"},"powerserver":{"webapiurl":"","webapihost":"localhost","webapipath":"","webapiport":5099,"iswebapihttps":false,"srvsrcoutdir":"C:\\Users\\InfosaicUser\\source\\repos","srvsrcoutdiradditiondir":"","modelname":"","generateopts":0,"licensefile":"","licenseversion":"","licensecontent":"","TemplateTypeName":"Default","TargetFramework":"net6.0","bBuildSolution":true,"EnvironmentType":"Default"},"IniConfigFiles":[],"CSharpUIConfig":{"ServerType":0,"RuntimeFileType":0}}}
+PBD:peat.pbl,,1
+PBD:..\pfeapsrv\pfeapsrv.pbl,,1
+PBD:..\pfedwsrv\pfedwsrv.pbl,,1
+PBD:..\pfemain\pfemain.pbl,,1
+PBD:..\pfeutil\pfeutil.pbl,,1
+PBD:..\pfewnsrv\pfewnsrv.pbl,,1
+PBD:..\pfcapsrv\pfcapsrv.pbl,,1
+PBD:..\pfcdwsrv\pfcdwsrv.pbl,,1
+PBD:..\pfcmain\pfcmain.pbl,,1
+PBD:..\pfcutil\pfcutil.pbl,,1
+PBD:..\pfcwnsrv\pfcwnsrv.pbl,,1

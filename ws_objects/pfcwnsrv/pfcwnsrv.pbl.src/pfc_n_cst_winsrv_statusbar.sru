@@ -271,7 +271,7 @@ Return iw_statusbar.of_RefreshPosition()
 
 end event
 
-event pfc_statusbarrbuttonup;call super::pfc_statusbarrbuttonup;//////////////////////////////////////////////////////////////////////////////
+event pfc_statusbarrbuttonup(integer ai_xpos, integer ai_ypos, string as_name);//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  pfc_StatusBarRButtonUp
 //
@@ -315,10 +315,14 @@ event pfc_statusbarrbuttonup;call super::pfc_statusbarrbuttonup;////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ai_xpos
+la_temp = ai_ypos
+la_temp = as_name
 end event
 
-event pfc_statusbardoubleclick;call super::pfc_statusbardoubleclick;//////////////////////////////////////////////////////////////////////////////
+event pfc_statusbardoubleclick(integer ai_xpos, integer ai_ypos, string as_name);//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  pfc_StatusBarDoubleClick
 //
@@ -362,10 +366,14 @@ event pfc_statusbardoubleclick;call super::pfc_statusbardoubleclick;////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ai_xpos
+la_temp = ai_ypos
+la_temp = as_name
 end event
 
-event pfc_statusbarclicked;call super::pfc_statusbarclicked;//////////////////////////////////////////////////////////////////////////////
+event pfc_statusbarclicked(integer ai_xpos, integer ai_ypos, string as_name);//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  pfc_StatusBarClick
 //
@@ -409,6 +417,11 @@ event pfc_statusbarclicked;call super::pfc_statusbarclicked;////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ai_xpos
+la_temp = ai_ypos
+la_temp = as_name
 
 end event
 

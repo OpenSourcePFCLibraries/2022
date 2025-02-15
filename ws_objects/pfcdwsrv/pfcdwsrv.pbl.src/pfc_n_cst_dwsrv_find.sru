@@ -1075,7 +1075,7 @@ protected function integer of_replace (long al_row, string as_colname, string as
 //	Arguments: 	
 //	al_row			The row number for the value that may be replaced.
 //	as_column		The column name for the value that may be replaced.
-//	as_replacewith	The value to replace with.
+//	as_replacewith	The value to replace with. -- obsolete, inv_findattrib.is_replacewith is used instead
 //
 //	Returns:  		integer
 //						1 if it succeeds and -1 if an error occurs. 

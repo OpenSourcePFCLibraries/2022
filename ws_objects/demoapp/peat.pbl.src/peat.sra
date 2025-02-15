@@ -14,7 +14,7 @@ n_cst_peat	 gnv_app
 end variables
 
 global type peat from application
- string appruntimeversion = "21.0.0.1311"
+ string appruntimeversion = "22.2.0.3391"
 end type
 global peat peat
 

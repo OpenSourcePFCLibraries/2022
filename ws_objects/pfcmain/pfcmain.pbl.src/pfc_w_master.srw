@@ -930,7 +930,7 @@ event pfc_begintran;////////////////////////////////////////////////////////////
 Return 1
 end event
 
-event pfc_endtran;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_endtran(integer ai_update_results);//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:  pfc_endtran
 //
@@ -980,6 +980,10 @@ event pfc_endtran;//////////////////////////////////////////////////////////////
 */
 //
 //////////////////////////////////////////////////////////////////////////////
+
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ai_update_results
 
 Return 1
 end event
@@ -1564,7 +1568,7 @@ return -1
 
 end event
 
-event pfc_mruprocess;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_mruprocess(integer ai_row);//////////////////////////////////////////////////////////////////////////////
 // 
 //	Event:		pfc_mruprocess
 //
@@ -1638,11 +1642,16 @@ event pfc_mruprocess;///////////////////////////////////////////////////////////
 //// opensheet(lw_window, lnv_mruattrib.is_classname, lw_frame, 0, original!)
 // opensheetwithparm(lw_window, lnv_mruattrib.is_menuitemkey, lnv_mruattrib.is_classname, lw_frame, 0, original! )
 //
+
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = ai_row
+
 return -1
 
 end event
 
-event pfc_premrusave;//////////////////////////////////////////////////////////////////////////////
+event type integer pfc_premrusave(ref n_cst_mruattrib anv_mruattrib);//////////////////////////////////////////////////////////////////////////////
 //
 //	Event:		pfc_premrusave
 //
@@ -1693,6 +1702,10 @@ event pfc_premrusave;///////////////////////////////////////////////////////////
 //anv_mruattrib.is_menuitemname = this.title
 //anv_mruattrib.is_menuitemkey = this.classname()
 //anv_mruattrib.is_menuitemmhelp = "Opens " + this.classname()
+
+//Virtual event - the following is to prevent Visual Expert from flagging unused arguments
+any	la_temp
+la_temp = anv_mruattrib
 
 return -1
 
