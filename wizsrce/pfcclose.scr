@@ -1,2 +1,0 @@
-/*  Disconnect from the database  */
-SQLCA.of_DisConnect ( )

@@ -1,2 +1,0 @@
-/*  Give the user 3 attempts to logon  */
-anv_logonattrib.ii_logonattempts = 3
