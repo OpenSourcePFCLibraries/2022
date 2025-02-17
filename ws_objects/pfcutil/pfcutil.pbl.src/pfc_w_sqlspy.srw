@@ -486,7 +486,6 @@ type cbx_batchmode from u_cbx within pfc_w_sqlspy
 integer x = 73
 integer y = 36
 integer width = 1856
-integer height = 68
 integer taborder = 10
 string text = "&Inspect each SQL statement before it is executed"
 end type
@@ -651,7 +650,7 @@ event clicked;call super::clicked;//////////////////////////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-showHelp ("pfcdlg.hlp", topic!, 10500)
+showHelp ("pfcdlg.chm", topic!, 10500)
 end event
 
 type cb_close from u_cb within pfc_w_sqlspy
@@ -718,7 +717,6 @@ type st_history from u_st within pfc_w_sqlspy
 boolean visible = false
 integer x = 23
 integer y = 136
-integer width = 343
 string text = "st_history"
 end type
 

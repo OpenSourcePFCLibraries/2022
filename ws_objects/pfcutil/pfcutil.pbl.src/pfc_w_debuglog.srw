@@ -16,13 +16,12 @@ end type
 end forward
 
 global type pfc_w_debuglog from w_main
-int X=23
-int Y=400
-int Width=2894
-int Height=728
-boolean TitleBar=true
-string Title="Debugging Log"
-long BackColor=80263328
+integer x = 23
+integer y = 400
+integer width = 2894
+integer height = 728
+string title = "Debugging Log"
+long backcolor = 80263328
 dw_debuglog dw_debuglog
 cb_print cb_print
 cb_clear cb_clear
@@ -376,12 +375,12 @@ End If
 end event
 
 type dw_debuglog from u_dw within pfc_w_debuglog
-int X=18
-int Y=20
-int Width=2400
-int Height=564
-int TabOrder=10
-string DataObject="d_debuglog"
+integer x = 18
+integer y = 20
+integer width = 2400
+integer height = 564
+integer taborder = 10
+string dataobject = "d_debuglog"
 end type
 
 event constructor;call super::constructor;
@@ -389,10 +388,10 @@ ib_rmbmenu = false
 end event
 
 type cb_print from u_cb within pfc_w_debuglog
-int X=2464
-int Y=24
-int TabOrder=20
-string Text="&Print"
+integer x = 2464
+integer y = 24
+integer taborder = 20
+string text = "&Print"
 end type
 
 event clicked;call u_cb::clicked;//////////////////////////////////////////////////////////////////////////////
@@ -441,10 +440,10 @@ gnv_app.inv_debug.of_PrintLog()
 end event
 
 type cb_clear from u_cb within pfc_w_debuglog
-int X=2464
-int Y=136
-int TabOrder=30
-string Text="&Clear"
+integer x = 2464
+integer y = 136
+integer taborder = 30
+string text = "&Clear"
 end type
 
 event clicked;call u_cb::clicked;//////////////////////////////////////////////////////////////////////////////
@@ -493,11 +492,11 @@ gnv_app.inv_debug.of_ClearLog()
 end event
 
 type cb_close from u_cb within pfc_w_debuglog
-int X=2464
-int Y=248
-int TabOrder=40
-string Text="Close"
-boolean Cancel=true
+integer x = 2464
+integer y = 248
+integer taborder = 40
+string text = "Close"
+boolean cancel = true
 end type
 
 event clicked;call u_cb::clicked;//////////////////////////////////////////////////////////////////////////////
@@ -545,10 +544,10 @@ close(parent)
 end event
 
 type cb_dlghelp from u_cb within pfc_w_debuglog
-int X=2464
-int Y=360
-int TabOrder=50
-string Text="&Help"
+integer x = 2464
+integer y = 360
+integer taborder = 50
+string text = "&Help"
 end type
 
 event clicked;call super::clicked;//////////////////////////////////////////////////////////////////////////////
@@ -590,6 +589,6 @@ event clicked;call super::clicked;//////////////////////////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-showHelp ("pfcdlg.hlp", topic!, 10000)
+showHelp ("pfcdlg.chm", topic!, 10000)
 end event
 

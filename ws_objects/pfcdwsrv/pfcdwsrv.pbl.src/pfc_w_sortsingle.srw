@@ -443,7 +443,6 @@ type cbx_asc from u_cbx within pfc_w_sortsingle
 integer x = 1038
 integer y = 112
 integer width = 617
-integer height = 68
 integer taborder = 20
 string text = "Ascending"
 boolean checked = true
@@ -613,6 +612,6 @@ event clicked;call super::clicked;//////////////////////////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-showHelp ("pfcdlg.hlp", topic!, 1100)
+showHelp ("pfcdlg.chm", topic!, 1100)
 end event
 

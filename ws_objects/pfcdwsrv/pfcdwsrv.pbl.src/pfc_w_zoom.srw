@@ -781,6 +781,6 @@ event clicked;call super::clicked;//////////////////////////////////////////////
  * Libraries see https://github.com/OpenSourcePFCLibraries
 */
 /////////////////////////////////////////////////////////////////////////////
-ShowHelp ("pfcdlg.hlp", topic!, 1400)
+ShowHelp ("pfcdlg.chm", topic!, 1400)
 end event
 
