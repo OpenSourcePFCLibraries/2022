@@ -989,14 +989,13 @@ if IsNull (dwo) then
 	return
 end if
 
-if dwo.name = "toolbarvisible" then
-	if ii_toolbarindex > 0 then
-		lb_checked = lnv_conversion.of_Boolean (data)
-		if not IsNull (lb_checked) then
-			inv_toolbar[ii_toolbarindex].b_visible = lb_checked
-			cb_apply.Enabled = True
-		end if
-	end if
+lb_checked = lnv_conversion.of_Boolean (data)
+
+if dwo.name = "toolbarvisible" and &
+	ii_toolbarindex > 0 and &
+	not IsNull (lb_checked) then
+		inv_toolbar[ii_toolbarindex].b_visible = lb_checked
+		cb_apply.Enabled = True
 end if
 end event
 
@@ -1068,6 +1067,6 @@ event clicked;call super::clicked;//////////////////////////////////////////////
 //
 //////////////////////////////////////////////////////////////////////////////
 
-showHelp ("pfcdlg.hlp", topic!, 1300)
+showHelp ("pfcdlg.chm", topic!, 1300)
 end event
 
