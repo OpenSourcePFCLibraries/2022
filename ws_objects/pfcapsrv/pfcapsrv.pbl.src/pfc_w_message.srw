@@ -310,9 +310,9 @@ cb_userinput.X = mle_message.X + mle_message.Width + SEPARATOR
 // Set the width of the window according to the size of
 // the Message and the RightSide buttons.
 If (cb_print.Visible=False And cb_userinput.Visible=False) Then
-	This.Width = mle_message.X + mle_message.Width + SEPARATOR + 30
+	This.Width = mle_message.X + mle_message.Width + SEPARATOR + 60
 Else
-	This.Width = mle_message.X + mle_message.Width + cb_print.Width + (SEPARATOR *2) + 30
+	This.Width = mle_message.X + mle_message.Width + cb_print.Width + (SEPARATOR *2) + 60
 End If
 
 // Move the BottomSide Buttons right under the Message.
@@ -333,7 +333,7 @@ ElseIf cb_1.Visible And cb_2.Visible And cb_3.Visible=False Then
 	cb_1.x = li_widthmidpoint - (cb_1.Width +20)
 	cb_2.x = li_widthmidpoint +20
 Else
-	cb_1.x = li_widthmidpoint - (cb_1.Width +20) + (cb_1.width/2)
+	cb_1.x = li_widthmidpoint - (cb_1.Width +20) - (cb_1.width/2)
 	cb_2.x = li_widthmidpoint - (cb_2.width/2)
 	cb_3.x = li_widthmidpoint + (cb_3.width/2 +20)
 End If
