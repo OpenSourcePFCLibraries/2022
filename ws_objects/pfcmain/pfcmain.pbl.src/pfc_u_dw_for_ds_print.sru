@@ -24,16 +24,31 @@ public function integer of_printsetup (readonly long al_pages);/////////////////
 //
 /////////////////////////////////////////////////////////////////////////
 integer li_rc
+long ll_rowcount, ll_pagecount, ll_lastpagecount, ll_stalled
+constant long MAX_STALLED_INSERTS = 1000
+
 this.modify ( 'datawindow.print.preview=yes' )
-do
-	// Insert rows until pagecount is the same as source DS. 
+// The caller normally copies the source via SetFullState, so the page count
+// already matches. Only pad with empty rows as a fallback, and stop if the
+// inserts fail or stop increasing the page count (e.g. crosstabs).
+ll_rowcount = this.rowcount()
+ll_lastpagecount = long ( this.describe ("evaluate('pagecount()'," + string ( max ( ll_rowcount, 1 ) ) + ")"))
+ll_pagecount = ll_lastpagecount
+do while ll_pagecount < al_pages
+	// Insert rows until pagecount is the same as source DS.
 	// This is needed so the user can set the desired pages in the print dialog.
-	this.insertrow( 0 )
-  // I have not encountered an issue with this so far but There may be
-  // a need for  safeguarding against a potential infinite loop here.
-  // To be safe, maybe add a counter variable and exit the loop
-  // when an implausibly high loop count is hit.
-loop while long ( this.describe ("evaluate('pagecount()'," + string ( this.rowcount() ) + ")")) < al_pages
+	if this.insertrow( 0 ) < 1 then exit
+	if this.rowcount() <= ll_rowcount then exit
+	ll_rowcount = this.rowcount()
+	ll_pagecount = long ( this.describe ("evaluate('pagecount()'," + string ( ll_rowcount ) + ")"))
+	if ll_pagecount > ll_lastpagecount then
+		ll_lastpagecount = ll_pagecount
+		ll_stalled = 0
+	else
+		ll_stalled ++
+		if ll_stalled >= MAX_STALLED_INSERTS then exit
+	end if
+loop
 this.modify ( 'datawindow.print.preview=no' )
 
 // We only want the print dialog to set all the specs to the DW so printing is cancelled

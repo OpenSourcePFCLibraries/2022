@@ -2697,9 +2697,6 @@ If ls_os = 'windows3x' Then
 	li_microhelpheight = li_microhelpheight - ii_microhelpwin3xsubtractvalue
 ElseIf ls_os = 'windowsnt3x' Then
 	li_microhelpheight = li_microhelpheight - ii_microhelpwinnt3xsubtractvalue
-Else
-	//Default
-	li_microhelpheight = li_microhelpheight - ii_microhelpwinnt3xsubtractvalue
 End If
 
 Return li_microhelpheight
