@@ -1209,6 +1209,8 @@ If (as_control = '') or (as_object = '') Then Return '!'
 
 // remember what we were looking at before
 ls_origfilter = ids_items.Describe("DataWindow.Table.Filter")
+// Describe returns "?" when there is no filter
+If ls_origfilter = "?" Then ls_origfilter = ""
 
 is_currfilter = "window=~""+as_object+"~" AND control=~""+as_control+"~""
 IF ids_items.SetFilter(is_currfilter) <> 1 then return '!'
@@ -2311,6 +2313,8 @@ l_dw = ago_item
 li_numset = of_SetState(as_window, ls_itemname, l_dw.enabled, l_dw.visible)
 ls_datawindow = trim(ls_itemname)
 ls_orig_filter = ids_items.Describe("DataWindow.Table.Filter")
+// Describe returns "?" when there is no filter
+If ls_orig_filter = "?" Then ls_orig_filter = ""
 // this filter will keep any columns that have a datawindow reference in it
 is_currfilter = "window=~""+as_window+"~" AND pos(control, ~""+ls_datawindow+"~")"
 IF ids_items.SetFilter("window=~""+as_window+"~" AND pos(control, ~""+ls_datawindow+"~") > 0") <> 1 then return -1
