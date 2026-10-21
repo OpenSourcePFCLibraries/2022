@@ -157,15 +157,30 @@ if (-not $NoBuild) {
         $log = Join-Path $targetDir 'build.log'
         $mode = if ($Full) { '/f' } else { '/i' }
 
+        # PBC writes each PBD beside its PBL. A PBD that is already there (for example one kept
+        # in source control) is backed up and put back afterwards, so the source tree is unchanged.
+        $backups = @{}
+        foreach ($library in $libraries) {
+            $pbd = [IO.Path]::ChangeExtension([IO.Path]::GetFullPath((Join-Path $pbtDir $library)), '.pbd')
+            if (Test-Path $pbd) {
+                $backup = Join-Path $targetDir ([IO.Path]::GetFileName($pbd) + '.original')
+                Copy-Item $pbd $backup -Force
+                $backups[$pbd] = $backup
+            }
+        }
+
         Write-Host "Building $name ($(if ($Full) { 'full' } else { 'incremental' }))"
         $started = Get-Date
         $rc = Invoke-Tool $PBC @('/d', "`"$pbt`"", '/o', "`"$exe`"", $mode) $log
         $text = Read-Log $log
 
-        # PBC writes each PBD beside its PBL; keep them with the exe
+        # Keep the new PBDs with the exe
         foreach ($library in $libraries) {
             $pbd = [IO.Path]::ChangeExtension([IO.Path]::GetFullPath((Join-Path $pbtDir $library)), '.pbd')
             if (Test-Path $pbd) { Move-Item $pbd $targetDir -Force }
+        }
+        foreach ($pbd in $backups.Keys) {
+            Move-Item $backups[$pbd] $pbd -Force
         }
 
         if ($rc -ne 0 -or -not (Test-Path $exe)) {
