@@ -2656,6 +2656,7 @@ u_dw_for_ds_print ldw_dw
 w_ds_print lw_dummy
 int li_rc
 long ll_pagecount
+blob lblb_state
 
 //Use print preview to get current pagecount
 this.modify ( 'datawindow.print.preview=yes' )
@@ -2666,7 +2667,16 @@ this.modify ( 'datawindow.print.preview=no' )
 Open(lw_dummy)
 ldw_dw = create u_dw_for_ds_print
 lw_dummy.openuserobject( ldw_dw )
-ldw_dw.dataobject = this.dataobject
+// Copy the full state (syntax, data and properties) so the dummy DW matches the
+// source exactly. This also handles crosstabs, composites, DDDWs and DataStores
+// without a dataobject (dynamically created or filled via SetFullState).
+if this.GetFullState(lblb_state) > 0 then
+	if ldw_dw.SetFullState(lblb_state) = -1 then
+		ldw_dw.dataobject = this.dataobject
+	end if
+else
+	ldw_dw.dataobject = this.dataobject
+end if
 // call function that displays the dialog 
 li_rc = ldw_dw.of_printsetup(ll_PageCount)
 
