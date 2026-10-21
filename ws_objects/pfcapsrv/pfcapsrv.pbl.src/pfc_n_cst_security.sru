@@ -1790,6 +1790,7 @@ protected function integer of_setcontrolstatus (graphicobject ago_item, string a
 // 7.0 Added support for new controls: vprogressbar, vtrackbar, hprogressbar, 
 //		 htrackbar, picturehyperlink, statictexthyperlink
 // 2022	Unknown control types are handled by of_SetControlStatus_Generic instead of halting
+// 2022	RibbonBar skipped; tabbed bar and status bar also skipped by type name
 //
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -1863,7 +1864,6 @@ inkedit			l_ie
 inkpicture		l_ip
 monthcalendar		l_mc
 webbrowser		l_wb
-tabbedbar		l_tb
 			
 If as_itemname = '' Then
 	If as_object = '' Then
@@ -1877,6 +1877,11 @@ End If
 
 // Nothing to process on tabbed control
 IF ls_itemname = 'mditbb_1' THEN Return 0
+
+// Nor on a tabbed bar or status bar with another name. These controls do not exist in
+// every PowerBuilder 2022 release, so they are recognized by type name instead of
+// with tabbedbar! and statusbar!
+IF of_IsA(ago_item, "tabbedbar") Or of_IsA(ago_item, "statusbar") THEN Return 0
 
 Choose Case typeof(ago_item) 
 	Case animation!
@@ -1975,6 +1980,9 @@ Choose Case typeof(ago_item)
 		l_rectangle = ago_item
 		setnull(lb_null)
 		li_numset = of_SetState(as_window, ls_itemname, lb_null, l_rectangle.visible)
+	Case ribbonbar!
+		// Nothing to process on the ribbon bar itself
+		li_numset = 0
 	Case richtextedit!
 		l_rte = ago_item
 		li_numset = of_SetState(as_window, ls_itemname, l_rte.enabled, l_rte.visible)
@@ -2080,6 +2088,16 @@ ls_itemname = lower(classname(a_object))
 IF ls_itemname = 'mditbb_1' THEN
 	as_desc = ""
 	Return "TabbedBar"
+END IF
+
+// These controls do not exist in every PowerBuilder 2022 release, so they are
+// recognized by type name instead of with tabbedbar! and statusbar!
+IF of_IsA(a_object, "tabbedbar") THEN
+	as_desc = of_GetTag(a_object.tag)
+	Return "TabbedBar"
+ELSEIF of_IsA(a_object, "statusbar") THEN
+	as_desc = of_GetTag(a_object.tag)
+	Return "StatusBar"
 END IF
 
 choose case typeof(a_object) 
@@ -2230,6 +2248,9 @@ choose case typeof(a_object)
 	case rectangle!
 		as_desc = of_GetTag(a_object.tag)
 		return 'Rectangle'
+	case ribbonbar!
+		as_desc = of_GetTag(a_object.tag)
+		return 'RibbonBar'
 	case richtextedit!
 		as_desc = of_GetTag(a_object.tag)
 		return 'RichTextEdit'
