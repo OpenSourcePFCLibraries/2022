@@ -1,0 +1,30 @@
+{
+    "MetaInfo": {
+        "IDEVersion": "220",
+        "RuntimeVersion": "22.2.0.3452",
+        "BuildFileVersion": "1.0.0.1"
+    },
+    "BuildPlan": {
+        "SourceControl": {
+            "PreCommand": "",
+            "ClearSrcBeforeDownload": false,
+            "SVN": [],
+            "Git": [],
+            "VSS": [],
+            "Merging": [
+                { "Target": ".\\demoapp\\peat demo app.pbt", "LocalProjectPath": ".\\", "RefreshPbl": false },
+                { "Target": ".\\pfcapp\\generic_pfc_app.pbt", "LocalProjectPath": ".\\", "RefreshPbl": false },
+                { "Target": ".\\examples\\appexamp\\pfc examples.pbt", "LocalProjectPath": ".\\", "RefreshPbl": false },
+                { "Target": ".\\tutorial\\pfctutor.pbt", "LocalProjectPath": ".\\", "RefreshPbl": false },
+                { "Target": ".\\security\\pfcsecad\\security administrator.pbt", "LocalProjectPath": ".\\", "RefreshPbl": false },
+                { "Target": ".\\security\\pfcsecsc\\security scanner.pbt", "LocalProjectPath": ".\\", "RefreshPbl": false }
+            ],
+            "PostCommand": ""
+        },
+        "BuildJob": {
+            "PreCommand": "",
+            "Projects": [],
+            "PostCommand": ""
+        }
+    }
+}
