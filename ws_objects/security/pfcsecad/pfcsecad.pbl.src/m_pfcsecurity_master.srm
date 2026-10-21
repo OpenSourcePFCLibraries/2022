@@ -75,7 +75,7 @@ end on
 type m_scanapplication from menu within m_file
 end type
 
-event clicked;run('pfcsecsc.exe')
+event clicked;run('pfcsecurity_scanner.exe')
 end event
 
 on m_scanapplication.create

@@ -37,6 +37,7 @@ global function integer f_setfilesrv (ref pfcscanner_n_cst_filesrv anv_filesrv, 
 //	6.0	Added support for Unix version on AIX (IBM) and HPUX (HP)
 // 6.0.02 Added support for Unicode.
 // 7.0 Removed support for 16-bit and Macintosh services
+// 12.0 Removed support for ANSI Windows, AIX, HPUX and Solaris
 //////////////////////////////////////////////////////////////////////////////
 //
 /*
@@ -74,7 +75,7 @@ if ab_switch then
 				if le_env.CharSet = charsetunicode! then
 					anv_filesrv = create pfcscanner_n_cst_filesrvunicode
 				else
-					anv_filesrv = create pfcscanner_n_cst_filesrvwin32
+					anv_filesrv = create pfcscanner_n_cst_filesrv
 				end if
 			case else
 				anv_filesrv = create pfcscanner_n_cst_filesrv

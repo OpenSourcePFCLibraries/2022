@@ -12,13 +12,10 @@ FVS:1.0.0.1
 FVN:1,0,0,1
 MAN:0,asInvoker,0
 PBD:pfcsecsc.pbl,,0
-OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,pfcscanner_n_cst_filesrvhpux,u
-OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,pfcscanner_n_cst_filesrvsol2,u
 OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,w_pfcsecurity_objectlist,w
 OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,pfcscanner_u_dw,u
 OBJ:C:\Users\InfosaicUser\Downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,pfcsecurity_scanner,a
 OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,pfcscanner_n_cst_securityscanner,u
-OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,pfcscanner_n_cst_filesrvaix,u
 OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,f_setfilesrv,f
 OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,pfcscanner_n_ds,u
 OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,w_pfcsecurity_targetselection,w
@@ -27,4 +24,3 @@ OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,base_
 OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,d_pfcsecurity_objectlist,d
 OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,pfcscanner_n_cst_string,u
 OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,pfcscanner_n_cst_filesrvunicode,u
-OBJ:c:\users\infosaicuser\downloads\pfc2022\security\pfcsecsc\pfcsecsc.pbl,pfcscanner_n_cst_filesrvwin32,u
