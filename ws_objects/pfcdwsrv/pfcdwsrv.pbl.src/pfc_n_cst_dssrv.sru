@@ -2512,6 +2512,7 @@ public function any of_buildexpression (long al_row, string as_column, string as
 //    7.0		Added "char" datatype to case statement
 //	12.5		Added LIKE & NOT LIKE operators
 //				Number conversion to handle other number formats (like 1.234,56) #11012
+//	2025		String values are escaped (of_ExpressionString): a single quote in a value made the expression invalid, and a tilde changed it (#40)
 //
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -2540,6 +2541,7 @@ public function any of_buildexpression (long al_row, string as_column, string as
 string	ls_expression
 string	ls_coltype
 string	ls_value
+n_cst_string	lnv_string
 
 // Verify passed arguments.
 If IsNull(ids_requestor) Or Not IsValid(ids_requestor) Then Return '!'
@@ -2588,7 +2590,7 @@ Else
 		
 		// CHARACTER DATATYPE		
 		Case "char(", "char"	
-			ls_expression += "'" + ls_value + "'"
+			ls_expression += lnv_string.of_ExpressionString(ls_value)
 	
 		// DATE DATATYPE	
 		Case "date"					
@@ -2604,7 +2606,7 @@ Else
 			
 		// LIKE, NOT LIKE
 		Case "like","not like"
-			ls_expression += "'"+ls_value+"'"
+			ls_expression += lnv_string.of_ExpressionString(ls_value)
 		
 		// Number
 		Case 	Else
@@ -2696,6 +2698,7 @@ public function any of_buildcomparison (long al_row, string as_column, string as
 //    7.0	Added "char" datatype to case statement
 //	12.5	Added LIKE & NOT LIKE operators
 //			Number conversion to handle other number formats (like 1.234,56) #11012
+//	2025		String values are escaped (of_ExpressionString): a single quote in a value made the expression invalid, and a tilde changed it (#40)
 //
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -2724,6 +2727,7 @@ public function any of_buildcomparison (long al_row, string as_column, string as
 string	ls_expression
 string	ls_coltype
 string	ls_value
+n_cst_string	lnv_string
 
 // Validate required reference.
 If IsNull(ids_requestor) Or Not IsValid(ids_requestor) Then Return '!'
@@ -2758,7 +2762,7 @@ Else
 		
 		// CHARACTER DATATYPE		
 		Case "char(", "char"	
-			ls_expression += "'" + ls_value + "'"
+			ls_expression += lnv_string.of_ExpressionString(ls_value)
 	
 		// DATE DATATYPE	
 		Case "date"					
@@ -2774,7 +2778,7 @@ Else
 	
 		// LIKE, NOT LIKE
 		Case "like","not like"
-			ls_expression += "'"+ls_value+"'"
+			ls_expression += lnv_string.of_ExpressionString(ls_value)
 		
 		// Number
 		Case 	Else
