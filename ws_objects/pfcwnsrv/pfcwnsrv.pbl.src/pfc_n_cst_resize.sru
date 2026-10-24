@@ -48,6 +48,8 @@ long 	il_parentminimumwidth=0
 long	il_parentminimumheight=0
 long	il_parentprevwidth=-1
 long	il_parentprevheight=-1
+// The user can't make the window smaller than the minimum size (of_SetWindowMinSize)
+boolean	ib_windowminsize = False
 
 integer	ii_rounding = 5
 
@@ -75,6 +77,9 @@ public function integer of_getminmaxpoints_line (windowobject awo_control, ref i
 private function integer of_getminmaxpoints_oval (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height)
 private function integer of_getminmaxpoints_rect (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height)
 private function integer of_getminmaxpoints_round_rect (windowobject awo_control, ref integer ai_x, ref integer ai_y, ref integer ai_width, ref integer ai_height)
+public function integer of_getminsize (ref integer ai_minwidth, ref integer ai_minheight)
+public function integer of_setwindowminsize (boolean ab_switch)
+public function boolean of_iswindowminsize ()
 end prototypes
 
 event pfc_resize;//////////////////////////////////////////////////////////////////////////////
@@ -1268,6 +1273,157 @@ ai_width = lrrec_cntrl.Width
 ai_height = lrrec_cntrl.Height
 
 Return 1
+end function
+
+public function integer of_getminsize (ref integer ai_minwidth, ref integer ai_minheight);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_GetMinSize
+//
+//	Access:  		public
+//
+//	Arguments:
+//	ai_minwidth		(by reference) the minimum width of the parent object's workspace
+//	ai_minheight	(by reference) its minimum height
+//
+//	Returns:  		integer
+//						1, or 0 if no minimum size is set (of_SetMinSize)
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	2025	Initial version (#47)
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c)
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+ai_minwidth = il_parentminimumwidth
+ai_minheight = il_parentminimumheight
+
+If il_parentminimumwidth <= 0 And il_parentminimumheight <= 0 Then Return 0
+Return 1
+end function
+
+public function integer of_setwindowminsize (boolean ab_switch);//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_SetWindowMinSize
+//
+//	Access:  		public
+//
+//	Arguments:
+//	ab_switch		TRUE: the user can't make the window smaller than the minimum size
+//						(of_SetMinSize); FALSE (the default): the window can be made smaller,
+//						and only the controls stop resizing at the minimum size
+//
+//	Returns:  		integer
+//						1 if it succeeds and -1 if an error occurs.
+//
+//	Description:  	The window (w_master) limits the size the user can drag it to, with
+//						its pfc_GetMinMaxInfo event.  The minimum size is that of the
+//						workspace; the window's frame (border, title bar, menu bar) is added.
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	2025	Initial version (#47)
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c)
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+If IsNull(ab_switch) Then Return -1
+ib_windowminsize = ab_switch
+Return 1
+end function
+
+public function boolean of_iswindowminsize ();//////////////////////////////////////////////////////////////////////////////
+//
+//	Function:  		of_IsWindowMinSize
+//
+//	Access:  		public
+//
+//	Arguments:		None
+//
+//	Returns:  		boolean
+//						TRUE if the user can't make the window smaller than the minimum size
+//						(of_SetWindowMinSize)
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Revision History
+//
+//	Version
+//	2025	Initial version (#47)
+//
+//////////////////////////////////////////////////////////////////////////////
+//
+/*
+ * Open Source PowerBuilder Foundation Class Libraries
+ *
+ * Copyright (c) 2004-2017, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted in accordance with the MIT License
+
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals and was originally based on software copyright (c)
+ * 1996-2004 Sybase, Inc. http://www.sybase.com.  For more
+ * information on the Open Source PowerBuilder Foundation Class
+ * Libraries see https://github.com/OpenSourcePFCLibraries
+*/
+//
+//////////////////////////////////////////////////////////////////////////////
+
+Return ib_windowminsize
 end function
 
 on pfc_n_cst_resize.create
